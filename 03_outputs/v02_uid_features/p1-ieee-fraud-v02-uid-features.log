@@ -1,0 +1,80 @@
+[{"stream_name":"stdout","time":10.383796377,"data":"Loading data...\n"}
+,{"stream_name":"stdout","time":39.00663658,"data":"Split sizes: 413378 88581 88581\n"}
+,{"stream_name":"stdout","time":52.920362396,"data":"Training ablation: base\n"}
+,{"stream_name":"stdout","time":68.114068213,"data":"[LightGBM] [Info] Number of positive: 14538, number of negative: 398840\n"}
+,{"stream_name":"stdout","time":68.869620798,"data":"[LightGBM] [Info] Auto-choosing row-wise multi-threading, the overhead of testing was 0.267559 seconds.\n"}
+,{"stream_name":"stdout","time":68.869658174,"data":"You can set `force_row_wise=true` to remove the overhead.\n"}
+,{"stream_name":"stdout","time":68.869768872,"data":"And if memory is not enough, you can set `force_col_wise=true`.\n"}
+,{"stream_name":"stdout","time":68.874670674,"data":"[LightGBM] [Info] Total Bins 13670\n"}
+,{"stream_name":"stdout","time":68.875768198,"data":"[LightGBM] [Info] Number of data points in the train set: 413378, number of used features: 185\n"}
+,{"stream_name":"stdout","time":69.190947821,"data":"[LightGBM] [Info] [binary:BoostFromScore]: pavg=0.500000 -\u003e initscore=-0.000000\n"}
+,{"stream_name":"stdout","time":69.191360516,"data":"[LightGBM] [Info] Start training from score -0.000000\n"}
+,{"stream_name":"stdout","time":69.30386964,"data":"Training until validation scores don't improve for 60 rounds\n"}
+,{"stream_name":"stdout","time":80.404659065,"data":"[100]\tvalid_0's average_precision: 0.499038\tvalid_0's binary_logloss: 0.338461\n"}
+,{"stream_name":"stdout","time":89.710161387,"data":"[200]\tvalid_0's average_precision: 0.549358\tvalid_0's binary_logloss: 0.270916\n"}
+,{"stream_name":"stdout","time":97.677445414,"data":"[300]\tvalid_0's average_precision: 0.569777\tvalid_0's binary_logloss: 0.231226\n"}
+,{"stream_name":"stdout","time":105.353142447,"data":"[400]\tvalid_0's average_precision: 0.582555\tvalid_0's binary_logloss: 0.204666\n"}
+,{"stream_name":"stdout","time":112.89182394,"data":"[500]\tvalid_0's average_precision: 0.592239\tvalid_0's binary_logloss: 0.18294\n"}
+,{"stream_name":"stdout","time":116.390581671,"data":"Did not meet early stopping. Best iteration is:\n"}
+,{"stream_name":"stdout","time":116.390641011,"data":"[547]\tvalid_0's average_precision: 0.595406\tvalid_0's binary_logloss: 0.17342\n"}
+,{"stream_name":"stdout","time":122.459773589,"data":"Training ablation: uid_freq\n"}
+,{"stream_name":"stdout","time":148.523758692,"data":"[LightGBM] [Info] Number of positive: 14538, number of negative: 398840\n"}
+,{"stream_name":"stdout","time":149.31865805,"data":"[LightGBM] [Info] Auto-choosing row-wise multi-threading, the overhead of testing was 0.269957 seconds.\n"}
+,{"stream_name":"stdout","time":149.31869587,"data":"You can set `force_row_wise=true` to remove the overhead.\n"}
+,{"stream_name":"stdout","time":149.318802958,"data":"And if memory is not enough, you can set `force_col_wise=true`.\n"}
+,{"stream_name":"stdout","time":149.32235753,"data":"[LightGBM] [Info] Total Bins 15704\n"}
+,{"stream_name":"stdout","time":149.32315903,"data":"[LightGBM] [Info] Number of data points in the train set: 413378, number of used features: 195\n"}
+,{"stream_name":"stdout","time":149.684622965,"data":"[LightGBM] [Info] [binary:BoostFromScore]: pavg=0.500000 -\u003e initscore=-0.000000\n"}
+,{"stream_name":"stdout","time":149.684955251,"data":"[LightGBM] [Info] Start training from score -0.000000\n"}
+,{"stream_name":"stdout","time":149.802153823,"data":"Training until validation scores don't improve for 60 rounds\n"}
+,{"stream_name":"stdout","time":162.28434564,"data":"[100]\tvalid_0's average_precision: 0.496003\tvalid_0's binary_logloss: 0.300153\n"}
+,{"stream_name":"stdout","time":172.742121908,"data":"[200]\tvalid_0's average_precision: 0.542543\tvalid_0's binary_logloss: 0.251768\n"}
+,{"stream_name":"stdout","time":181.560416904,"data":"[300]\tvalid_0's average_precision: 0.560992\tvalid_0's binary_logloss: 0.216457\n"}
+,{"stream_name":"stdout","time":189.693801915,"data":"[400]\tvalid_0's average_precision: 0.576748\tvalid_0's binary_logloss: 0.191705\n"}
+,{"stream_name":"stdout","time":197.591158905,"data":"[500]\tvalid_0's average_precision: 0.588461\tvalid_0's binary_logloss: 0.172229\n"}
+,{"stream_name":"stdout","time":201.528627689,"data":"Did not meet early stopping. Best iteration is:\n"}
+,{"stream_name":"stdout","time":201.528766658,"data":"[549]\tvalid_0's average_precision: 0.593764\tvalid_0's binary_logloss: 0.166739\n"}
+,{"stream_name":"stdout","time":207.525103693,"data":"Training ablation: uid_freq_amt\n"}
+,{"stream_name":"stdout","time":238.568205348,"data":"[LightGBM] [Info] Number of positive: 14538, number of negative: 398840\n"}
+,{"stream_name":"stdout","time":239.510474923,"data":"[LightGBM] [Info] Auto-choosing col-wise multi-threading, the overhead of testing was 0.742244 seconds.\n"}
+,{"stream_name":"stdout","time":239.510515568,"data":"You can set `force_col_wise=true` to remove the overhead.\n"}
+,{"stream_name":"stdout","time":239.514554908,"data":"[LightGBM] [Info] Total Bins 24615\n"}
+,{"stream_name":"stdout","time":239.515981331,"data":"[LightGBM] [Info] Number of data points in the train set: 413378, number of used features: 230\n"}
+,{"stream_name":"stdout","time":240.02665866,"data":"[LightGBM] [Info] [binary:BoostFromScore]: pavg=0.500000 -\u003e initscore=-0.000000\n"}
+,{"stream_name":"stdout","time":240.027126088,"data":"[LightGBM] [Info] Start training from score -0.000000\n"}
+,{"stream_name":"stdout","time":240.22114576,"data":"Training until validation scores don't improve for 60 rounds\n"}
+,{"stream_name":"stdout","time":259.479649405,"data":"[100]\tvalid_0's average_precision: 0.501765\tvalid_0's binary_logloss: 0.313992\n"}
+,{"stream_name":"stdout","time":274.741583538,"data":"[200]\tvalid_0's average_precision: 0.549736\tvalid_0's binary_logloss: 0.265258\n"}
+,{"stream_name":"stdout","time":287.220897886,"data":"[300]\tvalid_0's average_precision: 0.572147\tvalid_0's binary_logloss: 0.22776\n"}
+,{"stream_name":"stdout","time":299.238885818,"data":"[400]\tvalid_0's average_precision: 0.591549\tvalid_0's binary_logloss: 0.194329\n"}
+,{"stream_name":"stdout","time":310.747827041,"data":"[500]\tvalid_0's average_precision: 0.603409\tvalid_0's binary_logloss: 0.171297\n"}
+,{"stream_name":"stdout","time":316.262548745,"data":"Did not meet early stopping. Best iteration is:\n"}
+,{"stream_name":"stdout","time":316.262760747,"data":"[548]\tvalid_0's average_precision: 0.607145\tvalid_0's binary_logloss: 0.16538\n"}
+,{"stream_name":"stdout","time":323.959469402,"data":"V02 metrics:\n"}
+,{"stream_name":"stdout","time":323.967142992,"data":"       model   split     segment  rows  fraud_rate   pr_auc  roc_auc\n"}
+,{"stream_name":"stdout","time":323.967170068,"data":"        base   valid      global 88581    0.034341 0.595406 0.925686\n"}
+,{"stream_name":"stdout","time":323.967177013,"data":"        base   valid   uid_known 40835    0.023313 0.648534 0.956820\n"}
+,{"stream_name":"stdout","time":323.967181065,"data":"        base   valid uid_unknown 47746    0.043773 0.594186 0.901128\n"}
+,{"stream_name":"stdout","time":323.967185302,"data":"        base holdout      global 88581    0.034804 0.543631 0.905074\n"}
+,{"stream_name":"stdout","time":323.967190752,"data":"        base holdout   uid_known 29240    0.016997 0.594642 0.916821\n"}
+,{"stream_name":"stdout","time":323.9672118,"data":"        base holdout uid_unknown 59341    0.043579 0.545797 0.891246\n"}
+,{"stream_name":"stdout","time":323.967216952,"data":"    uid_freq   valid      global 88581    0.034341 0.593764 0.928145\n"}
+,{"stream_name":"stdout","time":323.967221368,"data":"    uid_freq   valid   uid_known 40835    0.023313 0.693717 0.967270\n"}
+,{"stream_name":"stdout","time":323.967226211,"data":"    uid_freq   valid uid_unknown 47746    0.043773 0.581504 0.897774\n"}
+,{"stream_name":"stdout","time":323.967230607,"data":"    uid_freq holdout      global 88581    0.034804 0.538118 0.906028\n"}
+,{"stream_name":"stdout","time":323.967235372,"data":"    uid_freq holdout   uid_known 29240    0.016997 0.628162 0.929364\n"}
+,{"stream_name":"stdout","time":323.96724005,"data":"    uid_freq holdout uid_unknown 59341    0.043579 0.534608 0.888385\n"}
+,{"stream_name":"stdout","time":323.967244645,"data":"uid_freq_amt   valid      global 88581    0.034341 0.607145 0.931050\n"}
+,{"stream_name":"stdout","time":323.967249247,"data":"uid_freq_amt   valid   uid_known 40835    0.023313 0.740781 0.975283\n"}
+,{"stream_name":"stdout","time":323.967253847,"data":"uid_freq_amt   valid uid_unknown 47746    0.043773 0.575609 0.891472\n"}
+,{"stream_name":"stdout","time":323.967258625,"data":"uid_freq_amt holdout      global 88581    0.034804 0.544150 0.907965\n"}
+,{"stream_name":"stdout","time":323.967262103,"data":"uid_freq_amt holdout   uid_known 29240    0.016997 0.683113 0.940113\n"}
+,{"stream_name":"stdout","time":323.967265159,"data":"uid_freq_amt holdout uid_unknown 59341    0.043579 0.531457 0.885127\n"}
+,{"stream_name":"stdout","time":323.96726829,"data":"V02 complete.\n"}
+,{"stream_name":"stderr","time":327.150938276,"data":"/usr/local/lib/python3.12/dist-packages/mistune.py:435: SyntaxWarning: invalid escape sequence '\\|'\n"}
+,{"stream_name":"stderr","time":327.150994366,"data":"  cells[i][c] = re.sub('\\\\\\\\\\|', '|', cell)\n"}
+,{"stream_name":"stderr","time":327.469256436,"data":"/usr/local/lib/python3.12/dist-packages/nbconvert/filters/filter_links.py:36: SyntaxWarning: invalid escape sequence '\\_'\n"}
+,{"stream_name":"stderr","time":327.469285501,"data":"  text = re.sub(r'_', '\\_', text) # Escape underscores in display text\n"}
+,{"stream_name":"stderr","time":328.295919038,"data":"[NbConvertApp] Converting notebook __script__.ipynb to html\n"}
+,{"stream_name":"stderr","time":329.993746353,"data":"[NbConvertApp] Writing 388481 bytes to __results__.html\n"}
+]

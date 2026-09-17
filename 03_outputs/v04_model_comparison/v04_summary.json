@@ -1,0 +1,42 @@
+[
+  {
+    "model": "lgbm_keep",
+    "kind": "lgbm",
+    "status": "complete",
+    "features": 44,
+    "best_iteration": 649,
+    "elapsed_seconds": 29.735066413879395,
+    "train_cutoff": 10437998.1,
+    "valid_cutoff": 13151845.999999998
+  },
+  {
+    "model": "lgbm_keep_monitor",
+    "kind": "lgbm",
+    "status": "complete",
+    "features": 53,
+    "best_iteration": 649,
+    "elapsed_seconds": 30.952799797058105,
+    "train_cutoff": 10437998.1,
+    "valid_cutoff": 13151845.999999998
+  },
+  {
+    "model": "xgb_keep_monitor",
+    "kind": "xgb",
+    "status": "complete",
+    "features": 53,
+    "best_iteration": 500,
+    "elapsed_seconds": 33.55432438850403,
+    "train_cutoff": 10437998.1,
+    "valid_cutoff": 13151845.999999998
+  },
+  {
+    "model": "cat_keep_monitor",
+    "kind": "cat",
+    "status": "complete",
+    "features": 53,
+    "best_iteration": 499,
+    "elapsed_seconds": 63.181562662124634,
+    "train_cutoff": 10437998.1,
+    "valid_cutoff": 13151845.999999998
+  }
+]

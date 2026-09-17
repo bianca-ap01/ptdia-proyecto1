@@ -1,0 +1,2 @@
+review_threshold,escalate_threshold,cost_fraud_approved,cost_legit_escalated,cost_review,max_review_rate
+0.4597834649369346,0.7791215589260153,100.0,10.0,2.0,0.05

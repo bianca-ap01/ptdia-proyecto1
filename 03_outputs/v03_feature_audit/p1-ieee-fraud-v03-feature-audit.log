@@ -1,0 +1,55 @@
+[{"stream_name":"stdout","time":12.541451289,"data":"Loading data...\n"}
+,{"stream_name":"stdout","time":45.677355011,"data":"Split sizes: 413378 88581 88581\n"}
+,{"stream_name":"stdout","time":66.554533453,"data":"Training audit baseline...\n"}
+,{"stream_name":"stdout","time":69.842674515,"data":"[LightGBM] [Info] Number of positive: 14538, number of negative: 398840\n"}
+,{"stream_name":"stdout","time":70.563568,"data":"[LightGBM] [Info] Auto-choosing row-wise multi-threading, the overhead of testing was 0.251498 seconds.\n"}
+,{"stream_name":"stdout","time":70.563606981,"data":"You can set `force_row_wise=true` to remove the overhead.\n"}
+,{"stream_name":"stdout","time":70.563612326,"data":"And if memory is not enough, you can set `force_col_wise=true`.\n"}
+,{"stream_name":"stdout","time":70.568209817,"data":"[LightGBM] [Info] Total Bins 13670\n"}
+,{"stream_name":"stdout","time":70.569675049,"data":"[LightGBM] [Info] Number of data points in the train set: 413378, number of used features: 185\n"}
+,{"stream_name":"stdout","time":70.999213454,"data":"[LightGBM] [Info] [binary:BoostFromScore]: pavg=0.500000 -\u003e initscore=-0.000000\n"}
+,{"stream_name":"stdout","time":71.002214323,"data":"[LightGBM] [Info] Start training from score -0.000000\n"}
+,{"stream_name":"stdout","time":71.120684553,"data":"Training until validation scores don't improve for 60 rounds\n"}
+,{"stream_name":"stdout","time":81.995946873,"data":"[100]\tvalid_0's average_precision: 0.499038\tvalid_0's binary_logloss: 0.338461\n"}
+,{"stream_name":"stdout","time":91.057589935,"data":"[200]\tvalid_0's average_precision: 0.549358\tvalid_0's binary_logloss: 0.270916\n"}
+,{"stream_name":"stdout","time":98.529412418,"data":"[300]\tvalid_0's average_precision: 0.569777\tvalid_0's binary_logloss: 0.231226\n"}
+,{"stream_name":"stdout","time":105.739802355,"data":"[400]\tvalid_0's average_precision: 0.582555\tvalid_0's binary_logloss: 0.204666\n"}
+,{"stream_name":"stdout","time":112.702118085,"data":"[500]\tvalid_0's average_precision: 0.592239\tvalid_0's binary_logloss: 0.18294\n"}
+,{"stream_name":"stdout","time":115.976724452,"data":"Did not meet early stopping. Best iteration is:\n"}
+,{"stream_name":"stdout","time":115.976764501,"data":"[547]\tvalid_0's average_precision: 0.595406\tvalid_0's binary_logloss: 0.17342\n"}
+,{"stream_name":"stdout","time":121.132689016,"data":"Computing distribution audit...\n"}
+,{"stream_name":"stdout","time":146.410114431,"data":"Computing permutation importance for top features...\n"}
+,{"stream_name":"stdout","time":252.808061589,"data":"V03 model metrics:\n"}
+,{"stream_name":"stdout","time":252.808114254,"data":"{\n"}
+,{"stream_name":"stdout","time":252.808121357,"data":"  \"valid_pr_auc\": 0.5954063477908068,\n"}
+,{"stream_name":"stdout","time":252.808125619,"data":"  \"valid_roc_auc\": 0.9256858445035767,\n"}
+,{"stream_name":"stdout","time":252.808129004,"data":"  \"holdout_pr_auc\": 0.5436306873675363,\n"}
+,{"stream_name":"stdout","time":252.808132554,"data":"  \"holdout_roc_auc\": 0.9050742126226828,\n"}
+,{"stream_name":"stdout","time":252.808135824,"data":"  \"best_iteration\": 547,\n"}
+,{"stream_name":"stdout","time":252.808139177,"data":"  \"features\": 185\n"}
+,{"stream_name":"stdout","time":252.808142334,"data":"}\n"}
+,{"stream_name":"stdout","time":252.80814541,"data":"Recommendations:\n"}
+,{"stream_name":"stdout","time":252.808949617,"data":"recommendation\n"}
+,{"stream_name":"stdout","time":252.808975539,"data":"low_priority    112\n"}
+,{"stream_name":"stdout","time":252.80898157,"data":"keep             44\n"}
+,{"stream_name":"stdout","time":252.808986962,"data":"review           20\n"}
+,{"stream_name":"stdout","time":252.809011473,"data":"monitor           9\n"}
+,{"stream_name":"stdout","time":252.809016201,"data":"Top monitor features:\n"}
+,{"stream_name":"stdout","time":252.817323991,"data":"feature  gain_importance  perm_pr_auc_drop   max_ks  max_missing_delta\n"}
+,{"stream_name":"stdout","time":252.817362545,"data":"    D1n    189259.754448          0.033780 0.604382           1.012068\n"}
+,{"stream_name":"stdout","time":252.817368569,"data":"    D2n    139602.228923          0.023639 0.400203           8.075579\n"}
+,{"stream_name":"stdout","time":252.817372739,"data":"   D15n    113390.977285          0.016189 0.453441           6.766769\n"}
+,{"stream_name":"stdout","time":252.817376795,"data":"   D10n     93624.541972          0.024600 0.525621           6.603319\n"}
+,{"stream_name":"stdout","time":252.817380974,"data":"     C9     36282.430766          0.012995 0.139912           0.000000\n"}
+,{"stream_name":"stdout","time":252.817384919,"data":"  id_02     25738.613398          0.003656 0.126568           8.780583\n"}
+,{"stream_name":"stdout","time":252.817388851,"data":"  id_20     20042.202794          0.003619 0.140107           8.774374\n"}
+,{"stream_name":"stdout","time":252.81739192,"data":"    D11     19174.144714          0.007643 0.098380          26.268532\n"}
+,{"stream_name":"stdout","time":252.817394638,"data":"  id_01     16158.502379          0.001156 0.122537           8.916536\n"}
+,{"stream_name":"stdout","time":252.817397409,"data":"V03 complete.\n"}
+,{"stream_name":"stderr","time":256.366656801,"data":"/usr/local/lib/python3.12/dist-packages/mistune.py:435: SyntaxWarning: invalid escape sequence '\\|'\n"}
+,{"stream_name":"stderr","time":256.366740101,"data":"  cells[i][c] = re.sub('\\\\\\\\\\|', '|', cell)\n"}
+,{"stream_name":"stderr","time":256.760990664,"data":"/usr/local/lib/python3.12/dist-packages/nbconvert/filters/filter_links.py:36: SyntaxWarning: invalid escape sequence '\\_'\n"}
+,{"stream_name":"stderr","time":256.761027372,"data":"  text = re.sub(r'_', '\\_', text) # Escape underscores in display text\n"}
+,{"stream_name":"stderr","time":257.659675483,"data":"[NbConvertApp] Converting notebook __script__.ipynb to html\n"}
+,{"stream_name":"stderr","time":259.568770342,"data":"[NbConvertApp] Writing 368495 bytes to __results__.html\n"}
+]

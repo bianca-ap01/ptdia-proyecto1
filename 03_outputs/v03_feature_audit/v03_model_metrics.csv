@@ -1,0 +1,2 @@
+valid_pr_auc,valid_roc_auc,holdout_pr_auc,holdout_roc_auc,best_iteration,features
+0.5954063477908068,0.9256858445035767,0.5436306873675363,0.9050742126226828,547,185

@@ -1,0 +1,24 @@
+[{"stream_name":"stdout","time":7.56977784,"data":"Loading IEEE-CIS data...\n"}
+,{"stream_name":"stdout","time":41.023853408,"data":"Shapes: (590540, 439) (506691, 439)\n"}
+,{"stream_name":"stdout","time":41.023905458,"data":"Computing structural summary...\n"}
+,{"stream_name":"stdout","time":122.515022048,"data":"Saving outputs...\n"}
+,{"stream_name":"stdout","time":124.540133372,"data":"{\n"}
+,{"stream_name":"stdout","time":124.540173832,"data":"  \"train_rows\": 590540,\n"}
+,{"stream_name":"stdout","time":124.540180162,"data":"  \"test_rows\": 506691,\n"}
+,{"stream_name":"stdout","time":124.540185662,"data":"  \"train_fraud_rate_pct\": 3.4990009144173126,\n"}
+,{"stream_name":"stdout","time":124.540190742,"data":"  \"weekly_fraud_rate_min_pct\": 1.8522992671337681,\n"}
+,{"stream_name":"stdout","time":124.540195192,"data":"  \"weekly_fraud_rate_max_pct\": 5.061181735942485,\n"}
+,{"stream_name":"stdout","time":124.540199902,"data":"  \"late_rows_known_uid_pct\": 42.76424966979375,\n"}
+,{"stream_name":"stdout","time":124.540204982,"data":"  \"adversarial_roc_auc\": 1.0,\n"}
+,{"stream_name":"stdout","time":124.540208002,"data":"  \"max_abs_corr_isFraud\": 0.38305975102060325,\n"}
+,{"stream_name":"stdout","time":124.540210942,"data":"  \"high_missing_features_gt80pct\": 74,\n"}
+,{"stream_name":"stdout","time":124.540214002,"data":"  \"high_numeric_shift_ks_gt020\": 4\n"}
+,{"stream_name":"stdout","time":124.540217102,"data":"}\n"}
+,{"stream_name":"stdout","time":124.540220002,"data":"EDA complete.\n"}
+,{"stream_name":"stderr","time":127.259634515,"data":"/usr/local/lib/python3.12/dist-packages/mistune.py:435: SyntaxWarning: invalid escape sequence '\\|'\n"}
+,{"stream_name":"stderr","time":127.259684065,"data":"  cells[i][c] = re.sub('\\\\\\\\\\|', '|', cell)\n"}
+,{"stream_name":"stderr","time":127.551538932,"data":"/usr/local/lib/python3.12/dist-packages/nbconvert/filters/filter_links.py:36: SyntaxWarning: invalid escape sequence '\\_'\n"}
+,{"stream_name":"stderr","time":127.551568722,"data":"  text = re.sub(r'_', '\\_', text) # Escape underscores in display text\n"}
+,{"stream_name":"stderr","time":129.310842558,"data":"[NbConvertApp] Converting notebook __script__.ipynb to html\n"}
+,{"stream_name":"stderr","time":130.125367931,"data":"[NbConvertApp] Writing 409247 bytes to __results__.html\n"}
+]

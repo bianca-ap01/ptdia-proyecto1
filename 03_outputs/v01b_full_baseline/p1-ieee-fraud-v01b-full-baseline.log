@@ -1,0 +1,57 @@
+[{"stream_name":"stdout","time":12.185836924,"data":"Loading data...\n"}
+,{"stream_name":"stdout","time":49.166866721,"data":"Shape after merge: (590540, 434)\n"}
+,{"stream_name":"stdout","time":49.183778373,"data":"Temporal split sizes: 413378 88581 88581\n"}
+,{"stream_name":"stdout","time":61.608860636,"data":"Training LightGBM baseline...\n"}
+,{"stream_name":"stdout","time":70.602038138,"data":"[LightGBM] [Info] Number of positive: 14538, number of negative: 398840\n"}
+,{"stream_name":"stdout","time":72.977823121,"data":"[LightGBM] [Info] Auto-choosing row-wise multi-threading, the overhead of testing was 0.853176 seconds.\n"}
+,{"stream_name":"stdout","time":72.977868869,"data":"You can set `force_row_wise=true` to remove the overhead.\n"}
+,{"stream_name":"stdout","time":72.977876479,"data":"And if memory is not enough, you can set `force_col_wise=true`.\n"}
+,{"stream_name":"stdout","time":72.984134091,"data":"[LightGBM] [Info] Total Bins 35624\n"}
+,{"stream_name":"stdout","time":72.988470707,"data":"[LightGBM] [Info] Number of data points in the train set: 413378, number of used features: 442\n"}
+,{"stream_name":"stdout","time":74.103471238,"data":"[LightGBM] [Info] [binary:BoostFromScore]: pavg=0.500000 -\u003e initscore=-0.000000\n"}
+,{"stream_name":"stdout","time":74.103857124,"data":"[LightGBM] [Info] Start training from score -0.000000\n"}
+,{"stream_name":"stdout","time":74.309234487,"data":"Training until validation scores don't improve for 60 rounds\n"}
+,{"stream_name":"stdout","time":84.550269278,"data":"[50]\tvalid_0's average_precision: 0.459474\tvalid_0's binary_logloss: 0.389125\n"}
+,{"stream_name":"stdout","time":95.228308699,"data":"[100]\tvalid_0's average_precision: 0.508761\tvalid_0's binary_logloss: 0.336087\n"}
+,{"stream_name":"stdout","time":104.767226654,"data":"[150]\tvalid_0's average_precision: 0.533852\tvalid_0's binary_logloss: 0.30639\n"}
+,{"stream_name":"stdout","time":112.812037876,"data":"[200]\tvalid_0's average_precision: 0.54916\tvalid_0's binary_logloss: 0.276991\n"}
+,{"stream_name":"stdout","time":119.871043746,"data":"[250]\tvalid_0's average_precision: 0.559128\tvalid_0's binary_logloss: 0.257665\n"}
+,{"stream_name":"stdout","time":126.933468775,"data":"[300]\tvalid_0's average_precision: 0.568159\tvalid_0's binary_logloss: 0.241762\n"}
+,{"stream_name":"stdout","time":133.609089698,"data":"[350]\tvalid_0's average_precision: 0.573415\tvalid_0's binary_logloss: 0.227704\n"}
+,{"stream_name":"stdout","time":139.999078234,"data":"[400]\tvalid_0's average_precision: 0.577294\tvalid_0's binary_logloss: 0.21268\n"}
+,{"stream_name":"stdout","time":146.602601335,"data":"[450]\tvalid_0's average_precision: 0.582922\tvalid_0's binary_logloss: 0.201402\n"}
+,{"stream_name":"stdout","time":152.896096929,"data":"[500]\tvalid_0's average_precision: 0.586816\tvalid_0's binary_logloss: 0.189796\n"}
+,{"stream_name":"stdout","time":159.097091731,"data":"[550]\tvalid_0's average_precision: 0.589871\tvalid_0's binary_logloss: 0.181227\n"}
+,{"stream_name":"stdout","time":159.097231823,"data":"Did not meet early stopping. Best iteration is:\n"}
+,{"stream_name":"stdout","time":159.097311987,"data":"[550]\tvalid_0's average_precision: 0.589871\tvalid_0's binary_logloss: 0.181227\n"}
+,{"stream_name":"stdout","time":167.08451647,"data":"Summary:\n"}
+,{"stream_name":"stdout","time":167.084554782,"data":"{\n"}
+,{"stream_name":"stdout","time":167.084561587,"data":"  \"train_rows\": 413378,\n"}
+,{"stream_name":"stdout","time":167.084567212,"data":"  \"valid_rows\": 88581,\n"}
+,{"stream_name":"stdout","time":167.084572159,"data":"  \"holdout_rows\": 88581,\n"}
+,{"stream_name":"stdout","time":167.084591684,"data":"  \"features\": 444,\n"}
+,{"stream_name":"stdout","time":167.084595946,"data":"  \"best_iteration\": 550,\n"}
+,{"stream_name":"stdout","time":167.084600227,"data":"  \"train_fraud_rate\": 0.03516878014795175,\n"}
+,{"stream_name":"stdout","time":167.084604263,"data":"  \"valid_fraud_rate\": 0.03434145019812375,\n"}
+,{"stream_name":"stdout","time":167.084608578,"data":"  \"holdout_fraud_rate\": 0.03480430340592226,\n"}
+,{"stream_name":"stdout","time":167.084612651,"data":"  \"valid_uid_known_pct\": 0.4609905058646888,\n"}
+,{"stream_name":"stdout","time":167.084616537,"data":"  \"holdout_uid_known_pct\": 0.44605502308621486,\n"}
+,{"stream_name":"stdout","time":167.084620113,"data":"  \"train_cutoff\": 10437998.1,\n"}
+,{"stream_name":"stdout","time":167.084623929,"data":"  \"valid_cutoff\": 13151845.999999998\n"}
+,{"stream_name":"stdout","time":167.084627711,"data":"}\n"}
+,{"stream_name":"stdout","time":167.084631239,"data":"Metrics:\n"}
+,{"stream_name":"stdout","time":167.091414116,"data":"            segment  rows  fraud_rate   pr_auc  roc_auc\n"}
+,{"stream_name":"stdout","time":167.091449648,"data":"       valid_global 88581    0.034341 0.589871 0.922691\n"}
+,{"stream_name":"stdout","time":167.091454555,"data":"    valid_uid_known 40835    0.023313 0.607848 0.952501\n"}
+,{"stream_name":"stdout","time":167.091458846,"data":"  valid_uid_unknown 47746    0.043773 0.605226 0.901385\n"}
+,{"stream_name":"stdout","time":167.091462878,"data":"     holdout_global 88581    0.034804 0.530326 0.900354\n"}
+,{"stream_name":"stdout","time":167.091467047,"data":"  holdout_uid_known 39512    0.019336 0.447485 0.900462\n"}
+,{"stream_name":"stdout","time":167.091471608,"data":"holdout_uid_unknown 49069    0.047260 0.563604 0.888120\n"}
+,{"stream_name":"stdout","time":167.091475408,"data":"Baseline complete.\n"}
+,{"stream_name":"stderr","time":170.869249699,"data":"/usr/local/lib/python3.12/dist-packages/mistune.py:435: SyntaxWarning: invalid escape sequence '\\|'\n"}
+,{"stream_name":"stderr","time":170.869412812,"data":"  cells[i][c] = re.sub('\\\\\\\\\\|', '|', cell)\n"}
+,{"stream_name":"stderr","time":171.242062502,"data":"/usr/local/lib/python3.12/dist-packages/nbconvert/filters/filter_links.py:36: SyntaxWarning: invalid escape sequence '\\_'\n"}
+,{"stream_name":"stderr","time":171.242112773,"data":"  text = re.sub(r'_', '\\_', text) # Escape underscores in display text\n"}
+,{"stream_name":"stderr","time":172.25524897,"data":"[NbConvertApp] Converting notebook __script__.ipynb to html\n"}
+,{"stream_name":"stderr","time":174.18614346,"data":"[NbConvertApp] Writing 368532 bytes to __results__.html\n"}
+]

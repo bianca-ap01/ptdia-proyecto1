@@ -1,0 +1,27 @@
+{
+  "train_cutoff": 10437998.1,
+  "valid_cutoff": 13151845.999999998,
+  "valid_pr_auc": 0.5954063477908068,
+  "valid_roc_auc": 0.9256858445035767,
+  "holdout_pr_auc": 0.5436306873675363,
+  "holdout_roc_auc": 0.9050742126226828,
+  "best_iteration": 547,
+  "features": 185,
+  "recommendations": {
+    "low_priority": 112,
+    "keep": 44,
+    "review": 20,
+    "monitor": 9
+  },
+  "top_monitor_features": [
+    "D1n",
+    "D2n",
+    "D15n",
+    "D10n",
+    "C9",
+    "id_02",
+    "id_20",
+    "D11",
+    "id_01"
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "train_rows": 590540,
+  "test_rows": 506691,
+  "train_fraud_rate_pct": 3.4990009144173126,
+  "weekly_fraud_rate_min_pct": 1.8522992671337681,
+  "weekly_fraud_rate_max_pct": 5.061181735942485,
+  "late_rows_known_uid_pct": 42.76424966979375,
+  "adversarial_roc_auc": 1.0,
+  "max_abs_corr_isFraud": 0.38305975102060325,
+  "high_missing_features_gt80pct": 74,
+  "high_numeric_shift_ks_gt020": 4
+}

@@ -1,0 +1,4 @@
+model,features,uid_features_added,best_iteration,train_cutoff,valid_cutoff
+base,185,0,547,10437998.1,13151845.999999998
+uid_freq,200,15,549,10437998.1,13151845.999999998
+uid_freq_amt,235,50,548,10437998.1,13151845.999999998

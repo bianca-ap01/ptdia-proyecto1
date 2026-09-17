@@ -1,0 +1,2 @@
+cutoff_quantile,cutoff_transactiondt,candidate_uid_count,crossing_uid_count,all_rows_in_crossing_uid_pct,late_rows_known_uid_pct,late_known_uid_fraud_rate,late_unknown_uid_fraud_rate,late_known_rows,late_unknown_rows
+0.8,12192853.600000001,222477,21375,30.11667287567311,42.76424966979375,0.02005622871624297,0.04513313609467456,50508,67600

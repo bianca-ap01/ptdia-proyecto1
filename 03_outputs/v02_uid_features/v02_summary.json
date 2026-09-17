@@ -1,0 +1,26 @@
+[
+  {
+    "model": "base",
+    "features": 185,
+    "uid_features_added": 0,
+    "best_iteration": 547,
+    "train_cutoff": 10437998.1,
+    "valid_cutoff": 13151845.999999998
+  },
+  {
+    "model": "uid_freq",
+    "features": 200,
+    "uid_features_added": 15,
+    "best_iteration": 549,
+    "train_cutoff": 10437998.1,
+    "valid_cutoff": 13151845.999999998
+  },
+  {
+    "model": "uid_freq_amt",
+    "features": 235,
+    "uid_features_added": 50,
+    "best_iteration": 548,
+    "train_cutoff": 10437998.1,
+    "valid_cutoff": 13151845.999999998
+  }
+]

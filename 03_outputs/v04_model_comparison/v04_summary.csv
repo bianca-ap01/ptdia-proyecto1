@@ -1,0 +1,5 @@
+model,kind,status,features,best_iteration,elapsed_seconds,train_cutoff,valid_cutoff
+lgbm_keep,lgbm,complete,44,649,29.735066413879395,10437998.1,13151845.999999998
+lgbm_keep_monitor,lgbm,complete,53,649,30.952799797058105,10437998.1,13151845.999999998
+xgb_keep_monitor,xgb,complete,53,500,33.55432438850403,10437998.1,13151845.999999998
+cat_keep_monitor,cat,complete,53,499,63.181562662124634,10437998.1,13151845.999999998

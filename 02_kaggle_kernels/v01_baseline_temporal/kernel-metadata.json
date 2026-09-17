@@ -1,0 +1,16 @@
+{
+  "id": "biancaaguinaga/p1-ieee-fraud-v01-baseline-temporal",
+  "title": "p1-ieee-fraud-v01-baseline-temporal",
+  "code_file": "main.py",
+  "language": "python",
+  "kernel_type": "script",
+  "is_private": true,
+  "enable_gpu": false,
+  "enable_internet": false,
+  "competition_sources": [
+    "ieee-fraud-detection"
+  ],
+  "dataset_sources": [],
+  "kernel_sources": [],
+  "model_sources": []
+}

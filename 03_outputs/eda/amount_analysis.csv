@@ -1,0 +1,2 @@
+transaction_amt_skew,multi_decimal_pct,multi_decimal_fraud_rate,non_multi_decimal_fraud_rate,iqr_outlier_pct,iqr_outlier_fraud_rate,non_outlier_fraud_rate,amt_p50,amt_p95,amt_p99
+14.374452888265429,43.63955024215125,0.035373231047421703,0.03469328277714516,11.257831814949029,0.05072049577329202,0.03299443954676772,68.76900100708008,445.0,1104.0
