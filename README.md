@@ -27,8 +27,10 @@ Estructura del trabajo de modelado.
 ## Documentos principales
 
 - `00_brief/Project 1.pdf`
+- `00_brief/UTEC_2026_1__Planificación_y_Toma_de_Decisiones_en_IA (1).pdf`
 - `01_planning/plan_modelado_eda.md`
 - `01_planning/decision_log_modelado.md`
+- `01_planning/auditoria_rubrica_profesor.md`
 - `05_reports/modelado_consolidado.md`
 
 ## Decision actual
