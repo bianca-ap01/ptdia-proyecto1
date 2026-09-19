@@ -17,3 +17,14 @@ Thumbs.db
 # Temporary outputs
 tmp/
 *.tmp
+
+# LaTeX build byproducts
+*.aux
+*.log
+*.out
+*.nav
+*.snm
+*.toc
+*.fls
+*.fdb_latexmk
+*.synctex.gz

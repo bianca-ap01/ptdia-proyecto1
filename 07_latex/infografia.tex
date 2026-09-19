@@ -1,0 +1,62 @@
+\documentclass[a3paper,landscape]{article}
+\usepackage[provide=*,spanish]{babel}
+\usepackage{fontspec}
+\setsansfont{Latin Modern Sans}\renewcommand{\familydefault}{\sfdefault}
+\usepackage[margin=12mm]{geometry}
+\usepackage{tikz,xcolor,hyperref}
+\usetikzlibrary{arrows.meta,positioning,shadows.blur}
+\pagestyle{empty}
+\definecolor{navy}{HTML}{14324C}\definecolor{teal}{HTML}{008A89}
+\definecolor{mint}{HTML}{E4F5F2}\definecolor{blue}{HTML}{E9F1FA}
+\definecolor{gold}{HTML}{FFF2DC}\definecolor{coral}{HTML}{FCEBE6}
+\newcommand{\cardtitle}[1]{{\color{navy}\bfseries\fontsize{20}{23}\selectfont #1}}
+\begin{document}
+\fontsize{14}{17}\selectfont
+\noindent\begin{tikzpicture}[x=1cm,y=1cm,>=Latex,
+card/.style={draw=navy!18,rounded corners=4mm,very thick,align=left,text width=7.8cm,minimum width=8.5cm,minimum height=6.0cm,inner sep=6mm},
+path/.style={->,line width=2.3pt,teal,rounded corners=5mm}]
+\fill[navy] (-.2,23.55) rectangle (39.15,26.7);
+\node[anchor=west,text=white,font=\bfseries\fontsize{27}{30}\selectfont] at (.45,25.5){Fraude financiero: un sistema que aprende, decide y se adapta};
+\node[anchor=west,text=white!80,font=\fontsize{14}{17}\selectfont] at (.5,24.25){IEEE-CIS · Proyecto 1 · Planificación y Toma de Decisiones en IA};
+\node[card,fill=blue,anchor=north west] (d) at (.2,22.5){\cardtitle{01 \quad DATOS}\\[4mm]
+Transacción + identidad unidas por \texttt{TransactionID}.\\[4mm]
+\textbf{590\,540} casos etiquetados; \textbf{3.50\%} fraude en train.\\[3mm]
+La fuente de competencia sin etiquetas no permite evaluar rendimiento.};
+\node[card,fill=mint,anchor=north west] (e) at (10.0,22.5){\cardtitle{02 \quad EXPLORACIÓN}\\[4mm]
+Tasa semanal reportada: \textbf{1.85--5.06\%}.\\[4mm]
+Faltantes, monto y diferencias entre UID conocido / desconocido.\\[3mm]
+Cambio en la distribución observable no prueba por sí solo concept drift.};
+\node[card,fill=gold,anchor=north west] (p) at (19.8,22.5){\cardtitle{03 \quad PREPARACIÓN}\\[4mm]
+Orden por tiempo: \textbf{70\% / 15\% / 15\%}.\\[4mm]
+Imputación y codificación ajustadas en el pasado.\\[3mm]
+Variables históricas sólo con eventos previos a cada transacción.};
+\node[card,fill=blue,anchor=north west] (m) at (29.6,22.5){\cardtitle{04 \quad MODELO}\\[4mm]
+V01 LightGBM, cifras del equipo:\\[2mm]
+\textbf{PR-AUC 0.5436} y ROC-AUC 0.9051 en prueba temporal.\\[3mm]
+V01 supera V01b y candidatos V04 en holdout.};
+\node[card,fill=coral,anchor=north west] (a) at (29.6,13.0){\cardtitle{05 \quad ACCIÓN}\\[4mm]
+V05: aprobar / revisión humana / escalar.\\[4mm]
+\textbf{66.17\%} del fraude enviado a revisión o escalamiento; revisión \textbf{5.10\%}.\\[3mm]
+Antes de operar, cumplir cupo de 5\% exacto.};
+\node[card,fill=mint,anchor=north west] (s) at (19.8,13.0){\cardtitle{06 \quad SERVICIO}\\[4mm]
+Propuesta: API + imagen versionada + Cloud Run.\\[4mm]
+Guardar score, acción, latencia y versión con acceso controlado.\\[3mm]
+El despliegue aún requiere pruebas de carga y de integración.};
+\node[card,fill=blue,anchor=north west] (v) at (10.0,13.0){\cardtitle{07 \quad VIGILANCIA}\\[4mm]
+Distribución: KS / PSI y faltantes.\\[3mm]
+Con etiquetas tardías: PR-AUC, Brier, costo y cobertura por segmento.\\[3mm]
+Ventanas móviles de 7 y 30 días frente a referencia.};
+\node[card,fill=gold,anchor=north west] (r) at (.2,13.0){\cardtitle{08 \quad ADAPTACIÓN}\\[4mm]
+Recalibrar, ajustar umbrales o reentrenar.\\[4mm]
+Comparar olvido en \textbf{4 / 8 / 12 semanas} sobre los mismos bloques futuros.\\[3mm]
+Protocolo propuesto; falta medir su efecto.};
+\draw[path] (d.east)--(e.west);\draw[path] (e.east)--(p.west);
+\draw[path] (p.east)--(m.west);\draw[path] (m.south)--(a.north);
+\draw[path] (a.west)--(s.east);\draw[path] (s.west)--(v.east);
+\draw[path] (v.west)--(r.east);
+\draw[path] (r.south) -- ++(0,-1) -| (38.7,19.5) -- (m.east);
+\node[anchor=west,align=left,text width=37cm,font=\small,text=navy] at (.45,4.4){\textbf{Decisión responsable:} el score bruto decide con la política V05; una probabilidad calibrada requiere ajuste sólo con datos anteriores. Una alerta de cambio solicita validación temporal antes de promover una nueva versión.};
+\draw[navy!30] (.45,3.75)--(38.6,3.75);
+\node[anchor=west,text width=37cm,align=left,font=\footnotesize,text=navy!85] at (.45,2.7){\textbf{Fuente:} consigna UTEC, taller de despliegue GCP y artefactos V01--V06 del repositorio. Los resultados de ventanas deslizantes quedan como protocolo de adaptación propuesto.};
+\end{tikzpicture}
+\end{document}

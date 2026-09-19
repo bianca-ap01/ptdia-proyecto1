@@ -1,0 +1,130 @@
+\documentclass[aspectratio=169,10pt]{beamer}
+\usepackage[provide=*,spanish]{babel}
+\usepackage{fontspec}
+\setsansfont{Latin Modern Sans}
+\usepackage{booktabs,tabularx,tikz}
+\usetikzlibrary{arrows.meta,positioning}
+\definecolor{navy}{HTML}{14324C}\definecolor{teal}{HTML}{008A89}\definecolor{pale}{HTML}{EAF5F4}
+\setbeamercolor{structure}{fg=teal}\setbeamercolor{frametitle}{fg=white,bg=navy}
+\setbeamercolor{block title}{fg=white,bg=navy}\setbeamercolor{block body}{fg=navy,bg=pale}
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{footline}{\hfill\insertframenumber\hspace{4mm}\vspace{2mm}}
+\title{Sistema adaptativo de detección de fraude}
+\subtitle{Datos no estacionarios · IEEE-CIS · Proyecto 1}
+\author{Equipo: \underline{\hspace{6cm}}}
+\institute{UTEC · Planificación y Toma de Decisiones en IA}
+\date{2026-1}
+\begin{document}
+\begin{frame}\titlepage\note{Presentación de 15 a 20 minutos; completar nombres antes de entregar.}\end{frame}
+\begin{frame}{1. El problema y la acción}\small
+\begin{columns}[T]\column{.55\linewidth}
+\begin{itemize}\item Fraude minoritario: 3.50\% en train, según el EDA del equipo.
+\item Cambian patrones, clientes y prevalencia a lo largo del tiempo.
+\item Cada caso recibe un score y una acción: aprobar, revisar o escalar.
+\end{itemize}
+\column{.42\linewidth}\begin{block}{Tres objetivos}
+Detectar fraude, respetar la capacidad humana y reducir fricción de usuarios legítimos.
+\end{block}\end{columns}
+\vfill\footnotesize{No suponemos que los datos futuros sigan exactamente la distribución del entrenamiento.}
+\end{frame}
+\begin{frame}{2. Evidencia temporal y preparación}\small
+\begin{columns}[T]\column{.5\linewidth}
+\begin{block}{Observaciones reportadas}
+590\,540 transacciones etiquetadas; fraude semanal 1.85--5.06\%; 74 atributos con $>80\%$ de faltantes.
+\end{block}
+\begin{itemize}\item Diferencias entre UID conocido y desconocido.
+\item Separación observable de train/test no demuestra por sí sola cambio en $P(Y\mid X)$.
+\end{itemize}
+\column{.48\linewidth}\begin{block}{Evaluación}
+70\% entrenamiento $\rightarrow$ 15\% validación $\rightarrow$ 15\% prueba futura.
+\end{block}
+\begin{itemize}\item Ajustar preprocesamiento sólo con pasado.
+\item Sin tiempo absoluto entre predictores.
+\item Agregaciones históricas disponibles antes de cada caso.
+\end{itemize}\end{columns}
+\end{frame}
+\begin{frame}{3. Modelos: qué medimos}\small
+\begin{tabularx}{\linewidth}{@{}p{.28\linewidth}XX@{}}\toprule
+Modelo & Papel & Estado\\\midrule
+V01 LightGBM & Baseline temporal principal & Mejor holdout entre versiones: PR-AUC 0.5436.\\
+V01b LightGBM full & Control con todas las features & No mejora holdout: PR-AUC 0.5303.\\
+V02 UID features & Memoria histórica por entidad & Mejora UID conocido; empeora UID desconocido.\\
+V04 XGBoost/CatBoost & Comparación avanzada & Ningún candidato supera V01.\\\bottomrule
+\end{tabularx}
+\vfill\begin{block}{Métrica principal}
+Área bajo precisión--recall para fraude minoritario; reportar también ROC-AUC, Brier y comportamiento por ventana.
+\end{block}
+\footnotesize Para cubrir literalmente dos modelos tradicionales, se recomienda añadir regresión logística y bosque aleatorio al notebook final con el mismo split temporal.
+\end{frame}
+\begin{frame}{4. Resultados V01 reportados}\small
+\begin{center}\begin{tabular}{@{}lrrr@{}}\toprule
+Bloque & Fraude & PR-AUC & ROC-AUC\\\midrule
+Validación & 3.43\% & 0.5954 & 0.9257\\
+Prueba futura & 3.48\% & 0.5436 & 0.9051\\
+Prueba UID conocido & 1.93\% & 0.5159 & 0.9020\\
+Prueba UID desconocido & 4.73\% & 0.5632 & 0.8933\\\bottomrule
+\end{tabular}\end{center}
+\begin{block}{Lectura}Caída global de 0.0518 en PR-AUC. Es evidencia de degradación temporal y justifica monitoreo por ventanas y protocolo de adaptación.\end{block}
+\end{frame}
+\begin{frame}{5. La decisión importa tanto como el ranking}\small
+\begin{columns}[T]\column{.50\linewidth}
+\begin{block}{Política V05: score bruto}
+$s<0.459783$: aprobar.\\
+$0.459783\leq s<0.779122$: revisión.\\
+$s\geq0.779122$: escalar con control humano.
+\end{block}
+Costos simulados: fraude aprobado 100; legítima escalada 10; revisión 2.
+\column{.47\linewidth}\begin{block}{Prueba reportada}
+Costo/txn \textbf{1.3680}; fraude enviado \textbf{66.17\%}; revisión \textbf{5.10\%}; escalamiento \textbf{2.48\%}.
+\end{block}
+La revisión supera el objetivo de 5\%. Ajustar umbrales y cupos antes de operar.
+\end{columns}\end{frame}
+\begin{frame}{6. Arquitectura y nivel de autonomía}\small
+\begin{center}\begin{tikzpicture}[node distance=2mm,>=Latex,font=\footnotesize,
+card/.style={draw=teal,rounded corners,fill=pale,align=center,text width=22mm,minimum height=12mm}]
+\node[card](a){Datos + identidad};\node[card,right=of a](b){Variables temporales};
+\node[card,right=of b](c){Modelo y score};\node[card,right=of c](d){Política + cupo};
+\node[card,right=of d](e){Acción y auditoría};
+\foreach \x/\y in {a/b,b/c,c/d,d/e}{\draw[->,thick,teal](\x)--(\y);}
+\end{tikzpicture}\end{center}
+\begin{itemize}\item Aprobar bajo riesgo de forma automática; revisión humana en incertidumbre.
+\item Escalamiento con verificación adicional y ruta de apelación.
+\item Cambio de modelo sólo tras evaluación temporal y aprobación del equipo.
+\end{itemize}
+\begin{block}{Calibración V06 reportada}Brier 0.0479 $\rightarrow$ 0.0219; verificar que el calibrador sólo vio datos anteriores al holdout.\end{block}
+\end{frame}
+\begin{frame}{7. Despliegue propuesto}\small
+\begin{columns}[T]\column{.5\linewidth}\begin{block}{Camino de producción}
+FastAPI $\rightarrow$ Docker $\rightarrow$ Cloud Build / Artifact Registry $\rightarrow$ Cloud Run.
+\end{block}
+\column{.48\linewidth}\begin{block}{Observabilidad}
+Logs minimizados $\rightarrow$ métricas de tráfico, latencia, proporción revisada y etiquetas tardías.
+\end{block}\end{columns}
+\vspace{5mm}
+\begin{itemize}\item Versionar modelo, preprocesamiento, calibrador y umbrales.
+\item Probar costos, latencia, acceso a datos y volumen antes de desplegar.
+\end{itemize}
+\vfill\footnotesize{El servicio cloud es una propuesta de diseño basada en el taller GCP: API, Docker, Artifact Registry, Cloud Build y Cloud Run.}
+\end{frame}
+\begin{frame}{8. Detectar cambio y comparar olvido}\small
+\begin{tabularx}{\linewidth}{@{}p{.26\linewidth}XX@{}}\toprule
+Señal & Sin esperar etiquetas & Cuando llegan etiquetas\\\midrule
+Entradas y score & KS, PSI, faltantes y percentiles & Distinguir si afectan errores.\\
+Resultado y operación & Cupo de revisión y escalamiento & PR-AUC, recall, Brier, costo y segmentos.\\\bottomrule
+\end{tabularx}
+\vspace{4mm}\begin{block}{Experimento pendiente}
+En cada bloque semanal futuro, comparar entrenamiento histórico frente a ventanas móviles de \textbf{4, 8 y 12 semanas}; mismas fechas de evaluación, sólo etiquetas disponibles al entrenar.
+\end{block}
+\end{frame}
+\begin{frame}{9. Síntesis y tareas de cierre}\small
+\begin{enumerate}\item V01 y V05: resultados previos reportados; corroborarlos con notebooks y particiones.
+\item Ejecutar dos enfoques tradicionales y boosting con los CSV originales.
+\item Cuantificar PR-AUC y costo por ventana, incluido el experimento de olvido.
+\item Aplicar un cupo $\leq5\%$ y medir fricción sobre compras legítimas.
+\end{enumerate}
+\begin{block}{Mensaje final}Predicción, decisión y adaptación forman un mismo ciclo; cada actualización necesita validación temporal y trazabilidad.\end{block}
+\end{frame}
+\begin{frame}{Infografía del ciclo completo}\centering
+\includegraphics[width=\textwidth,height=.8\textheight,keepaspectratio]{infografia.pdf}
+\end{frame}
+\end{document}

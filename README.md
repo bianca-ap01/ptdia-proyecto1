@@ -11,6 +11,7 @@ Estructura del trabajo de modelado.
 | `04_scripts/` | Scripts locales posteriores a los kernels. | Politica de decision V05 y robustez V06. |
 | `05_reports/` | Reportes narrativos por version. | Material base para la entrega final. |
 | `06_delivery/` | Artefactos finales alineados a rubrica. | Informe de 8 paginas, arquitectura, despliegue, drift, infografia y guion. |
+| `07_latex/` | Entregables compilables en LaTeX. | Informe PDF, presentación PDF e infografía PDF. |
 
 ## Versiones
 
@@ -40,6 +41,9 @@ Estructura del trabajo de modelado.
 - `06_delivery/protocolo_drift_adaptacion.md`
 - `06_delivery/infografia_final_mermaid.md`
 - `06_delivery/guion_presentacion.md`
+- `07_latex/informe.pdf`
+- `07_latex/presentacion.pdf`
+- `07_latex/infografia.pdf`
 
 ## Decision actual
 
