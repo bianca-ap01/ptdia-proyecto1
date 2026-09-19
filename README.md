@@ -10,6 +10,7 @@ Estructura del trabajo de modelado.
 | `03_outputs/` | Resultados descargados o generados por version. | Metricas, predicciones, reportes, logs y graficos. |
 | `04_scripts/` | Scripts locales posteriores a los kernels. | Politica de decision V05 y robustez V06. |
 | `05_reports/` | Reportes narrativos por version. | Material base para la entrega final. |
+| `06_delivery/` | Artefactos finales alineados a rubrica. | Informe de 8 paginas, arquitectura, despliegue, drift, infografia y guion. |
 
 ## Versiones
 
@@ -28,10 +29,17 @@ Estructura del trabajo de modelado.
 
 - `00_brief/Project 1.pdf`
 - `00_brief/UTEC_2026_1__Planificación_y_Toma_de_Decisiones_en_IA (1).pdf`
+- `00_brief/Taller_Despliegue_GCP.pptx.pdf`
 - `01_planning/plan_modelado_eda.md`
 - `01_planning/decision_log_modelado.md`
 - `01_planning/auditoria_rubrica_profesor.md`
 - `05_reports/modelado_consolidado.md`
+- `06_delivery/informe_tecnico_8_paginas.md`
+- `06_delivery/arquitectura_sistema_mermaid.md`
+- `06_delivery/propuesta_despliegue_gcp.md`
+- `06_delivery/protocolo_drift_adaptacion.md`
+- `06_delivery/infografia_final_mermaid.md`
+- `06_delivery/guion_presentacion.md`
 
 ## Decision actual
 
