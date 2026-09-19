@@ -1,0 +1,14 @@
+{
+  "train_rows": 413378,
+  "valid_rows": 88581,
+  "holdout_rows": 88581,
+  "features": 185,
+  "best_iteration": 547,
+  "train_fraud_rate": 0.03516878014795175,
+  "valid_fraud_rate": 0.03434145019812375,
+  "holdout_fraud_rate": 0.03480430340592226,
+  "valid_uid_known_pct": 0.4609905058646888,
+  "holdout_uid_known_pct": 0.44605502308621486,
+  "train_cutoff": 10437998.1,
+  "valid_cutoff": 13151845.999999998
+}
