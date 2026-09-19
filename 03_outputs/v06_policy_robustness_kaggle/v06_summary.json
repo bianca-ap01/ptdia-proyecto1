@@ -1,0 +1,52 @@
+{
+  "base_holdout": [
+    {
+      "policy_type": "global",
+      "cost_per_txn": 1.3809281900181753,
+      "fraud_detection_rate": 0.6879662666234188,
+      "fraud_miss_rate": 0.31203373337658125,
+      "review_rate": 0.05065420349736399,
+      "escalate_rate": 0.03779591560266874,
+      "approve_rate": 0.9115498808999672
+    },
+    {
+      "policy_type": "segmented_uid",
+      "cost_per_txn": 1.372438784840993,
+      "fraud_detection_rate": 0.6655854686993189,
+      "fraud_miss_rate": 0.33441453130068116,
+      "review_rate": 0.047764193224280604,
+      "escalate_rate": 0.028155021957304613,
+      "approve_rate": 0.9240807848184148
+    }
+  ],
+  "calibration": [
+    {
+      "split": "valid",
+      "score": "pred",
+      "brier": 0.04403764328659908,
+      "mean_score": 0.14034181398851725,
+      "fraud_rate": 0.03434145019812375
+    },
+    {
+      "split": "valid",
+      "score": "pred_iso",
+      "brier": 0.01998356723484925,
+      "mean_score": 0.034341450198123756,
+      "fraud_rate": 0.03434145019812375
+    },
+    {
+      "split": "holdout",
+      "score": "pred",
+      "brier": 0.04787700980972795,
+      "mean_score": 0.14303872807747403,
+      "fraud_rate": 0.03480430340592226
+    },
+    {
+      "split": "holdout",
+      "score": "pred_iso",
+      "brier": 0.02191578617645987,
+      "mean_score": 0.03547829671266653,
+      "fraud_rate": 0.03480430340592226
+    }
+  ]
+}

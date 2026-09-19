@@ -483,9 +483,11 @@ Por UID en holdout, V01 comparable tambien supera a los candidatos auditados:
 
 **Artefactos esperados:**
 
+- `p1/02_kaggle_kernels/v05_policy_decision/main.py`
 - `p1/04_scripts/v05_policy_decision.py`
 - `p1/03_outputs/v05_policy_decision/policy_thresholds.csv`
-- `p1/v05_policy_resultados.md`
+- `p1/03_outputs/v05_policy_decision_kaggle/`
+- `p1/05_reports/v05_policy_resultados.md`
 
 **Resultado ejecutado:**
 
@@ -534,11 +536,13 @@ Comparacion en holdout:
 
 **Artefactos esperados:**
 
+- `p1/02_kaggle_kernels/v06_policy_robustness/main.py`
 - `p1/04_scripts/v06_policy_robustness.py`
 - `p1/03_outputs/v06_policy_robustness/global_policy_sensitivity.csv`
 - `p1/03_outputs/v06_policy_robustness/segmented_uid_policy_sensitivity.csv`
 - `p1/03_outputs/v06_policy_robustness/calibration_summary.csv`
-- `p1/v06_policy_robustness_resultados.md`
+- `p1/03_outputs/v06_policy_robustness_kaggle/`
+- `p1/05_reports/v06_policy_robustness_resultados.md`
 
 **Resultado ejecutado:**
 
@@ -547,7 +551,6 @@ Sensibilidad global en holdout:
 | Escenario | Costo por transaccion | Fraude detectado | Revision | Escalamiento | Aprobacion automatica |
 | --- | ---: | ---: | ---: | ---: | ---: |
 | base | 1.3809 | 68.80% | 5.07% | 3.78% | 91.15% |
-| friction_high | 1.5068 | 63.12% | 4.52% | 1.96% | 93.53% |
 | fraud_high | 2.3357 | 75.15% | 4.99% | 7.34% | 87.67% |
 | capacity_tight | 1.5100 | 63.93% | 3.10% | 3.77% | 93.13% |
 | capacity_loose | 1.1695 | 75.35% | 9.63% | 2.87% | 87.50% |

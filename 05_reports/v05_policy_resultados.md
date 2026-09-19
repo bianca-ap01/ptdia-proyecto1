@@ -1,5 +1,8 @@
 # V05 - Politica de decision basada en riesgo
 
+Kernel Kaggle publico:
+https://www.kaggle.com/code/biancaaguinaga/p1-ieee-fraud-v05-policy-decision
+
 ## Objetivo
 
 Convertir el score probabilistico del baseline V01 en una decision operativa. Esta etapa no intenta entrenar un modelo nuevo; usa el mejor modelo defendible hasta ahora para responder una pregunta distinta: que hacer con cada transaccion segun su riesgo.
@@ -109,6 +112,7 @@ La decision tecnica es mantener V01 como modelo base y usar V05 para reportar el
 
 ## Artefactos
 
+- `p1/02_kaggle_kernels/v05_policy_decision/main.py`
 - `p1/04_scripts/v05_policy_decision.py`
 - `p1/03_outputs/v05_policy_decision/policy_thresholds.csv`
 - `p1/03_outputs/v05_policy_decision/policy_segment_results.csv`
@@ -116,6 +120,7 @@ La decision tecnica es mantener V01 como modelo base y usar V05 para reportar el
 - `p1/03_outputs/v05_policy_decision/v05_policy_report.md`
 - `p1/03_outputs/v05_policy_decision/valid_policy_decisions.csv`
 - `p1/03_outputs/v05_policy_decision/holdout_policy_decisions.csv`
+- `p1/03_outputs/v05_policy_decision_kaggle/`
 
 ## Siguiente paso recomendado
 

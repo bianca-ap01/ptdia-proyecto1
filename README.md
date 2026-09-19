@@ -6,9 +6,9 @@ Estructura del trabajo de modelado.
 | --- | --- | --- |
 | `00_brief/` | Planteo original del proyecto. | Fuente de requisitos. |
 | `01_planning/` | Plan metodologico y log de decisiones. | Trazabilidad de por que se tomo cada decision. |
-| `02_kaggle_kernels/` | Codigo de notebooks/kernels ejecutados en Kaggle. | Reproducibilidad de EDA y modelos V01-V04. |
+| `02_kaggle_kernels/` | Codigo de notebooks/kernels ejecutados en Kaggle. | Reproducibilidad de EDA y versiones V01-V06. |
 | `03_outputs/` | Resultados descargados o generados por version. | Metricas, predicciones, reportes, logs y graficos. |
-| `04_scripts/` | Scripts locales posteriores a los kernels. | Politica de decision V05 y robustez V06. |
+| `04_scripts/` | Scripts locales de respaldo. | Politica de decision V05 y robustez V06 antes de publicarlas en Kaggle. |
 | `05_reports/` | Reportes narrativos por version. | Material base para la entrega final. |
 | `06_delivery/` | Artefactos finales alineados a rubrica. | Informe de 8 paginas, arquitectura, despliegue, drift, infografia y guion. |
 | `07_latex/` | Entregables compilables en LaTeX. | Informe PDF, presentación PDF e infografía PDF. |
@@ -23,8 +23,19 @@ Estructura del trabajo de modelado.
 | V02 | Features UID | `02_kaggle_kernels/v02_uid_features/` | `03_outputs/v02_uid_features/` | `05_reports/v02_uid_features_resultados.md` |
 | V03 | Auditoria de features | `02_kaggle_kernels/v03_feature_audit/` | `03_outputs/v03_feature_audit/` | `05_reports/v03_feature_audit_resultados.md` |
 | V04 | Comparacion de modelos | `02_kaggle_kernels/v04_model_comparison/` | `03_outputs/v04_model_comparison/` | `05_reports/v04_model_comparison_resultados.md` |
-| V05 | Politica de decision | `04_scripts/v05_policy_decision.py` | `03_outputs/v05_policy_decision/` | `05_reports/v05_policy_resultados.md` |
-| V06 | Robustez y calibracion | `04_scripts/v06_policy_robustness.py` | `03_outputs/v06_policy_robustness/` | `05_reports/v06_policy_robustness_resultados.md` |
+| V05 | Politica de decision | `02_kaggle_kernels/v05_policy_decision/` y `04_scripts/v05_policy_decision.py` | `03_outputs/v05_policy_decision/` y `03_outputs/v05_policy_decision_kaggle/` | `05_reports/v05_policy_resultados.md` |
+| V06 | Robustez y calibracion | `02_kaggle_kernels/v06_policy_robustness/` y `04_scripts/v06_policy_robustness.py` | `03_outputs/v06_policy_robustness/` y `03_outputs/v06_policy_robustness_kaggle/` | `05_reports/v06_policy_robustness_resultados.md` |
+
+## Kernels publicos en Kaggle
+
+- EDA: https://www.kaggle.com/code/biancaaguinaga/p1-ieee-fraud-eda
+- V01 baseline temporal: https://www.kaggle.com/code/biancaaguinaga/p1-ieee-fraud-v01-baseline-temporal
+- V01b baseline con todas las features: https://www.kaggle.com/code/biancaaguinaga/p1-ieee-fraud-v01b-full-baseline
+- V02 features UID: https://www.kaggle.com/code/biancaaguinaga/p1-ieee-fraud-v02-uid-features
+- V03 auditoria de features: https://www.kaggle.com/code/biancaaguinaga/p1-ieee-fraud-v03-feature-audit
+- V04 comparacion de modelos: https://www.kaggle.com/code/biancaaguinaga/p1-ieee-fraud-v04-model-comparison
+- V05 politica de decision: https://www.kaggle.com/code/biancaaguinaga/p1-ieee-fraud-v05-policy-decision
+- V06 robustez y calibracion: https://www.kaggle.com/code/biancaaguinaga/p1-ieee-fraud-v06-policy-robustness
 
 ## Documentos principales
 

@@ -1,5 +1,8 @@
 # V06 - Robustez, calibracion y segmentacion de politica
 
+Kernel Kaggle publico:
+https://www.kaggle.com/code/biancaaguinaga/p1-ieee-fraud-v06-policy-robustness
+
 ## Objetivo
 
 Auditar si la politica V05 depende demasiado de una sola eleccion de costos o de una sola politica global. Esta etapa no busca reemplazar el modelo V01 ni la politica V05 fina; busca responder si la recomendacion es estable bajo escenarios razonables.
@@ -90,6 +93,7 @@ Decision: para ranking y umbrales se puede seguir usando el score bruto; para co
 
 ## Artefactos
 
+- `p1/02_kaggle_kernels/v06_policy_robustness/main.py`
 - `p1/04_scripts/v06_policy_robustness.py`
 - `p1/03_outputs/v06_policy_robustness/global_policy_sensitivity.csv`
 - `p1/03_outputs/v06_policy_robustness/segmented_uid_policy_sensitivity.csv`
@@ -97,6 +101,7 @@ Decision: para ranking y umbrales se puede seguir usando el score bruto; para co
 - `p1/03_outputs/v06_policy_robustness/calibration_summary.csv`
 - `p1/03_outputs/v06_policy_robustness/calibration_bins.csv`
 - `p1/03_outputs/v06_policy_robustness/v06_policy_robustness_report.md`
+- `p1/03_outputs/v06_policy_robustness_kaggle/`
 
 ## Proxima etapa
 
