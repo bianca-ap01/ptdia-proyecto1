@@ -4,7 +4,7 @@
 
 El sistema propuesto es un sistema inteligente adaptativo para deteccion de fraude en transacciones electronicas. Cada transaccion recibe un score de riesgo y una decision operativa: aprobar, enviar a revision manual o escalar/bloquear.
 
-Las metricas y decisiones reportadas provienen de kernels publicos de Kaggle para EDA y V01-V06, con outputs descargados al repositorio para trazabilidad.
+Las metricas y decisiones reportadas provienen de kernels publicos de Kaggle para EDA y V01-V07, con outputs descargados al repositorio para trazabilidad.
 
 El caso es relevante porque el fraude financiero combina tres condiciones exigidas por el proyecto:
 
@@ -77,3 +77,4 @@ Con esa regla:
 - V01 queda como modelo base porque tiene mejor holdout PR-AUC global entre las variantes probadas.
 - V05 queda como politica operativa porque reduce costo frente a aprobar todo, revisar top 5% y escalar top 1%.
 - V06 queda como auditoria porque demuestra sensibilidad coherente a costos y necesidad de calibracion.
+- V07 queda como benchmark adicional porque el MLP no supera a LightGBM en holdout.

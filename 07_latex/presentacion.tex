@@ -54,7 +54,7 @@ V04 XGBoost/CatBoost & Comparación avanzada & Ningún candidato supera V01.\\\b
 \vfill\begin{block}{Métrica principal}
 Área bajo precisión--recall para fraude minoritario; reportar también ROC-AUC, Brier y comportamiento por ventana.
 \end{block}
-\footnotesize EDA y V01--V06 están publicados como kernels de Kaggle. Para cubrir literalmente dos modelos tradicionales, se recomienda añadir regresión logística y bosque aleatorio con el mismo split temporal.
+\footnotesize EDA y V01--V07 están publicados como kernels de Kaggle. V07 agrega SGD logística y MLP; un bosque aleatorio simple quedaría como cierre literal opcional.
 \end{frame}
 \begin{frame}{4. Resultados V01 reportados}\small
 \begin{center}\begin{tabular}{@{}lrrr@{}}\toprule
@@ -65,6 +65,7 @@ Prueba UID conocido & 1.93\% & 0.5159 & 0.9020\\
 Prueba UID desconocido & 4.73\% & 0.5632 & 0.8933\\\bottomrule
 \end{tabular}\end{center}
 \begin{block}{Lectura}Caída global de 0.0518 en PR-AUC. Es evidencia de degradación temporal y justifica monitoreo por ventanas y protocolo de adaptación.\end{block}
+\footnotesize V07 confirma que el MLP no supera la referencia tabular: PR-AUC holdout 0.2218 frente a 0.5313 de LightGBM.
 \end{frame}
 \begin{frame}{5. La decisión importa tanto como el ranking}\small
 \begin{columns}[T]\column{.50\linewidth}
@@ -117,8 +118,8 @@ En cada bloque semanal futuro, comparar entrenamiento histórico frente a ventan
 \end{block}
 \end{frame}
 \begin{frame}{9. Síntesis y tareas de cierre}\small
-\begin{enumerate}\item EDA y V01--V06: resultados ejecutados y publicados como kernels Kaggle.
-\item Opcional de rúbrica: ejecutar dos enfoques tradicionales con los CSV originales.
+\begin{enumerate}\item EDA y V01--V07: resultados ejecutados y publicados como kernels Kaggle.
+\item V07: MLP y baseline tradicional no reemplazan a LightGBM.
 \item Cuantificar PR-AUC y costo por ventana, incluido el experimento de olvido.
 \item Aplicar un cupo $\leq5\%$ y medir fricción sobre compras legítimas.
 \end{enumerate}

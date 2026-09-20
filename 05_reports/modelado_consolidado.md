@@ -15,7 +15,7 @@ La decision metodologica central fue tratar el fraude como un problema de rankin
 
 ## 2. Evidencia principal del EDA
 
-El EDA propio y las versiones V01--V06 se ejecutaron como kernels publicos en Kaggle. Sus codigos estan en `p1/02_kaggle_kernels/` y los resultados descargados estan en `p1/03_outputs/`.
+El EDA propio y las versiones V01--V07 se ejecutaron como kernels publicos en Kaggle. Sus codigos estan en `p1/02_kaggle_kernels/` y los resultados descargados estan en `p1/03_outputs/`.
 
 Kernels publicos principales:
 
@@ -27,6 +27,7 @@ Kernels publicos principales:
 - V04: https://www.kaggle.com/code/biancaaguinaga/p1-ieee-fraud-v04-model-comparison
 - V05: https://www.kaggle.com/code/biancaaguinaga/p1-ieee-fraud-v05-policy-decision
 - V06: https://www.kaggle.com/code/biancaaguinaga/p1-ieee-fraud-v06-policy-robustness
+- V07: https://www.kaggle.com/code/biancaaguinaga/p1-ieee-fraud-v07-mlp-benchmark
 
 ### 2.1 Desbalance de clases
 
@@ -112,6 +113,7 @@ El baseline V01 uso:
 | V04 | Comparar modelos y feature sets auditados. | Ningun candidato supera V01. | Mantener V01. |
 | V05 | Convertir score en politica de decision. | Kernel publico completo; holdout: costo 1.3680, fraude detectado 66.17%. | Aceptar como primera politica operativa. |
 | V06 | Evaluar robustez, calibracion y segmentacion. | Kernel publico completo; calibracion mejora Brier; segmentacion UID reduce costo pero detecta menos fraude. | Mantener V05 y recomendar calibracion para probabilidades. |
+| V07 | Comparar MLP y baseline tradicional. | MLP holdout PR-AUC 0.2218; SGD logistic 0.1638; LightGBM referencia 0.5313. | No reemplaza V01; cierra benchmark deep learning/tradicional. |
 
 ## 5. Resultados predictivos
 
@@ -174,6 +176,18 @@ V04 probo modelos con el set auditado:
 | cat_keep_monitor | 0.5383 | 0.4989 | 0.9020 |
 
 Decision: no podar agresivamente. La auditoria sirve para monitorear y entender riesgos, no para eliminar features automaticamente.
+
+### 5.5 Benchmark MLP y tradicional V07
+
+V07 incorporo el notebook EDA de referencia de Fabryzzio como insumo metodologico y comparo tres modelos bajo el mismo split temporal:
+
+| Modelo | Valid PR-AUC | Holdout PR-AUC | Holdout ROC-AUC |
+| --- | ---: | ---: | ---: |
+| LightGBM referencia | 0.5885 | 0.5313 | 0.9055 |
+| SGD logistic tradicional | 0.2974 | 0.1638 | 0.7696 |
+| MLP Keras ponderado | 0.4476 | 0.2218 | 0.8496 |
+
+Decision: el MLP no reemplaza V01. Su aporte es cerrar la comparacion con una red neuronal densa y reforzar que, para datos tabulares anonimizados con faltantes e interacciones, el boosting tabular sigue siendo mas robusto en holdout.
 
 ## 6. Politica de decision
 
@@ -271,10 +285,11 @@ La recomendacion actual es:
 1. Mantener V01 como modelo base principal.
 2. Usar V05 como politica operativa principal.
 3. Usar V06 como soporte de robustez y calibracion.
-4. No adoptar V01b como reemplazo.
-5. No adoptar features UID como modelo unico.
-6. No podar features agresivamente solo por la auditoria V03.
-7. Calibrar el score si se va a reportar como probabilidad.
+4. Mantener V07 como benchmark complementario, no como reemplazo.
+5. No adoptar V01b como reemplazo.
+6. No adoptar features UID como modelo unico.
+7. No podar features agresivamente solo por la auditoria V03.
+8. Calibrar el score si se va a reportar como probabilidad.
 
 Esta decision es conservadora pero defendible. El criterio no fue escoger el experimento con el mayor numero aislado, sino el que mantiene mejor balance entre desempeno futuro, estabilidad, interpretabilidad operacional y riesgo de leakage.
 
@@ -320,7 +335,7 @@ Las decisiones del pipeline se apoyan en evidencia experimental propia y en crit
 | Plan metodologico | `p1/01_planning/plan_modelado_eda.md` |
 | Bitacora de decisiones | `p1/01_planning/decision_log_modelado.md` |
 | Kernels Kaggle | `p1/02_kaggle_kernels/`; enlaces publicos en `README.md` |
-| Outputs | `p1/03_outputs/`, incluidos `v05_policy_decision_kaggle/` y `v06_policy_robustness_kaggle/` |
+| Outputs | `p1/03_outputs/`, incluidos `v05_policy_decision_kaggle/`, `v06_policy_robustness_kaggle/` y `v07_mlp_benchmark_kaggle/` |
 | Scripts locales | `p1/04_scripts/` |
 | Reportes por version | `p1/05_reports/` |
 
@@ -330,4 +345,4 @@ El modelo recomendado para esta etapa es V01, un LightGBM temporal con 185 featu
 
 La politica recomendada es V05: aprobar transacciones de bajo riesgo, revisar riesgo intermedio y escalar riesgo alto. Esta politica reduce el costo frente a reglas simples y detecta una proporcion importante del fraude en holdout.
 
-La entrega debe presentar V06 como evidencia adicional: la decision es sensible a costos de forma coherente, el score necesita calibracion para interpretarse como probabilidad, y la segmentacion UID es prometedora pero no suficientemente clara para adoptarse como politica principal en esta primera version.
+La entrega debe presentar V06 como evidencia adicional: la decision es sensible a costos de forma coherente, el score necesita calibracion para interpretarse como probabilidad, y la segmentacion UID es prometedora pero no suficientemente clara para adoptarse como politica principal en esta primera version. V07 agrega que el MLP no mejora la referencia tabular, por lo que no cambia la recomendacion.

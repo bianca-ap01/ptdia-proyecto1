@@ -33,7 +33,7 @@
 \end{center}
 \vspace{-4pt}\hrule\vspace{4pt}
 
-\textbf{Resumen.} Se diseña y evalúa un sistema inteligente adaptativo para detección de fraude financiero con datos temporales. El sistema integra transacciones e identidad, estima un score con un modelo LightGBM, traduce el score en acciones operativas y propone monitoreo de drift, calibración y reentrenamiento con ventanas deslizantes. Los resultados provienen de artefactos V01--V06 publicados como kernels de Kaggle y descargados al repositorio. La recomendación final es usar V01 como modelo base, V05 como política inicial y V06 como soporte de robustez/calibración.
+\textbf{Resumen.} Se diseña y evalúa un sistema inteligente adaptativo para detección de fraude financiero con datos temporales. El sistema integra transacciones e identidad, estima un score con un modelo LightGBM, traduce el score en acciones operativas y propone monitoreo de drift, calibración y reentrenamiento con ventanas deslizantes. Los resultados provienen de artefactos V01--V07 publicados como kernels de Kaggle y descargados al repositorio. La recomendación final es usar V01 como modelo base, V05 como política inicial y V06 como soporte de robustez/calibración.
 
 \section{Problema, objetivos y restricciones}
 
@@ -73,7 +73,7 @@ Las transacciones se ordenan por \texttt{TransactionDT}. Los primeros 70\% se us
 
 \section{Modelado y evaluación temporal}
 
-La línea base V01 usa LightGBM con 185 atributos y \emph{early stopping}. La selección se justifica por la naturaleza tabular del dataset: variables numéricas, categóricas codificadas, faltantes e interacciones no lineales. Posteriormente se ejecutaron controles: V01b con todas las features, V02 con features UID históricas, V03 de auditoría de variables y V04 con LightGBM, XGBoost y CatBoost sobre sets auditados. EDA y V01--V06 quedan trazables como kernels públicos de Kaggle; V05 y V06 son autocontenidos porque reentrenan el score base antes de calcular política y robustez.
+La línea base V01 usa LightGBM con 185 atributos y \emph{early stopping}. La selección se justifica por la naturaleza tabular del dataset: variables numéricas, categóricas codificadas, faltantes e interacciones no lineales. Posteriormente se ejecutaron controles: V01b con todas las features, V02 con features UID históricas, V03 de auditoría de variables, V04 con LightGBM, XGBoost y CatBoost sobre sets auditados, y V07 con baseline tradicional y MLP. EDA y V01--V07 quedan trazables como kernels públicos de Kaggle.
 
 \begin{table}[H]\centering\small
 \begin{tabularx}{\linewidth}{@{}p{.13\linewidth}X p{.23\linewidth}p{.22\linewidth}@{}}\toprule
@@ -96,9 +96,9 @@ Holdout UID desconocido & 4.73\% & 0.5632 & 0.8933\\\bottomrule
 \end{tabular}
 \end{table}
 
-La caída de PR-AUC entre validación y holdout es consistente con degradación temporal. V02 demuestra que el historial UID sí contiene señal: en holdout UID conocido, \texttt{uid\_freq\_amt} sube de 0.5946 a 0.6831; sin embargo, UID desconocido cae de 0.5458 a 0.5315. Por ello no se adopta como modelo único. V04 confirma que podar agresivamente features reduce señal: el mejor candidato auditado queda en 0.5131 de PR-AUC holdout, por debajo de V01.
+La caída de PR-AUC entre validación y holdout es consistente con degradación temporal. V02 demuestra que el historial UID sí contiene señal: en holdout UID conocido, \texttt{uid\_freq\_amt} sube de 0.5946 a 0.6831; sin embargo, UID desconocido cae de 0.5458 a 0.5315. Por ello no se adopta como modelo único. V04 confirma que podar agresivamente features reduce señal: el mejor candidato auditado queda en 0.5131 de PR-AUC holdout, por debajo de V01. V07 agrega un MLP ponderado y una regresión logística SGD: en holdout obtienen PR-AUC 0.2218 y 0.1638, por debajo de LightGBM de referencia con 0.5313.
 
-\textbf{Nota sobre la rúbrica.} La implementación existente compara tres enfoques avanzados de boosting y varios conjuntos de variables. Para cubrir literalmente ``dos enfoques tradicionales y uno avanzado'', se recomienda agregar una regresión logística regularizada y un bosque aleatorio simple con el mismo split temporal. Esta acción no cambia la recomendación actual, pero cerraría completamente ese ítem formal.
+\textbf{Nota sobre la rúbrica.} V07 agrega un baseline tradicional lineal y un MLP. Si el docente exige literalmente dos modelos tradicionales distintos, aún conviene agregar un bosque aleatorio simple; esto no cambiaría la recomendación actual, pero cerraría ese ítem formal.
 
 \section{Arquitectura, incertidumbre y decisión}
 
@@ -176,7 +176,7 @@ Cada iteración entrena con etiquetas disponibles antes de $t$, calibra en una s
 
 \section{Limitaciones y cierre}
 
-Los costos son normalizados, no monetarios reales; el dataset está anonimizado; la equidad demográfica no puede auditarse directamente; y la política V05 excede levemente el cupo de revisión. Aun así, el proyecto cubre el ciclo de vida solicitado: definición del problema, EDA temporal, modelado, decisión, despliegue y adaptación, con evidencia reproducible en Kaggle para EDA y V01--V06. La recomendación final es V01 + V05 + monitoreo/calibración V06. El siguiente paso para cierre perfecto de rúbrica es ejecutar dos modelos tradicionales adicionales con el mismo split temporal y sumar sus métricas a la tabla comparativa.
+Los costos son normalizados, no monetarios reales; el dataset está anonimizado; la equidad demográfica no puede auditarse directamente; y la política V05 excede levemente el cupo de revisión. Aun así, el proyecto cubre el ciclo de vida solicitado: definición del problema, EDA temporal, modelado, decisión, despliegue y adaptación, con evidencia reproducible en Kaggle para EDA y V01--V07. La recomendación final es V01 + V05 + monitoreo/calibración V06; V07 queda como benchmark complementario.
 
 \section*{Referencias}
 \small

@@ -597,3 +597,32 @@ Calibracion:
 - Reportes, delivery y LaTeX actualizados para mencionar ejecucion publica y outputs descargados.
 
 **Decision posterior:** Mantener V01 como modelo recomendado, V05 como politica operativa y V06 como auditoria de robustez/calibracion. La publicacion de V05/V06 no cambia la conclusion tecnica; fortalece la reproducibilidad y la evidencia para la rubrica.
+
+### 2026-09-19 - Incorporar EDA de referencia y ejecutar V07 MLP
+
+**Etapa:** Experimentacion complementaria.
+
+**Decision:** Revisar el notebook publico `fabryzziomezatorres/ieee-fraud-eda-riesgos`, incorporar sus aportes utiles al EDA y crear V07 para comparar un MLP con un baseline tradicional y LightGBM bajo el split temporal del proyecto.
+
+**Motivo:** El notebook de referencia agrega observaciones utiles: faltantes estructurales de identity, faltantes por bloques V, monto multi-decimal, riesgo de UID recurrente y un benchmark MLP. El MLP responde a una brecha experimental/rubrica: comparar un enfoque de red neuronal contra los modelos tabulares usados hasta ahora.
+
+**Riesgo controlado:** No copiar metricas de otro split ni de otra politica de costos. V07 se ejecuta con nuestro split 70/15/15 y mantiene evaluacion por UID conocido/desconocido para comparabilidad con V01-V06.
+
+**Artefactos esperados:**
+
+- `p1/00_brief/reference_kaggle/fabryzziomezatorres_ieee_fraud_eda_riesgos/`
+- `p1/02_kaggle_kernels/v07_mlp_benchmark/main.py`
+- `p1/03_outputs/v07_mlp_benchmark_kaggle/`
+- `p1/05_reports/v07_mlp_benchmark_resultados.md`
+
+**Resultado ejecutado:** Kernel V07 completo en Kaggle.
+
+Resultados globales:
+
+| Modelo | Valid PR-AUC | Holdout PR-AUC | Holdout ROC-AUC |
+| --- | ---: | ---: | ---: |
+| LightGBM referencia | 0.5885 | 0.5313 | 0.9055 |
+| SGD logistic tradicional | 0.2974 | 0.1638 | 0.7696 |
+| MLP Keras ponderado | 0.4476 | 0.2218 | 0.8496 |
+
+**Decision posterior:** V07 no reemplaza a V01. El MLP queda documentado como benchmark deep learning y la regresion logistica SGD como baseline tradicional. La evidencia refuerza que LightGBM es mas adecuado para esta primera version tabular con faltantes, variables anonimizadas e interacciones no lineales.

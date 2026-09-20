@@ -36,8 +36,8 @@ La rubrica no premia solo "tener un buen modelo". Evalua seis dimensiones:
 | EDA temporal | Cubierto | EDA propio, validacion adversarial, tasa semanal, UID, missingness. | Seleccionar visuales concretos para el documento final. |
 | Preprocesamiento temporal | Cubierto | Split temporal, exclusion de variables temporales crudas y protocolo de ventanas deslizantes. | Sin brecha relevante. |
 | Division temporal train/valid/test | Cubierto | V01-V06 usan 70/15/15 temporal; V05/V06 autocontenidos reentrenan V01 antes de politica/robustez. | Diagrama incluido en delivery y LaTeX. |
-| Al menos dos enfoques tradicionales y uno avanzado | Parcial | LightGBM, XGBoost, CatBoost. | El profesor dice "tradicionales" y "avanzado"; conviene etiquetar: Logistic Regression/Random Forest como tradicionales, boosting como avanzado. Si no se entrenan, justificar que LightGBM/XGBoost/CatBoost son comparativos de boosting, pero podria bajar puntos. |
-| Comparacion de modelos | Cubierto parcialmente | V04 compara LightGBM/XGBoost/CatBoost sobre features auditadas y el consolidado incluye tabla final. | Si el docente exige literalmente modelos tradicionales, agregar Logistic Regression y Random Forest. |
+| Al menos dos enfoques tradicionales y uno avanzado | Cubierto parcialmente | V07 agrega SGD logistic tradicional y MLP; V04 cubre LightGBM/XGBoost/CatBoost. | Si el docente exige dos tradicionales estrictos, aun faltaria Random Forest o HistGradientBoosting simple. |
+| Comparacion de modelos | Cubierto | V04 compara boosting; V07 compara LightGBM, baseline tradicional y MLP con tabla final. | Sin brecha relevante salvo lectura estricta de "dos tradicionales". |
 | Degradacion temporal | Cubierto | Validacion vs holdout, metricas por ventana. | Incluir grafico o tabla de degradacion temporal. |
 | Propuesta de despliegue | Cubierto | `06_delivery/propuesta_despliegue_gcp.md` adapta el taller GCP a FastAPI, Docker, Artifact Registry, Cloud Build y Cloud Run. | Sin brecha relevante. |
 | Deteccion de drift | Cubierto | `06_delivery/protocolo_drift_adaptacion.md` define KS/PSI, score drift, missingness, performance y alertas. | Sin brecha relevante. |
@@ -48,9 +48,9 @@ La rubrica no premia solo "tener un buen modelo". Evalua seis dimensiones:
 
 ## 3. Riesgo principal de nota
 
-La parte de modelado esta fuerte y ya se completo la mayor parte de sistema/adaptacion/producto final. La brecha principal remanente es interpretar literalmente la exigencia de modelos "tradicionales":
+La parte de modelado esta fuerte y ya se completo la mayor parte de sistema/adaptacion/producto final. V07 reduce la brecha de experimentacion al agregar baseline tradicional y MLP. La brecha remanente, si se interpreta literalmente, es tener dos modelos tradicionales distintos:
 
-- falta posiblemente un baseline tradicional adicional si el docente interpreta estrictamente "dos enfoques tradicionales y uno avanzado".
+- falta posiblemente un segundo baseline tradicional adicional si el docente interpreta estrictamente "dos enfoques tradicionales y uno avanzado".
 
 ## 4. Acciones recomendadas antes de entregar
 
@@ -59,15 +59,13 @@ La parte de modelado esta fuerte y ya se completo la mayor parte de sistema/adap
 1. Verificar que el PDF final compile correctamente.
 2. Mantener los enlaces publicos de Kaggle y GitHub visibles.
 3. Preparar defensa oral de por que V05/V06 son politica y auditoria, no modelos nuevos.
-4. Si hay tiempo, entrenar Logistic Regression y Random Forest para cerrar la lectura literal de la rubrica.
+4. Si hay tiempo, entrenar Random Forest o HistGradientBoosting simple para cerrar la lectura literal de dos tradicionales.
 
 ### Prioridad 2 - fortalecer modelado segun enunciado
 
-1. Evaluar si conviene entrenar un baseline tradicional adicional:
-   - Logistic Regression con imputacion/encoding simple;
-   - Random Forest o HistGradientBoosting como tradicional/intermedio;
-   - mantener LightGBM/XGBoost/CatBoost como avanzados.
-2. Si el tiempo no alcanza, justificar que V01-V04 comparan modelos de boosting y que V05-V06 cubren decision, calibracion y robustez operacional.
+1. V07 ya entreno un baseline tradicional lineal y un MLP.
+2. Si se busca cierre literal maximo, agregar Random Forest o HistGradientBoosting como segundo tradicional/intermedio.
+3. Si el tiempo no alcanza, justificar que V04 cubre boosting avanzado y V07 cubre comparacion tradicional/deep learning.
 
 ### Prioridad 3 - producto final
 
@@ -100,10 +98,10 @@ Lo construido hasta ahora cubre las secciones de:
 - sensibilidad de costos;
 - arquitectura, despliegue, drift/adaptacion, informe, infografia y presentacion.
 
-Para maximizar nota, la unica mejora tecnica de bajo riesgo pendiente es agregar modelos tradicionales simples si el profesor exige esa categoria de forma estricta.
+Para maximizar nota, la unica mejora tecnica de bajo riesgo pendiente es agregar un segundo modelo tradicional simple si el profesor exige esa categoria de forma estricta.
 
 ## 6. Plan inmediato sugerido
 
 1. Recompilar PDFs en `07_latex/`.
 2. Confirmar que README y reportes enlazan los kernels publicos.
-3. Evaluar si ejecutamos un baseline tradicional rapido para cubrir explicitamente la frase "dos enfoques tradicionales y uno avanzado".
+3. Evaluar si ejecutamos un segundo baseline tradicional rapido para cubrir explicitamente la frase "dos enfoques tradicionales y uno avanzado".

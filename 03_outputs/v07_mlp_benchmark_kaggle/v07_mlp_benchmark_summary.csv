@@ -1,0 +1,4 @@
+model,elapsed_seconds,features,best_iteration,train_cutoff,valid_cutoff,n_iter,best_epoch,epochs_run,best_val_pr_auc_keras
+lightgbm_v01_feature_surface,58.95382022857666,186,549.0,10437998.1,13151845.999999998,,,,
+sgd_logistic_traditional,29.601356029510498,186,,10437998.1,13151845.999999998,35.0,,,
+mlp_keras_weighted,27.658638954162598,186,,10437998.1,13151845.999999998,,9.0,12.0,0.43885910511016846

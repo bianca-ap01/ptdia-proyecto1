@@ -6,7 +6,7 @@ El proyecto desarrolla un sistema inteligente adaptativo para deteccion de fraud
 
 El problema es relevante porque el fraude cambia en el tiempo. Los atacantes modifican patrones, los clientes cambian comportamiento y la distribucion de las variables no permanece fija. Por ello, el sistema no puede evaluarse como un clasificador estatico con split aleatorio; debe respetar el orden temporal y contemplar concept drift.
 
-Los experimentos EDA y V01-V06 quedaron publicados como kernels publicos de Kaggle y sus outputs fueron descargados al repositorio. Esto permite auditar codigo, particiones, resultados y reportes asociados a cada decision.
+Los experimentos EDA y V01-V07 quedaron publicados como kernels publicos de Kaggle y sus outputs fueron descargados al repositorio. Esto permite auditar codigo, particiones, resultados y reportes asociados a cada decision.
 
 ## 2. Objetivos, restricciones y metricas
 
@@ -74,6 +74,7 @@ El modelo base V01 fue LightGBM con 185 features. Se eligio porque el dataset es
 | V04 | LightGBM/XGBoost/CatBoost auditados | Ninguno supera V01 | Mantener V01 |
 | V05 | Politica approve/review/escalate | Costo holdout 1.3680 | Politica operativa |
 | V06 | Robustez y calibracion | Brier 0.0479 a 0.0219 | Auditoria y calibracion |
+| V07 | MLP y baseline tradicional | MLP holdout PR-AUC 0.2218 | No reemplaza V01 |
 
 Resultados V01:
 
@@ -85,6 +86,8 @@ Resultados V01:
 | Holdout UID desconocido | 4.73% | 0.5632 | 0.8933 |
 
 La caida de validacion a holdout confirma degradacion temporal. Aun asi, V01 fue el modelo mas robusto entre los comparados.
+
+V07 agrego un MLP Keras ponderado y una regresion logistica SGD. En holdout, el MLP obtuvo PR-AUC 0.2218 y la regresion 0.1638, por debajo de la referencia LightGBM de V07 con 0.5313. Por eso V07 cierra la comparacion experimental, pero no cambia la seleccion del modelo.
 
 ## 6. Modulo de decision
 

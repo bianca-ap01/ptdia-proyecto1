@@ -28,4 +28,4 @@ flowchart TB
 
 ## Mensaje para exposicion
 
-El sistema no es un clasificador estatico. Es un ciclo adaptativo: aprende de datos historicos, decide bajo restricciones operativas, monitorea drift y actualiza umbrales o modelo cuando el entorno cambia. La trazabilidad queda respaldada por kernels publicos de Kaggle para EDA y V01-V06.
+El sistema no es un clasificador estatico. Es un ciclo adaptativo: aprende de datos historicos, decide bajo restricciones operativas, monitorea drift y actualiza umbrales o modelo cuando el entorno cambia. La trazabilidad queda respaldada por kernels publicos de Kaggle para EDA y V01-V07.

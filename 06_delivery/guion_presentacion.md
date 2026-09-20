@@ -38,7 +38,8 @@ No construimos solo un clasificador. Construimos el diseno de un sistema adaptat
 - V01b con todas las features no mejoro.
 - V02 UID mejoro UID conocido pero empeoro UID desconocido.
 - V04 XGBoost/CatBoost/feature sets auditados no superaron V01.
-- EDA y V01-V06 estan publicados como kernels publicos en Kaggle.
+- V07 MLP no supero LightGBM: holdout PR-AUC 0.2218 vs 0.5313.
+- EDA y V01-V07 estan publicados como kernels publicos en Kaggle.
 
 ### 4. Decision operativa
 
@@ -61,7 +62,7 @@ No construimos solo un clasificador. Construimos el diseno de un sistema adaptat
 | Por que PR-AUC y no accuracy? | Porque el fraude es 3.50%; accuracy puede ser alta prediciendo todo como legitimo. |
 | Por que no split aleatorio? | Porque el sistema operaria sobre futuro; mezclar tiempos genera leakage temporal. |
 | Por que no usar `TransactionDT` como predictor? | Porque codifica posicion temporal absoluta y podria sobreajustar al periodo. |
-| Por que V01 y no V01b? | V01b usa mas features, pero empeora holdout global. |
+| Por que V01 y no V01b/MLP? | V01b usa mas features pero empeora holdout; V07 MLP queda por debajo de LightGBM. |
 | Por que no adoptar UID features? | Mejoran UID conocido, pero empeoran UID desconocido y la mejora global es minima. |
 | Que pasa si cambia el costo de bloquear? | V06 muestra que la politica escala menos y reduce friccion cuando ese costo sube. |
 | Como detectan drift? | Con KS/PSI, cambios de score, missingness, PR-AUC por ventana y costo operativo. |
@@ -69,4 +70,4 @@ No construimos solo un clasificador. Construimos el diseno de un sistema adaptat
 
 ## Cierre recomendado
 
-La solucion final recomendada es V01 + V05 + monitoreo/calibracion V06. Es una decision conservadora, pero defendible: prioriza generalizacion temporal, trazabilidad publica en Kaggle, costos operativos y capacidad de adaptacion.
+La solucion final recomendada es V01 + V05 + monitoreo/calibracion V06, con V07 como benchmark adicional. Es una decision conservadora, pero defendible: prioriza generalizacion temporal, trazabilidad publica en Kaggle, costos operativos y capacidad de adaptacion.

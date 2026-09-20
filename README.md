@@ -6,7 +6,7 @@ Estructura del trabajo de modelado.
 | --- | --- | --- |
 | `00_brief/` | Planteo original del proyecto. | Fuente de requisitos. |
 | `01_planning/` | Plan metodologico y log de decisiones. | Trazabilidad de por que se tomo cada decision. |
-| `02_kaggle_kernels/` | Codigo de notebooks/kernels ejecutados en Kaggle. | Reproducibilidad de EDA y versiones V01-V06. |
+| `02_kaggle_kernels/` | Codigo de notebooks/kernels ejecutados en Kaggle. | Reproducibilidad de EDA y versiones V01-V07. |
 | `03_outputs/` | Resultados descargados o generados por version. | Metricas, predicciones, reportes, logs y graficos. |
 | `04_scripts/` | Scripts locales de respaldo. | Politica de decision V05 y robustez V06 antes de publicarlas en Kaggle. |
 | `05_reports/` | Reportes narrativos por version. | Material base para la entrega final. |
@@ -25,6 +25,7 @@ Estructura del trabajo de modelado.
 | V04 | Comparacion de modelos | `02_kaggle_kernels/v04_model_comparison/` | `03_outputs/v04_model_comparison/` | `05_reports/v04_model_comparison_resultados.md` |
 | V05 | Politica de decision | `02_kaggle_kernels/v05_policy_decision/` y `04_scripts/v05_policy_decision.py` | `03_outputs/v05_policy_decision/` y `03_outputs/v05_policy_decision_kaggle/` | `05_reports/v05_policy_resultados.md` |
 | V06 | Robustez y calibracion | `02_kaggle_kernels/v06_policy_robustness/` y `04_scripts/v06_policy_robustness.py` | `03_outputs/v06_policy_robustness/` y `03_outputs/v06_policy_robustness_kaggle/` | `05_reports/v06_policy_robustness_resultados.md` |
+| V07 | Benchmark MLP y EDA complementario | `02_kaggle_kernels/v07_mlp_benchmark/` | `03_outputs/v07_mlp_benchmark_kaggle/` | `05_reports/v07_mlp_benchmark_resultados.md` |
 
 ## Kernels publicos en Kaggle
 
@@ -36,6 +37,7 @@ Estructura del trabajo de modelado.
 - V04 comparacion de modelos: https://www.kaggle.com/code/biancaaguinaga/p1-ieee-fraud-v04-model-comparison
 - V05 politica de decision: https://www.kaggle.com/code/biancaaguinaga/p1-ieee-fraud-v05-policy-decision
 - V06 robustez y calibracion: https://www.kaggle.com/code/biancaaguinaga/p1-ieee-fraud-v06-policy-robustness
+- V07 benchmark MLP: https://www.kaggle.com/code/biancaaguinaga/p1-ieee-fraud-v07-mlp-benchmark
 
 ## Documentos principales
 
@@ -58,4 +60,4 @@ Estructura del trabajo de modelado.
 
 ## Decision actual
 
-Mantener V01 como modelo base documentado, usar V05 como primera politica operativa, y usar V06 como auditoria de robustez/calibracion para la entrega consolidada.
+Mantener V01 como modelo base documentado, usar V05 como primera politica operativa, usar V06 como auditoria de robustez/calibracion y usar V07 como benchmark adicional MLP/tradicional para cerrar experimentacion.

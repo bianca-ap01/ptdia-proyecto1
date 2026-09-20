@@ -1,0 +1,28 @@
+[
+  {
+    "model": "lightgbm_v01_feature_surface",
+    "elapsed_seconds": 58.95382022857666,
+    "features": 186,
+    "best_iteration": 549,
+    "train_cutoff": 10437998.1,
+    "valid_cutoff": 13151845.999999998
+  },
+  {
+    "model": "sgd_logistic_traditional",
+    "elapsed_seconds": 29.601356029510498,
+    "features": 186,
+    "n_iter": 35,
+    "train_cutoff": 10437998.1,
+    "valid_cutoff": 13151845.999999998
+  },
+  {
+    "model": "mlp_keras_weighted",
+    "elapsed_seconds": 27.658638954162598,
+    "features": 186,
+    "best_epoch": 9,
+    "epochs_run": 12,
+    "best_val_pr_auc_keras": 0.43885910511016846,
+    "train_cutoff": 10437998.1,
+    "valid_cutoff": 13151845.999999998
+  }
+]

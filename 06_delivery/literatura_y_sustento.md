@@ -13,6 +13,7 @@ Uso en el proyecto:
 - V01 se selecciona por holdout PR-AUC.
 - V04 compara modelos con PR-AUC.
 - V05 traduce ranking a decision operativa y fue publicado como kernel reproducible.
+- V07 compara MLP y baseline tradicional con PR-AUC bajo el mismo split temporal.
 
 ## Concept drift y evaluacion temporal
 
