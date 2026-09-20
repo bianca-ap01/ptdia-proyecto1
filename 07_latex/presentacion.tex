@@ -54,7 +54,7 @@ V04 XGBoost/CatBoost & Comparación avanzada & Ningún candidato supera V01.\\\b
 \vfill\begin{block}{Métrica principal}
 Área bajo precisión--recall para fraude minoritario; reportar también ROC-AUC, Brier y comportamiento por ventana.
 \end{block}
-\footnotesize Para cubrir literalmente dos modelos tradicionales, se recomienda añadir regresión logística y bosque aleatorio al notebook final con el mismo split temporal.
+\footnotesize EDA y V01--V06 están publicados como kernels de Kaggle. Para cubrir literalmente dos modelos tradicionales, se recomienda añadir regresión logística y bosque aleatorio con el mismo split temporal.
 \end{frame}
 \begin{frame}{4. Resultados V01 reportados}\small
 \begin{center}\begin{tabular}{@{}lrrr@{}}\toprule
@@ -77,7 +77,7 @@ Costos simulados: fraude aprobado 100; legítima escalada 10; revisión 2.
 \column{.47\linewidth}\begin{block}{Prueba reportada}
 Costo/txn \textbf{1.3680}; fraude enviado \textbf{66.17\%}; revisión \textbf{5.10\%}; escalamiento \textbf{2.48\%}.
 \end{block}
-La revisión supera el objetivo de 5\%. Ajustar umbrales y cupos antes de operar.
+La revisión supera el objetivo de 5\%. Ajustar umbrales y cupos antes de operar. V05 fue ejecutado como kernel público autocontenido.
 \end{columns}\end{frame}
 \begin{frame}{6. Arquitectura y nivel de autonomía}\small
 \begin{center}\begin{tikzpicture}[node distance=2mm,>=Latex,font=\footnotesize,
@@ -91,7 +91,7 @@ card/.style={draw=teal,rounded corners,fill=pale,align=center,text width=22mm,mi
 \item Escalamiento con verificación adicional y ruta de apelación.
 \item Cambio de modelo sólo tras evaluación temporal y aprobación del equipo.
 \end{itemize}
-\begin{block}{Calibración V06 reportada}Brier 0.0479 $\rightarrow$ 0.0219; verificar que el calibrador sólo vio datos anteriores al holdout.\end{block}
+\begin{block}{Calibración V06 pública}Brier 0.0479 $\rightarrow$ 0.0219; score bruto para ranking y score calibrado para probabilidad.\end{block}
 \end{frame}
 \begin{frame}{7. Despliegue propuesto}\small
 \begin{columns}[T]\column{.5\linewidth}\begin{block}{Camino de producción}
@@ -117,8 +117,8 @@ En cada bloque semanal futuro, comparar entrenamiento histórico frente a ventan
 \end{block}
 \end{frame}
 \begin{frame}{9. Síntesis y tareas de cierre}\small
-\begin{enumerate}\item V01 y V05: resultados previos reportados; corroborarlos con notebooks y particiones.
-\item Ejecutar dos enfoques tradicionales y boosting con los CSV originales.
+\begin{enumerate}\item EDA y V01--V06: resultados ejecutados y publicados como kernels Kaggle.
+\item Opcional de rúbrica: ejecutar dos enfoques tradicionales con los CSV originales.
 \item Cuantificar PR-AUC y costo por ventana, incluido el experimento de olvido.
 \item Aplicar un cupo $\leq5\%$ y medir fricción sobre compras legítimas.
 \end{enumerate}

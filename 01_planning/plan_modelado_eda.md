@@ -26,7 +26,7 @@ Por lo tanto, el modelo no debe evaluarse solo como clasificador estatico. Debe 
 
 ## 2. Evidencia del EDA
 
-El EDA propio se ejecuto en Kaggle como kernel privado:
+El EDA propio se ejecuto en Kaggle como kernel publico:
 
 `biancaaguinaga/p1-ieee-fraud-eda`
 

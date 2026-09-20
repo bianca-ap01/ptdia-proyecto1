@@ -4,6 +4,8 @@
 
 El sistema propuesto es un sistema inteligente adaptativo para deteccion de fraude en transacciones electronicas. Cada transaccion recibe un score de riesgo y una decision operativa: aprobar, enviar a revision manual o escalar/bloquear.
 
+Las metricas y decisiones reportadas provienen de kernels publicos de Kaggle para EDA y V01-V06, con outputs descargados al repositorio para trazabilidad.
+
 El caso es relevante porque el fraude financiero combina tres condiciones exigidas por el proyecto:
 
 - los datos llegan en el tiempo;

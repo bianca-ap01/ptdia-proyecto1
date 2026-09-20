@@ -86,6 +86,7 @@ Un nuevo modelo solo se promueve si:
 - V05 es la politica vigente.
 - V06 muestra que los umbrales son sensibles a capacidad y costos.
 - V03 identifica features que deben monitorearse: especialmente `D1n`, `D2n`, `D10n`, `D15n`, `C9`, `id_02`, `id_20`, `D11`, `id_01`.
+- V05 y V06 tienen kernels publicos autocontenidos y outputs descargados, lo que permite auditar la politica y la calibracion.
 
 ## Referencias metodologicas
 

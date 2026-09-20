@@ -21,51 +21,45 @@ La rubrica no premia solo "tener un buen modelo". Evalua seis dimensiones:
 
 | Exigencia del PDF | Estado actual | Evidencia actual | Brecha |
 | --- | --- | --- | --- |
-| Caso de uso concreto y relevante | Cubierto parcialmente | Fraude financiero IEEE-CIS esta definido en el plan y consolidado. | Falta explicitar mejor contexto real, usuarios del sistema y alcance de decisiones. |
-| Objetivos del sistema | Cubierto parcialmente | `modelado_consolidado.md` define deteccion, score y decisiones. | Falta separar objetivos tecnicos, operativos y sociales en una tabla final. |
-| Restricciones | Parcial | Se menciona capacidad de revision 5%, drift, costos normalizados y no usar tiempo crudo. | Falta lista formal de restricciones: datos anonimizados, latencia, capacidad humana, no automatizar bloqueo total sin revision, privacidad. |
+| Caso de uso concreto y relevante | Cubierto | Fraude financiero IEEE-CIS esta definido en el plan, consolidado e informe tecnico. | Mantener el alcance: apoyo a decision, no bloqueo irreversible sin control humano. |
+| Objetivos del sistema | Cubierto | `06_delivery/objetivos_restricciones_metricas.md` separa objetivos tecnicos, temporales, operativos, adaptativos y sociales. | Sin brecha relevante. |
+| Restricciones | Cubierto | `06_delivery/objetivos_restricciones_metricas.md` formaliza temporalidad, capacidad humana, costos, privacidad, drift y autonomia limitada. | Sin brecha relevante. |
 | Metricas tecnicas | Cubierto | PR-AUC, ROC-AUC y resultados por segmento. | Agregar F1/recall/precision si estan disponibles o justificar por que PR-AUC domina. |
-| Metricas de decision | Cubierto | V05 costo esperado, fraude detectado, revision, escalamiento. | Mejorar tabla de costo y umbrales en el informe de 8 paginas. |
-| Metricas sociales | Debil | Se menciona friccion de cliente y UID conocido/desconocido. | Falta formalizar cobertura, friccion, falsos positivos y riesgo de trato desigual por segmento. |
-| Arquitectura del sistema | Falta como visual | La logica existe en texto, no en diagrama final. | Crear diagrama de arquitectura end-to-end. |
-| Adquisicion e integracion de datos | Parcial | Kernels cargan IEEE-CIS y unen transaction/identity. | Falta describir flujo de datos como sistema real. |
+| Metricas de decision | Cubierto | V05 costo esperado, fraude detectado, revision, escalamiento; kernel publico V05 completo. | Sin brecha relevante. |
+| Metricas sociales | Cubierto | Se formalizan friccion, legitimas escaladas, UID conocido/desconocido y revision humana. | Mantener limitacion: no hay atributos demograficos para equidad directa. |
+| Arquitectura del sistema | Cubierto | `06_delivery/arquitectura_sistema_mermaid.md` e informe tecnico incluyen diagrama end-to-end. | Sin brecha relevante. |
+| Adquisicion e integracion de datos | Cubierto | Kernels cargan IEEE-CIS, unen transaction/identity y el despliegue describe flujo real. | Sin brecha relevante. |
 | Modulo predictivo | Cubierto | V01 LightGBM como modelo base. | Documentar entradas/salidas del modulo. |
 | Modulo de toma de decisiones | Cubierto | V05 approve/review/escalate. | Incluir en arquitectura y explicar responsable humano vs automatizado. |
-| Manejo de incertidumbre | Parcial | V06 calibracion. | Explicar que score bruto no es probabilidad y donde entra calibracion. |
-| Componente de accion | Parcial | V05 define approve/review/escalate. | Describir alertas, cola de revision y escalamiento operativo. |
+| Manejo de incertidumbre | Cubierto | V06 publico reporta calibracion isotonica y Brier; delivery explica score bruto vs probabilidad. | Sin brecha relevante. |
+| Componente de accion | Cubierto | V05 define approve/review/escalate; arquitectura y despliegue describen cola y escalamiento. | Sin brecha relevante. |
 | EDA temporal | Cubierto | EDA propio, validacion adversarial, tasa semanal, UID, missingness. | Seleccionar visuales concretos para el documento final. |
-| Preprocesamiento temporal | Parcial | Split temporal, exclusion de variables temporales crudas. | Falta explicar ventanas deslizantes/rezagos como propuesta de adaptacion. |
-| Division temporal train/valid/test | Cubierto | V01-V04 usan 70/15/15 temporal. | Incluir diagrama simple de particion temporal. |
+| Preprocesamiento temporal | Cubierto | Split temporal, exclusion de variables temporales crudas y protocolo de ventanas deslizantes. | Sin brecha relevante. |
+| Division temporal train/valid/test | Cubierto | V01-V06 usan 70/15/15 temporal; V05/V06 autocontenidos reentrenan V01 antes de politica/robustez. | Diagrama incluido en delivery y LaTeX. |
 | Al menos dos enfoques tradicionales y uno avanzado | Parcial | LightGBM, XGBoost, CatBoost. | El profesor dice "tradicionales" y "avanzado"; conviene etiquetar: Logistic Regression/Random Forest como tradicionales, boosting como avanzado. Si no se entrenan, justificar que LightGBM/XGBoost/CatBoost son comparativos de boosting, pero podria bajar puntos. |
-| Comparacion de modelos | Cubierto parcialmente | V04 compara LightGBM/XGBoost/CatBoost sobre features auditadas. | Falta una tabla final clara y quizas un baseline tradicional simple. |
+| Comparacion de modelos | Cubierto parcialmente | V04 compara LightGBM/XGBoost/CatBoost sobre features auditadas y el consolidado incluye tabla final. | Si el docente exige literalmente modelos tradicionales, agregar Logistic Regression y Random Forest. |
 | Degradacion temporal | Cubierto | Validacion vs holdout, metricas por ventana. | Incluir grafico o tabla de degradacion temporal. |
-| Propuesta de despliegue | Debil | V05/V06 sugieren decision operativa, pero no despliegue completo. | Crear seccion: batch/stream, frecuencia, monitoreo, responsables, escalabilidad. |
-| Deteccion de drift | Parcial | KS train-valid/holdout en V03 y adversarial validation en EDA. | Falta presentarlo como protocolo de drift operativo. |
-| Adaptacion al drift | Debil | V06 recomienda recalibracion y ventanas. | Falta simular o proponer explicitamente ventanas deslizantes y reentrenamiento periodico. |
-| Documento tecnico max. 8 paginas | Pendiente | Existe consolidado largo. | Hay que condensarlo a 8 paginas. |
-| Infografia final | Pendiente | No existe todavia. | Crear infografia de ciclo de vida IA. |
-| Presentacion 15-20 min | Pendiente | No existe deck final. | Preparar guion o slides. |
+| Propuesta de despliegue | Cubierto | `06_delivery/propuesta_despliegue_gcp.md` adapta el taller GCP a FastAPI, Docker, Artifact Registry, Cloud Build y Cloud Run. | Sin brecha relevante. |
+| Deteccion de drift | Cubierto | `06_delivery/protocolo_drift_adaptacion.md` define KS/PSI, score drift, missingness, performance y alertas. | Sin brecha relevante. |
+| Adaptacion al drift | Cubierto | Protocolo propone recalibracion, ajuste de umbrales y reentrenamiento con ventanas deslizantes. | Simular ventanas queda como trabajo futuro deseable. |
+| Documento tecnico max. 8 paginas | Cubierto | `06_delivery/informe_tecnico_8_paginas.md` y `07_latex/informe.pdf`. | Verificar extension final tras compilacion. |
+| Infografia final | Cubierto | `06_delivery/infografia_final_mermaid.md` y `07_latex/infografia.pdf`. | Sin brecha relevante. |
+| Presentacion 15-20 min | Cubierto | `06_delivery/guion_presentacion.md` y `07_latex/presentacion.pdf`. | Completar nombres del equipo. |
 
 ## 3. Riesgo principal de nota
 
-La parte de modelado esta fuerte, pero la rubrica asigna 4 puntos a diseno del sistema y adaptacion, y 4 puntos a calidad del producto. Ahi todavia hay brechas:
+La parte de modelado esta fuerte y ya se completo la mayor parte de sistema/adaptacion/producto final. La brecha principal remanente es interpretar literalmente la exigencia de modelos "tradicionales":
 
-- falta arquitectura visual del sistema;
-- falta propuesta de despliegue;
-- falta protocolo de drift/adaptacion;
-- falta infografia final;
-- falta condensar el documento a maximo 8 paginas;
 - falta posiblemente un baseline tradicional adicional si el docente interpreta estrictamente "dos enfoques tradicionales y uno avanzado".
 
 ## 4. Acciones recomendadas antes de entregar
 
 ### Prioridad 1 - cerrar rubrica tecnica
 
-1. Crear un documento tecnico de maximo 8 paginas.
-2. Agregar diagrama de arquitectura del sistema.
-3. Agregar protocolo de drift y adaptacion con ventanas deslizantes.
-4. Definir objetivos, restricciones y metricas en tabla formal.
-5. Agregar seccion de despliegue: flujo de datos, autonomia, frecuencia de actualizacion, costos y escalabilidad.
+1. Verificar que el PDF final compile correctamente.
+2. Mantener los enlaces publicos de Kaggle y GitHub visibles.
+3. Preparar defensa oral de por que V05/V06 son politica y auditoria, no modelos nuevos.
+4. Si hay tiempo, entrenar Logistic Regression y Random Forest para cerrar la lectura literal de la rubrica.
 
 ### Prioridad 2 - fortalecer modelado segun enunciado
 
@@ -73,7 +67,7 @@ La parte de modelado esta fuerte, pero la rubrica asigna 4 puntos a diseno del s
    - Logistic Regression con imputacion/encoding simple;
    - Random Forest o HistGradientBoosting como tradicional/intermedio;
    - mantener LightGBM/XGBoost/CatBoost como avanzados.
-2. Si el tiempo no alcanza, justificar que V01-V04 comparan modelos de boosting y que la prioridad fue evaluacion temporal robusta.
+2. Si el tiempo no alcanza, justificar que V01-V04 comparan modelos de boosting y que V05-V06 cubren decision, calibracion y robustez operacional.
 
 ### Prioridad 3 - producto final
 
@@ -96,23 +90,20 @@ La parte de modelado esta fuerte, pero la rubrica asigna 4 puntos a diseno del s
 
 ## 5. Decision sobre lo que ya tenemos
 
-Lo construido hasta ahora es una base muy buena para las secciones de:
+Lo construido hasta ahora cubre las secciones de:
 
 - analisis de datos;
 - modelado temporal;
 - comparacion de modelos;
 - politica de decision;
 - calibracion;
-- sensibilidad de costos.
+- sensibilidad de costos;
+- arquitectura, despliegue, drift/adaptacion, informe, infografia y presentacion.
 
-Pero todavia no basta para cubrir "excelente" en toda la rubrica. Para maximizar nota, el siguiente trabajo debe moverse de experimentos de modelo hacia producto final: arquitectura, despliegue, drift/adaptacion, documento de 8 paginas e infografia.
+Para maximizar nota, la unica mejora tecnica de bajo riesgo pendiente es agregar modelos tradicionales simples si el profesor exige esa categoria de forma estricta.
 
 ## 6. Plan inmediato sugerido
 
-1. Crear `informe_tecnico_8_paginas.md` como version condensada para entrega.
-2. Crear diagramas:
-   - arquitectura del sistema;
-   - split temporal;
-   - ciclo de adaptacion ante drift.
-3. Crear `protocolo_drift_adaptacion.md` con ventanas fijas/deslizantes, metricas de monitoreo y acciones.
-4. Evaluar si ejecutamos un baseline tradicional rapido para cubrir explicitamente la frase "dos enfoques tradicionales y uno avanzado".
+1. Recompilar PDFs en `07_latex/`.
+2. Confirmar que README y reportes enlazan los kernels publicos.
+3. Evaluar si ejecutamos un baseline tradicional rapido para cubrir explicitamente la frase "dos enfoques tradicionales y uno avanzado".

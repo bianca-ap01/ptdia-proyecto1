@@ -576,3 +576,24 @@ Calibracion:
 **Riesgo controlado:** Evitar que el proyecto recomiende un unico umbral sin mostrar sensibilidad a costos ni verificar calibracion.
 
 **Proxima decision tecnica:** Preparar la version consolidada de modelado para entrega, con comparacion V01-V06, decision final y limitaciones.
+
+### 2026-09-19 - Publicar V05/V06 y actualizar trazabilidad de entrega
+
+**Etapa:** Reproducibilidad, documentacion y cierre de artefactos.
+
+**Decision:** Convertir V05 y V06 en kernels Kaggle publicos autocontenidos, descargar sus outputs y actualizar reportes, delivery y LaTeX para reflejar que EDA y V01-V06 son reproducibles desde Kaggle.
+
+**Motivo:** V05 y V06 ya existian como scripts locales, pero para una entrega defendible no basta con reportar resultados locales. Al publicarlos en Kaggle se mejora la trazabilidad: cualquier evaluador puede revisar codigo, metadata, ejecucion y outputs asociados a la politica de decision y a la auditoria de robustez/calibracion.
+
+**Riesgo controlado:** Evitar que la politica V05 y la calibracion/robustez V06 parezcan decisiones no reproducibles o dependientes del entorno local.
+
+**Evidencia:**
+
+- V05 publico: `https://www.kaggle.com/code/biancaaguinaga/p1-ieee-fraud-v05-policy-decision`
+- V06 publico: `https://www.kaggle.com/code/biancaaguinaga/p1-ieee-fraud-v06-policy-robustness`
+- V05 estado Kaggle: completo; outputs en `p1/03_outputs/v05_policy_decision_kaggle/`.
+- V06 estado Kaggle: completo; outputs en `p1/03_outputs/v06_policy_robustness_kaggle/`.
+- README actualizado con enlaces publicos de EDA y V01-V06.
+- Reportes, delivery y LaTeX actualizados para mencionar ejecucion publica y outputs descargados.
+
+**Decision posterior:** Mantener V01 como modelo recomendado, V05 como politica operativa y V06 como auditoria de robustez/calibracion. La publicacion de V05/V06 no cambia la conclusion tecnica; fortalece la reproducibilidad y la evidencia para la rubrica.

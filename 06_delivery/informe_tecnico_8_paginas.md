@@ -6,6 +6,8 @@ El proyecto desarrolla un sistema inteligente adaptativo para deteccion de fraud
 
 El problema es relevante porque el fraude cambia en el tiempo. Los atacantes modifican patrones, los clientes cambian comportamiento y la distribucion de las variables no permanece fija. Por ello, el sistema no puede evaluarse como un clasificador estatico con split aleatorio; debe respetar el orden temporal y contemplar concept drift.
 
+Los experimentos EDA y V01-V06 quedaron publicados como kernels publicos de Kaggle y sus outputs fueron descargados al repositorio. Esto permite auditar codigo, particiones, resultados y reportes asociados a cada decision.
+
 ## 2. Objetivos, restricciones y metricas
 
 | Elemento | Definicion |
@@ -70,6 +72,8 @@ El modelo base V01 fue LightGBM con 185 features. Se eligio porque el dataset es
 | V02 | UID historicas | Mejora UID conocido, empeora UID desconocido | No adoptar como modelo unico |
 | V03 | Auditoria de features | 44 keep, 9 monitor | Usar para monitoreo |
 | V04 | LightGBM/XGBoost/CatBoost auditados | Ninguno supera V01 | Mantener V01 |
+| V05 | Politica approve/review/escalate | Costo holdout 1.3680 | Politica operativa |
+| V06 | Robustez y calibracion | Brier 0.0479 a 0.0219 | Auditoria y calibracion |
 
 Resultados V01:
 
@@ -109,6 +113,8 @@ Resultado V05 en holdout:
 | V05 | 1.3680 | 66.17% | 5.10% | 2.48% |
 
 V05 se adopta como primera politica operativa porque reduce costo y detecta mas fraude que reglas simples.
+
+V05 se ejecuto tambien como kernel publico autocontenido: reentrena el score base y genera umbrales, decisiones y comparaciones de politica. Esto evita depender solo de archivos locales.
 
 ## 7. Arquitectura y despliegue
 
@@ -165,6 +171,8 @@ flowchart TD
 ```
 
 V06 mostro que el score bruto no esta calibrado: en holdout el score promedio fue 14.30% mientras la tasa real fue 3.48%. La calibracion isotonica redujo Brier de 0.0479 a 0.0219. Por eso el score bruto se usa para ranking y umbrales, pero el score calibrado se recomienda para comunicar probabilidad.
+
+V06 tambien fue ejecutado como kernel publico autocontenido. Sus outputs confirman la sensibilidad de costos y la comparacion entre politica global y politica segmentada por UID.
 
 ## 9. Limitaciones
 

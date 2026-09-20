@@ -15,7 +15,18 @@ La decision metodologica central fue tratar el fraude como un problema de rankin
 
 ## 2. Evidencia principal del EDA
 
-El EDA propio se ejecuto en Kaggle y sus resultados estan en `p1/03_outputs/eda/`.
+El EDA propio y las versiones V01--V06 se ejecutaron como kernels publicos en Kaggle. Sus codigos estan en `p1/02_kaggle_kernels/` y los resultados descargados estan en `p1/03_outputs/`.
+
+Kernels publicos principales:
+
+- EDA: https://www.kaggle.com/code/biancaaguinaga/p1-ieee-fraud-eda
+- V01: https://www.kaggle.com/code/biancaaguinaga/p1-ieee-fraud-v01-baseline-temporal
+- V01b: https://www.kaggle.com/code/biancaaguinaga/p1-ieee-fraud-v01b-full-baseline
+- V02: https://www.kaggle.com/code/biancaaguinaga/p1-ieee-fraud-v02-uid-features
+- V03: https://www.kaggle.com/code/biancaaguinaga/p1-ieee-fraud-v03-feature-audit
+- V04: https://www.kaggle.com/code/biancaaguinaga/p1-ieee-fraud-v04-model-comparison
+- V05: https://www.kaggle.com/code/biancaaguinaga/p1-ieee-fraud-v05-policy-decision
+- V06: https://www.kaggle.com/code/biancaaguinaga/p1-ieee-fraud-v06-policy-robustness
 
 ### 2.1 Desbalance de clases
 
@@ -99,8 +110,8 @@ El baseline V01 uso:
 | V02 | Agregar features UID historicas. | UID conocido mejora, UID desconocido empeora. | No adoptar como modelo unico. |
 | V03 | Auditar importancia, shift y missingness. | 44 `keep`, 9 `monitor`, 20 `review`, 112 `low_priority`. | Usar para monitoreo, no para poda automatica. |
 | V04 | Comparar modelos y feature sets auditados. | Ningun candidato supera V01. | Mantener V01. |
-| V05 | Convertir score en politica de decision. | Holdout: costo 1.3680, fraude detectado 66.17%. | Aceptar como primera politica operativa. |
-| V06 | Evaluar robustez, calibracion y segmentacion. | Calibracion mejora Brier; segmentacion UID reduce costo pero detecta menos fraude. | Mantener V05 y recomendar calibracion para probabilidades. |
+| V05 | Convertir score en politica de decision. | Kernel publico completo; holdout: costo 1.3680, fraude detectado 66.17%. | Aceptar como primera politica operativa. |
+| V06 | Evaluar robustez, calibracion y segmentacion. | Kernel publico completo; calibracion mejora Brier; segmentacion UID reduce costo pero detecta menos fraude. | Mantener V05 y recomendar calibracion para probabilidades. |
 
 ## 5. Resultados predictivos
 
@@ -308,8 +319,8 @@ Las decisiones del pipeline se apoyan en evidencia experimental propia y en crit
 | Planteo | `p1/00_brief/Project 1.pdf` |
 | Plan metodologico | `p1/01_planning/plan_modelado_eda.md` |
 | Bitacora de decisiones | `p1/01_planning/decision_log_modelado.md` |
-| Kernels Kaggle | `p1/02_kaggle_kernels/` |
-| Outputs | `p1/03_outputs/` |
+| Kernels Kaggle | `p1/02_kaggle_kernels/`; enlaces publicos en `README.md` |
+| Outputs | `p1/03_outputs/`, incluidos `v05_policy_decision_kaggle/` y `v06_policy_robustness_kaggle/` |
 | Scripts locales | `p1/04_scripts/` |
 | Reportes por version | `p1/05_reports/` |
 

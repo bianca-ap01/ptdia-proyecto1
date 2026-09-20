@@ -6,7 +6,7 @@
 | ---: | --- | --- |
 | 2 min | Problema, dataset y objetivos | Integrante 1 |
 | 3 min | EDA temporal y decisiones de preparacion | Integrante 2 |
-| 4 min | Modelado V01-V04 y seleccion del modelo | Integrante 3 |
+| 4 min | Modelado V01-V06 y seleccion final | Integrante 3 |
 | 4 min | Politica de decision V05 y robustez V06 | Integrante 4 |
 | 3 min | Arquitectura, despliegue y drift/adaptacion | Integrante 5 |
 | 2 min | Limitaciones, trabajo futuro y cierre | Equipo |
@@ -38,6 +38,7 @@ No construimos solo un clasificador. Construimos el diseno de un sistema adaptat
 - V01b con todas las features no mejoro.
 - V02 UID mejoro UID conocido pero empeoro UID desconocido.
 - V04 XGBoost/CatBoost/feature sets auditados no superaron V01.
+- EDA y V01-V06 estan publicados como kernels publicos en Kaggle.
 
 ### 4. Decision operativa
 
@@ -45,6 +46,7 @@ No construimos solo un clasificador. Construimos el diseno de un sistema adaptat
 - Costos: fraude aprobado 100, legitima escalada 10, revision 2.
 - V05 en holdout: costo 1.3680, fraude detectado 66.17%, revision 5.10%.
 - Supera reglas simples.
+- V06 confirma que el score bruto no debe comunicarse como probabilidad sin calibracion.
 
 ### 5. Drift y despliegue
 
@@ -67,4 +69,4 @@ No construimos solo un clasificador. Construimos el diseno de un sistema adaptat
 
 ## Cierre recomendado
 
-La solucion final recomendada es V01 + V05 + monitoreo V06. Es una decision conservadora, pero defendible: prioriza generalizacion temporal, trazabilidad, costos operativos y capacidad de adaptacion.
+La solucion final recomendada es V01 + V05 + monitoreo/calibracion V06. Es una decision conservadora, pero defendible: prioriza generalizacion temporal, trazabilidad publica en Kaggle, costos operativos y capacidad de adaptacion.

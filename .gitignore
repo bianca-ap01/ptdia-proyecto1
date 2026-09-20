@@ -28,3 +28,4 @@ tmp/
 *.fls
 *.fdb_latexmk
 *.synctex.gz
+.texcache/

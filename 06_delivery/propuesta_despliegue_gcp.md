@@ -13,6 +13,8 @@ El taller de despliegue propone un flujo practico:
 
 Para este proyecto, ese flujo se adapta a un sistema de fraude tabular con LightGBM, politica de decision y monitoreo de drift.
 
+La version de referencia para desplegar es V01 como modelo predictivo, V05 como politica de decision y V06 como soporte de calibracion/robustez. Las tres piezas tienen artefactos versionados en el repositorio y V05/V06 fueron ejecutadas como kernels publicos autocontenidos.
+
 ## Arquitectura de despliegue
 
 ```mermaid
@@ -81,13 +83,14 @@ Salida conceptual:
 | --- | --- | --- |
 | API | FastAPI | Simple para exponer `/predict`, documentacion automatica y baja friccion. |
 | Modelo | LightGBM serializado | Modelo V01 vigente. |
-| Politica | Funcion Python con umbrales V05 | Mantiene decision separada del modelo. |
+| Politica | Funcion Python con umbrales V05 | Mantiene decision separada del modelo; kernel publico reproduce umbrales y resultados. |
 | Contenedor | Docker | Reproducibilidad entre local y nube. |
 | Build | Cloud Build | Automatiza construir imagen desde GitHub. |
 | Registry | Artifact Registry | Almacena imagen Docker versionada. |
 | Serving | Cloud Run | Serverless, escala a cero, apropiado para API HTTP. |
 | Logs | Cloud Logging | Trazabilidad de predicciones y errores. |
 | Monitoreo | Cloud Monitoring + BigQuery/Storage | Drift, latencia, costos, tasa de revision. |
+| Calibrador | Isotonic regression opcional | V06 muestra que el score bruto rankea, pero no debe comunicarse como probabilidad. |
 
 ## Flujo CI/CD
 

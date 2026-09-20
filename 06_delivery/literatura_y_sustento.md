@@ -12,7 +12,7 @@ Uso en el proyecto:
 
 - V01 se selecciona por holdout PR-AUC.
 - V04 compara modelos con PR-AUC.
-- V05 traduce ranking a decision operativa.
+- V05 traduce ranking a decision operativa y fue publicado como kernel reproducible.
 
 ## Concept drift y evaluacion temporal
 
@@ -44,6 +44,7 @@ Uso en el proyecto:
 - V06 encontro que el score bruto promedio en holdout era 14.30% mientras la tasa real era 3.48%.
 - La calibracion isotonica redujo Brier de 0.0479 a 0.0219 y alinio el score promedio con la tasa real.
 - Decision: score bruto para ranking, score calibrado para probabilidad/comunicacion.
+- La corrida publica V06 deja trazables la calibracion, la sensibilidad de costos y la comparacion global vs segmentada.
 
 ## Despliegue en Cloud Run
 

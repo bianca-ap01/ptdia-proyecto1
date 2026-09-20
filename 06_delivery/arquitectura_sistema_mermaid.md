@@ -37,6 +37,8 @@ flowchart LR
 | Monitoreo | Mide drift y degradacion temporal. | V03 feature audit, V06 sensibilidad. |
 | Adaptacion | Recalibra, ajusta umbrales o reentrena. | Protocolo propuesto con ventanas deslizantes. |
 
+Los modulos V05 y V06 estan publicados tambien como kernels Kaggle autocontenidos, por lo que la politica y la auditoria de robustez son reproducibles fuera del entorno local.
+
 ## Flujo de decision
 
 ```mermaid
