@@ -6,7 +6,7 @@ El proyecto desarrolla un sistema inteligente adaptativo para deteccion de fraud
 
 El problema es relevante porque el fraude cambia en el tiempo. Los atacantes modifican patrones, los clientes cambian comportamiento y la distribucion de las variables no permanece fija. Por ello, el sistema no puede evaluarse como un clasificador estatico con split aleatorio; debe respetar el orden temporal y contemplar concept drift.
 
-Los experimentos EDA y V01-V07 quedaron publicados como kernels publicos de Kaggle y sus outputs fueron descargados al repositorio. Esto permite auditar codigo, particiones, resultados y reportes asociados a cada decision.
+Los experimentos EDA y V01-V07 quedaron publicados como kernels publicos de Kaggle y sus outputs fueron descargados al repositorio. Esto permite auditar codigo, particiones, resultados y reportes asociados a cada decision. El informe se organiza para cubrir la rubrica del curso: problema, datos, modelado, sistema adaptativo, producto entregable y presentacion.
 
 ## 2. Objetivos, restricciones y metricas
 
@@ -45,6 +45,9 @@ Estas evidencias justifican:
 - reportar metricas por UID conocido/desconocido;
 - monitorear drift en features, scores y performance;
 - no eliminar outliers de monto, porque los montos extremos tienen mayor tasa de fraude.
+- incorporar `TransactionAmt_multi_decimal` en V07 como senal simple sugerida por el EDA de referencia.
+
+El EDA de referencia de Fabryzzio se uso como complemento metodologico, no como fuente de resultados finales. Se revisaron sus observaciones sobre identity, bloques V, monto, UID y MLP, pero las metricas finales se recalcularon con nuestro split temporal para mantener comparabilidad con V01-V07.
 
 ## 4. Preparacion y validacion temporal
 
@@ -75,6 +78,8 @@ El modelo base V01 fue LightGBM con 185 features. Se eligio porque el dataset es
 | V05 | Politica approve/review/escalate | Costo holdout 1.3680 | Politica operativa |
 | V06 | Robustez y calibracion | Brier 0.0479 a 0.0219 | Auditoria y calibracion |
 | V07 | MLP y baseline tradicional | MLP holdout PR-AUC 0.2218 | No reemplaza V01 |
+
+Cada version responde a una pregunta de decision. V01 fija la referencia, V01b prueba si usar todas las variables mejora, V02 evalua memoria de UID, V03 audita variables, V04 compara modelos tabulares, V05 convierte score en accion, V06 mide incertidumbre y V07 compara MLP y baseline lineal. Esta secuencia documenta el proceso completo, no solo el modelo ganador.
 
 Resultados V01:
 
@@ -177,7 +182,18 @@ V06 mostro que el score bruto no esta calibrado: en holdout el score promedio fu
 
 V06 tambien fue ejecutado como kernel publico autocontenido. Sus outputs confirman la sensibilidad de costos y la comparacion entre politica global y politica segmentada por UID.
 
-## 9. Limitaciones
+## 9. Cobertura de rubrica
+
+| Criterio | Evidencia incluida |
+| --- | --- |
+| Problema, objetivos, restricciones y metricas | Caso de fraude, PR-AUC, costos, revision, escalamiento y calibracion. |
+| Analisis y preparacion | EDA temporal, faltantes, UID, adversarial validation y split 70/15/15. |
+| Modelado y evaluacion | V01-V07, holdout futuro, comparacion de modelos y segmentos UID. |
+| Sistema adaptativo | Arquitectura, acciones, incertidumbre, drift, calibracion y reentrenamiento. |
+| Producto entregado | GitHub, kernels publicos, reportes, informe, presentacion e infografia. |
+| Presentacion | Deck ampliado para 15-20 minutos con justificacion de decisiones. |
+
+## 10. Limitaciones
 
 | Limitacion | Control |
 | --- | --- |
@@ -187,6 +203,6 @@ V06 tambien fue ejecutado como kernel publico autocontenido. Sus outputs confirm
 | UID features no adoptadas | Explorar modelos segmentados en trabajo futuro. |
 | Drift temporal | Monitoreo y reentrenamiento con ventanas deslizantes. |
 
-## 10. Conclusion
+## 11. Conclusion
 
 La recomendacion final es usar V01 como modelo base, V05 como politica operativa y V06 como soporte de calibracion/robustez. El sistema no se plantea como un clasificador estatico: se plantea como un ciclo adaptativo que aprende, decide, monitorea y actualiza su comportamiento ante drift.

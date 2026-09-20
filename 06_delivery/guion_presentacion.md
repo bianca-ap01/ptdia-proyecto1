@@ -4,16 +4,16 @@
 
 | Tiempo | Seccion | Responsable sugerido |
 | ---: | --- | --- |
-| 2 min | Problema, dataset y objetivos | Integrante 1 |
-| 3 min | EDA temporal y decisiones de preparacion | Integrante 2 |
-| 4 min | Modelado V01-V06 y seleccion final | Integrante 3 |
-| 4 min | Politica de decision V05 y robustez V06 | Integrante 4 |
-| 3 min | Arquitectura, despliegue y drift/adaptacion | Integrante 5 |
-| 2 min | Limitaciones, trabajo futuro y cierre | Equipo |
+| 2 min | Problema, alcance, objetivos y restricciones | Integrante 1 |
+| 4 min | EDA temporal, EDA de referencia y preparacion | Integrante 2 |
+| 5 min | Diseno experimental V01-V07 y seleccion final | Integrante 3 |
+| 4 min | Politica V05, incertidumbre y calibracion V06 | Integrante 4 |
+| 3 min | Arquitectura, despliegue GCP y drift/adaptacion | Integrante 5 |
+| 2 min | Rubrica, limitaciones y cierre | Equipo |
 
 ## Mensaje central
 
-No construimos solo un clasificador. Construimos el diseno de un sistema adaptativo para fraude: estima riesgo, toma decisiones bajo capacidad limitada, monitorea drift y define cuando recalibrar o reentrenar.
+No construimos solo un clasificador. Construimos el diseno de un sistema adaptativo para fraude: estima riesgo, toma decisiones bajo capacidad limitada, monitorea drift y define cuando recalibrar o reentrenar. La defensa debe enfatizar el por que de cada decision y la evidencia que la sostiene.
 
 ## Puntos clave por seccion
 
@@ -30,6 +30,8 @@ No construimos solo un clasificador. Construimos el diseno de un sistema adaptat
 - Train/test tienen fuerte separacion temporal.
 - Hay diferencias entre UID conocido y desconocido.
 - Muchos faltantes son estructurales, no ruido aleatorio.
+- El EDA de referencia complemento la lectura con bloques V, faltantes de identity, cola pesada del monto, montos multi-decimales y comparacion con MLP.
+- No se copiaron sus metricas porque usa otro split y otra politica de costos.
 
 ### 3. Modelado
 
@@ -40,6 +42,7 @@ No construimos solo un clasificador. Construimos el diseno de un sistema adaptat
 - V04 XGBoost/CatBoost/feature sets auditados no superaron V01.
 - V07 MLP no supero LightGBM: holdout PR-AUC 0.2218 vs 0.5313.
 - EDA y V01-V07 estan publicados como kernels publicos en Kaggle.
+- La pregunta de cada version debe decirse explicitamente: V01 base, V01b todas las features, V02 memoria UID, V03 auditoria, V04 modelos alternativos, V05 decision, V06 incertidumbre y V07 red neuronal/baseline tradicional.
 
 ### 4. Decision operativa
 
@@ -54,6 +57,12 @@ No construimos solo un clasificador. Construimos el diseno de un sistema adaptat
 - Propuesta GCP: FastAPI, Docker, Artifact Registry, Cloud Build, Cloud Run.
 - Monitoreo: PR-AUC, KS/PSI, score drift, capacidad de revision.
 - Adaptacion: recalibrar, ajustar umbrales o reentrenar con ventana deslizante.
+
+### 6. Rubrica y cierre
+
+- Problema, datos, modelado, sistema adaptativo, producto y presentacion quedan cubiertos.
+- La infografia final mapea cada criterio de la rubrica a evidencia concreta.
+- La unica brecha formal posible es si el docente exige literalmente dos modelos tradicionales distintos; en ese caso conviene agregar Random Forest o HistGradientBoosting simple.
 
 ## Preguntas probables y respuestas
 
@@ -70,4 +79,4 @@ No construimos solo un clasificador. Construimos el diseno de un sistema adaptat
 
 ## Cierre recomendado
 
-La solucion final recomendada es V01 + V05 + monitoreo/calibracion V06, con V07 como benchmark adicional. Es una decision conservadora, pero defendible: prioriza generalizacion temporal, trazabilidad publica en Kaggle, costos operativos y capacidad de adaptacion.
+La solucion final recomendada es V01 + V05 + monitoreo/calibracion V06, con V07 como benchmark adicional. Es una decision conservadora y defendible: prioriza generalizacion temporal, trazabilidad publica en Kaggle, costos operativos y capacidad de adaptacion.

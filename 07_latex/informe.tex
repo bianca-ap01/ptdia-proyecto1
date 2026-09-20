@@ -33,7 +33,7 @@
 \end{center}
 \vspace{-4pt}\hrule\vspace{4pt}
 
-\textbf{Resumen.} Se diseña y evalúa un sistema inteligente adaptativo para detección de fraude financiero con datos temporales. El sistema integra transacciones e identidad, estima un score con un modelo LightGBM, traduce el score en acciones operativas y propone monitoreo de drift, calibración y reentrenamiento con ventanas deslizantes. Los resultados provienen de artefactos V01--V07 publicados como kernels de Kaggle y descargados al repositorio. La recomendación final es usar V01 como modelo base, V05 como política inicial y V06 como soporte de robustez/calibración.
+\textbf{Resumen.} Se diseña y evalúa un sistema inteligente adaptativo para detección de fraude financiero con datos temporales. El sistema integra transacciones e identidad, estima un score con un modelo LightGBM, traduce el score en acciones operativas y propone monitoreo de drift, calibración y reentrenamiento con ventanas deslizantes. Los resultados provienen de artefactos V01--V07 publicados como kernels de Kaggle y descargados al repositorio. La recomendación final es usar V01 como modelo base, V05 como política inicial y V06 como soporte de robustez/calibración. La defensa se organiza según la rúbrica del curso: problema, datos, modelado, sistema adaptativo, producto entregable y presentación.
 
 \section{Problema, objetivos y restricciones}
 
@@ -71,20 +71,27 @@ El EDA propio reporta 590\,540 transacciones etiquetadas, 506\,691 registros de 
 
 Las transacciones se ordenan por \texttt{TransactionDT}. Los primeros 70\% se usan para entrenamiento, el 15\% siguiente para validación y el 15\% final como holdout futuro. \texttt{TransactionDT}, \texttt{DT\_day\_index} y \texttt{DT\_week\_index} no se usan como predictores porque codifican posición temporal absoluta; se reservan para partición y monitoreo. Las agregaciones por UID se consideran válidas sólo si usan información disponible antes de la transacción evaluada.
 
+El EDA externo revisado de Fabryzzio complementó la lectura del equipo en cuatro puntos: ausencia estructural de atributos de identidad, faltantes por bloques en variables \texttt{V}, montos con cola pesada y montos con más de dos decimales. La decisión no fue copiar su pipeline, porque usa otra partición y otra política de costos, sino contrastar sus observaciones con nuestro diseño temporal. Por eso V07 incorpora \texttt{TransactionAmt\_multi\_decimal}, mantiene la evaluación por UID conocido/desconocido y agrega un MLP como benchmark bajo el mismo split 70/15/15 del proyecto.
+
 \section{Modelado y evaluación temporal}
 
 La línea base V01 usa LightGBM con 185 atributos y \emph{early stopping}. La selección se justifica por la naturaleza tabular del dataset: variables numéricas, categóricas codificadas, faltantes e interacciones no lineales. Posteriormente se ejecutaron controles: V01b con todas las features, V02 con features UID históricas, V03 de auditoría de variables, V04 con LightGBM, XGBoost y CatBoost sobre sets auditados, y V07 con baseline tradicional y MLP. EDA y V01--V07 quedan trazables como kernels públicos de Kaggle.
 
 \begin{table}[H]\centering\small
-\begin{tabularx}{\linewidth}{@{}p{.13\linewidth}X p{.23\linewidth}p{.22\linewidth}@{}}\toprule
+\begin{tabularx}{\linewidth}{@{}p{.12\linewidth}X p{.23\linewidth}p{.22\linewidth}@{}}\toprule
 Versión & Objetivo & Resultado principal & Decisión\\\midrule
 V01 & Baseline temporal LightGBM & Holdout PR-AUC 0.5436 & Modelo base.\\
 V01b & Usar todas las features & Holdout PR-AUC 0.5303 & No reemplaza V01.\\
 V02 & Features UID históricas & UID conocido mejora; UID desconocido empeora & No adoptar como modelo único.\\
 V03 & Auditoría de importancia y drift & 44 keep, 9 monitor & Usar para monitoreo.\\
-V04 & Comparar LightGBM/XGBoost/CatBoost & Ninguno supera V01 & Mantener V01.\\\bottomrule
+V04 & Comparar LightGBM/XGBoost/CatBoost & Ninguno supera V01 & Mantener V01.\\
+V05 & Traducir score en acción & Costo holdout 1.3680 & Política inicial.\\
+V06 & Robustez y calibración & Brier 0.0479 a 0.0219 & Calibrar probabilidades.\\
+V07 & Comparar MLP y baseline lineal & MLP PR-AUC 0.2218 & Benchmark, no reemplazo.\\\bottomrule
 \end{tabularx}
 \end{table}
+
+Cada versión responde a una pregunta concreta. V01 mide el desempeño base con un algoritmo adecuado para datos tabulares. V01b prueba si aumentar la superficie de variables mejora la generalización; no lo hace. V02 mide si la memoria de cliente aporta señal; aporta en UID conocido, pero no en UID desconocido, por lo que sería riesgoso adoptarla como regla única. V03 separa variables para conservar, monitorear o revisar. V04 contrasta alternativas de boosting. V05 evalúa la parte de decisión, V06 la incertidumbre y V07 la comparación con red neuronal y baseline tradicional. Esta secuencia documenta el proceso pedido por la rúbrica, no sólo el resultado final.
 
 \begin{table}[H]\centering\small
 \begin{tabular}{@{}lrrr@{}}\toprule
@@ -143,6 +150,22 @@ V05 & \textbf{1.3680} & \textbf{66.17\%} & 5.10\% & 2.48\%\\\bottomrule
 \end{table}
 
 V05 supera a reglas simples, aunque la revisión en holdout (5.10\%) excede levemente el objetivo de 5\%. En producción, si el cupo fuera estricto, se recomienda usar umbrales por percentil temporal o una cola con capacidad fija. V06, también ejecutado como kernel público, confirma que la política responde de forma coherente ante escenarios alternativos de costo y capacidad.
+
+\section{Cobertura de la rúbrica}
+
+\begin{table}[H]\centering\small
+\begin{tabularx}{\linewidth}{@{}p{.28\linewidth}X@{}}\toprule
+Criterio de evaluación & Evidencia incluida\\\midrule
+Problema, objetivos, restricciones y métricas & Caso de fraude financiero, objetivos técnicos y operativos, PR-AUC, costo, revisión, escalamiento y calibración.\\
+Análisis y preparación de datos & EDA temporal, tasa semanal, faltantes, UID, adversarial validation, split 70/15/15 y control de leakage temporal.\\
+Modelado y evaluación & V01--V07 ejecutados en Kaggle, comparación temporal, holdout futuro y segmentación UID.\\
+Sistema adaptativo & Arquitectura con predicción, decisión, acción, monitoreo, calibración y reentrenamiento por ventanas.\\
+Calidad del producto & Repositorio GitHub, kernels públicos, reportes por versión, informe técnico, presentación e infografía.\\
+Presentación & Deck ampliado para 15--20 minutos, con decisiones y fundamentos por etapa.\\\bottomrule
+\end{tabularx}
+\end{table}
+
+Esta cobertura evita una entrega centrada sólo en el modelo. La guía del curso exige explicar cómo el sistema adquiere datos, predice, decide, actúa, mide incertidumbre y se adapta ante cambios. Por eso la solución final se presenta como un ciclo de vida completo.
 
 \section{Despliegue y ciclo de vida}
 

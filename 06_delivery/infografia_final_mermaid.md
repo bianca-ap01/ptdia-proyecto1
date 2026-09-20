@@ -1,19 +1,20 @@
 # Infografia final en Mermaid
 
-Esta infografia resume el ciclo de vida completo del sistema inteligente adaptativo.
+Esta infografia resume la entrega segun la rubrica del curso y conecta esa evidencia con el ciclo operativo del sistema adaptativo. La version final en LaTeX/PDF usa el mismo mensaje: problema, datos, modelado, sistema adaptativo, producto y presentacion.
 
 ```mermaid
 flowchart TB
-    A[1. Datos<br/>IEEE-CIS transaction + identity<br/>transacciones temporales] --> B[2. EDA temporal<br/>desbalance 3.50%<br/>drift semanal 1.85%-5.06%<br/>UID conocido/desconocido]
-    B --> C[3. Preparacion<br/>split temporal 70/15/15<br/>sin TransactionDT crudo<br/>features tabulares y faltantes]
-    C --> D[4. Modelado<br/>V01 LightGBM<br/>holdout PR-AUC 0.5436<br/>ROC-AUC 0.9051]
-    D --> E[5. Decision<br/>V05 approve / review / escalate<br/>fraude detectado 66.17%<br/>revision 5.10%]
-    E --> F[6. Despliegue<br/>FastAPI + Docker<br/>Artifact Registry<br/>Cloud Run]
-    F --> G[7. Monitoreo<br/>PR-AUC por ventana<br/>KS/PSI<br/>score drift<br/>costos y capacidad]
-    G --> H{8. Drift o degradacion?}
-    H -- No --> F
-    H -- Si --> I[9. Adaptacion<br/>recalibrar<br/>ajustar umbrales<br/>reentrenar con ventana deslizante]
-    I --> D
+    A[Rubrica 1<br/>Problema, objetivos y metricas<br/>fraude 3.50%, PR-AUC, costo] --> B[Rubrica 2<br/>Analisis y preparacion<br/>EDA temporal, UID, faltantes, 70/15/15]
+    B --> C[Rubrica 3<br/>Modelado y evaluacion<br/>V01-V07, holdout futuro, segmentos]
+    C --> D[Rubrica 4<br/>Sistema adaptativo<br/>score, accion, incertidumbre, drift]
+    D --> E[Rubrica 5<br/>Producto entregado<br/>GitHub, Kaggle, reportes, PDFs]
+    E --> F[Rubrica 6<br/>Presentacion<br/>deck 15-20 min con defensa]
+    D --> G[Ciclo operativo<br/>FastAPI + Docker + Cloud Run]
+    G --> H[Monitoreo<br/>KS/PSI, Brier, costo, UID]
+    H --> I{Alerta?}
+    I -- No --> G
+    I -- Si --> J[Adaptacion<br/>calibrar, ajustar umbrales o reentrenar]
+    J --> C
 
     style A fill:#E8F3FF,stroke:#2B6CB0
     style B fill:#EAF8EA,stroke:#2F855A
@@ -28,4 +29,4 @@ flowchart TB
 
 ## Mensaje para exposicion
 
-El sistema no es un clasificador estatico. Es un ciclo adaptativo: aprende de datos historicos, decide bajo restricciones operativas, monitorea drift y actualiza umbrales o modelo cuando el entorno cambia. La trazabilidad queda respaldada por kernels publicos de Kaggle para EDA y V01-V07.
+La infografia debe ayudar al profesor a ver rapidamente que la entrega cubre la rubrica completa. El sistema aprende de datos historicos, decide bajo restricciones operativas, monitorea drift y actualiza umbrales o modelo cuando el entorno cambia. La trazabilidad queda respaldada por kernels publicos de Kaggle para EDA y V01-V07.
