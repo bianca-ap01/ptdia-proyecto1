@@ -1,0 +1,15 @@
+{
+  "status": "complete",
+  "stage": "done",
+  "daily_review_capacity": 158,
+  "configurations": 27,
+  "scenarios": 731,
+  "central_no_model_cost_per_txn": 23.37943326006706,
+  "central_v01_cost_per_txn": 8.817917350820155,
+  "costs_are": "illustrative_USD",
+  "review_effectiveness": [
+    0.6,
+    0.8,
+    1.0
+  ]
+}

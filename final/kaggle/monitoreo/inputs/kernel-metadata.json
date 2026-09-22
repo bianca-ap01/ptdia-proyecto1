@@ -1,0 +1,18 @@
+{
+  "id": "jeffreyamc/ptdia-final-monitoreo",
+  "title": "ptdia-final-monitoreo",
+  "code_file": "main.ipynb",
+  "language": "python",
+  "kernel_type": "notebook",
+  "is_private": true,
+  "enable_gpu": true,
+  "enable_internet": false,
+  "competition_sources": [
+    "ieee-fraud-detection"
+  ],
+  "dataset_sources": [],
+  "kernel_sources": [
+    "biancaaguinaga/p1-ieee-fraud-v01-baseline-temporal"
+  ],
+  "model_sources": []
+}

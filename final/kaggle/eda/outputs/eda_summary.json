@@ -1,0 +1,14 @@
+{
+  "train_rows": 590540,
+  "test_rows": 506691,
+  "train_fraud_rate": 0.03499000914417313,
+  "train_day_min": 1.0,
+  "train_day_max": 182.99920138888888,
+  "test_day_min": 213.00027777777777,
+  "test_day_max": 395.99936342592594,
+  "test_has_target": false,
+  "train_cutoff": 10437998.1,
+  "valid_cutoff": 13151845.999999998,
+  "weekly_fraud_rate_min": 0.018522992671337682,
+  "weekly_fraud_rate_max": 0.05061181735942485
+}

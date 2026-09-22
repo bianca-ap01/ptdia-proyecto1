@@ -1,0 +1,8 @@
+{
+  "status": "complete",
+  "stage": "done",
+  "shift_rows": 33,
+  "score_windows": 10,
+  "test_has_target": false,
+  "score_source": "V01 historical predictions"
+}

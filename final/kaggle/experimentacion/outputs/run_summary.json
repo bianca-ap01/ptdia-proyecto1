@@ -1,0 +1,31 @@
+{
+  "status": "complete",
+  "stage": "done",
+  "label_delay_days": 7,
+  "split_cutoffs": [
+    10437998.1,
+    13151845.999999998
+  ],
+  "block_count": 9,
+  "features": 185,
+  "completed_rows": 240,
+  "last_model": "catboost",
+  "last_strategy": "alert",
+  "last_window": "expanding",
+  "models": [
+    "lightgbm",
+    "xgboost",
+    "catboost"
+  ],
+  "windows": [
+    14,
+    30,
+    45,
+    "expanding"
+  ],
+  "rows": 590540,
+  "blocks": 9,
+  "fit_count": 141,
+  "prediction_rows": 4158810,
+  "source_v01_exact": true
+}
