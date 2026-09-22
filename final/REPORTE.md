@@ -42,7 +42,28 @@ La corrida completa produjo **4 bloques de validación, 5 de holdout, 141 ajuste
 | XGBoost | 0.499 | 0.535 | 0.555 | **0.557** | 0.527 | 0.537 |
 | CatBoost | 0.471 | 0.483 | 0.507 | **0.517** | 0.491 | 0.499 |
 
-En las tres familias, 45 días fue la mejor ventana periódica por PR-AUC media; 14 días olvidó demasiado y el historial acumulado incorporó observaciones más antiguas. LightGBM periódico de 45 días supera al V01 estático en **0.046 puntos de PR-AUC media** y requirió **cinco actualizaciones** en holdout; la versión por alerta de 45 días obtuvo 0.574 con **dos**. Esto responde qué cambia al variar la memoria y cuánto se entrena. Las curvas [LightGBM](kaggle/experimentacion/outputs/plots/01_pr_auc_lightgbm.png), [XGBoost](kaggle/experimentacion/outputs/plots/01_pr_auc_xgboost.png) y [CatBoost](kaggle/experimentacion/outputs/plots/01_pr_auc_catboost.png) permiten ver los cinco bloques, no solo su promedio.
+PR-AUC es independiente del umbral y por eso ordena las estrategias, pero no describe lo que ocurre al cupo con el que opera el sistema. Al 5 % de revisión, el recall y la precisión medios de los cinco bloques dan este F1, que es la métrica nominal del enunciado:
+
+| Modelo | Estático: recall / precisión / **F1** | Periódico 45 d: recall / precisión / **F1** |
+|:--|:--|:--|
+| LightGBM | 0.583 / 0.420 / **0.488** | 0.622 / 0.449 / **0.521** |
+| XGBoost | 0.530 / 0.383 / **0.444** | 0.602 / 0.433 / **0.504** |
+| CatBoost | 0.523 / 0.377 / **0.438** | 0.571 / 0.412 / **0.478** |
+
+La mejora al cupo acompaña a la de PR-AUC en las tres familias. F1 se reporta como referencia comparable con la literatura, no como criterio de decisión: pesa por igual un falso positivo y un falso negativo, y la sección 5 muestra que en este problema esos dos errores cuestan órdenes distintos.
+
+En las tres familias, 45 días fue la mejor ventana periódica por PR-AUC media; 14 días olvidó demasiado y el historial acumulado incorporó observaciones más antiguas. LightGBM periódico de 45 días supera al V01 estático en **0.046 puntos de PR-AUC media** y requirió **cinco actualizaciones** en holdout; la versión por alerta de 45 días obtuvo 0.574 con **dos**.
+
+Con cinco bloques y una sola semilla, una diferencia de medias no basta para afirmar un ranking. Como las estrategias comparten los mismos bloques, la prueba adecuada es un **t pareado**, que elimina la varianza entre bloques —la que domina, con desviaciones de 0.05 a 0.07 dentro de cada configuración. El [análisis de significancia](kaggle/experimentacion/outputs/significance_summary.csv), reproducible con [`significance_analysis.py`](significance_analysis.py), separa dos afirmaciones que conviene no mezclar:
+
+| Comparación | LightGBM | XGBoost | CatBoost |
+|:--|:--|:--|:--|
+| Periódico 45 d vs estático | +0.046, p=**0.024** | +0.058, p=**0.006** | +0.046, p=**0.007** |
+| Bloques favorables | 5/5 | 5/5 | 5/5 |
+| IC 95 % de la diferencia | [+0.010, +0.082] | [+0.028, +0.088] | [+0.021, +0.071] |
+| Periódico 45 d vs 30 d | +0.005, p=0.296 | +0.002, p=0.736 | +0.010, p=0.037 |
+
+**Adaptar supera a no adaptar en las tres familias**, con intervalos que excluyen el cero y las cinco diferencias por bloque positivas. En cambio, **45 días no es distinguible de 30 días** en LightGBM ni en XGBoost: esa diferencia cabe dentro del ruido y la preferencia por 45 d se sostiene solo como tendencia del patrón cóncavo, no como resultado estadístico. Lo que el experimento sustenta es el valor de la ventana deslizante frente al modelo congelado, no el ajuste fino de su tamaño. Esto responde qué cambia al variar la memoria y cuánto se entrena. Las curvas [LightGBM](kaggle/experimentacion/outputs/plots/01_pr_auc_lightgbm.png), [XGBoost](kaggle/experimentacion/outputs/plots/01_pr_auc_xgboost.png) y [CatBoost](kaggle/experimentacion/outputs/plots/01_pr_auc_catboost.png) permiten ver los cinco bloques, no solo su promedio.
 
 ![PR-AUC de LightGBM por bloque futuro y estrategia](kaggle/experimentacion/outputs/plots/01_pr_auc_lightgbm.png)
 
@@ -73,6 +94,10 @@ Bajo estos supuestos, V01 con política reduce el costo simulado en **14.562 USD
 ![Costo ilustrativo por transacción del escenario central](kaggle/sistema_final/outputs/plots/01_costo_escenarios.png)
 
 La [sensibilidad](kaggle/sistema_final/outputs/plots/02_sensibilidad.png) muestra que la eficacia de revisión pesa más que el costo de reentrenar en este volumen. Con V01, el costo por transacción es **9.730 / 8.818 / 7.906** para revisiones con eficacia **60 / 80 / 100 %**. Para LightGBM periódico de 45 días, subir el cargo por actualización de **USD 0 a 500** eleva el costo por transacción de **8.919 a 8.947** porque hay solo cinco actualizaciones entre 88 581 filas. V01 gana en **25 de los 27** cruces de eficacia, costo de actualización y fricción explorados; las otras dos combinaciones favorecen por poco al periódico de 45 días. El 100 % de eficacia es el límite optimista, no una expectativa operativa.
+
+Esa comparación es el resultado principal del trabajo y conviene enunciarla sin rodeos. Mover la eficacia del analista de 60 a 100 % desplaza el costo en **1.824 USD por transacción**; mover el cargo por reentrenar de USD 0 a 500 lo desplaza **0.028**. Es una diferencia de **65×** entre las dos palancas. Bajo esta función de costo, **el sistema está limitado por la capacidad de revisión humana, no por la calidad del clasificador**: ganar 0.046 de PR-AUC no se convierte en ahorro porque, con el cupo fijo en 158 revisiones diarias, un modelo que ordena mejor no puede revisar más y empuja masa hacia el escalamiento, que cuesta USD 10 por legítima.
+
+De ahí la recomendación operativa, que no es «no adaptar». La adaptación funciona y está demostrada en la dimensión que mide el modelo: las tres familias mejoran con ventana deslizante, con significancia estadística. Lo que no está demostrado es que esa mejora se traduzca en ahorro bajo los supuestos de costo actuales. Por eso se mantiene V01 con política y se conserva armada la infraestructura adaptativa —ventanas, detector, protocolo de promoción—, mientras el disparo automático de reentrenamiento queda suspendido hasta que un piloto mida la eficacia real del analista, que es el parámetro que domina la decisión. El aparato de medición que permite detectar esta reversión es el entregable; el modelo es secundario.
 
 Como indicadores sociales observables, el [desglose UID](kaggle/sistema_final/outputs/social_uid_proxy.csv) registra **11.5 escalaciones falsas por 1 000 legítimas** con UID conocido y **37.9** con UID desconocido. La cobertura de fraude referido es 64.0 % y 72.3 %, respectivamente. Esa diferencia exige investigar captura de identidad y fricción antes de operar; UID conocido/desconocido no es un grupo demográfico protegido ni prueba equidad.
 
