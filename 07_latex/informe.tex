@@ -129,7 +129,7 @@ act/.style={draw=teal!60,rounded corners=2pt,align=center,text width=18mm,minimu
 
 El score no debe interpretarse como probabilidad: en holdout su promedio es 0.143 mientras la prevalencia observada es 0.035, una sobreestimación de 4.11$\times$. Una isotónica ajustada \emph{solo con validación} y aplicada a holdout corrige el nivel sin tocar el modelo ni el ranking: Brier baja de 0.04788 a 0.02192 ($-54.2$\,\%) y la media calibrada queda en 0.0355, a 1.02$\times$ de la prevalencia. Ajustarla con holdout habría filtrado el periodo reservado hacia la calibración, que es el error que el protocolo temporal evita en todo lo demás. Esto es coherente con la literatura: modelos fuertes pueden rankear bien y producir probabilidades sesgadas (Niculescu-Mizil \& Caruana, 2005; Zadrozny \& Elkan, 2002).
 
-La política traduce el score en tres acciones, con umbrales elegidos en validación y congelados para holdout. El cupo diario es 158 revisiones, el 5\,\% de la mediana diaria de volumen del train inicial, y se aplica por día.
+La política traduce el score en tres acciones, con umbrales elegidos en validación y congelados para holdout. El cupo diario es 158 revisiones, el 5\,\% de la mediana diaria de volumen del train inicial, y se aplica por día. El holdout evaluado tiene 88\,581 transacciones con 3\,083 fraudes.
 
 \begin{table}[H]\centering\small
 \begin{tabular}{@{}lrrr@{}}\toprule
