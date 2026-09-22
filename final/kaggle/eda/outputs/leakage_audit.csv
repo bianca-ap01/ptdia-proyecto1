@@ -1,0 +1,8 @@
+feature_or_step,status,reason
+TransactionID,excluir,Llave unica y proxy de orden; no predictor.
+TransactionDT / DT_day_index / DT_week_index,excluir como predictor,"Solo orden, cortes y monitoreo."
+TransactionAmt_outlier_iqr,corregido,Cuartiles ajustados en cada ventana; V01 los ajustaba sobre todas las filas.
+Categorias y frecuencias,controlado,Mapas construidos solo con filas del entrenamiento permitido.
+UID e historicos,controlado con limite,"UID por atributos propios; agregados etiquetados solo del pasado, sin fila futura."
+V/C/D anonimizadas,no demostrable completamente,Auditar disponibilidad en inferencia; el origen de cada campo no es publico.
+Validacion / early stopping,separacion,La validacion selecciona decisiones; holdout final reservado para evaluacion.
