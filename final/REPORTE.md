@@ -73,6 +73,15 @@ Con cinco bloques y una sola semilla, una diferencia de medias no basta para afi
 
 La mejor PR-AUC no coincide automáticamente con el menor costo ilustrativo de ranking: LightGBM V01 marca **14.34 USD/transacción** en el proxy de cupo del notebook 3, frente a **14.47** del periódico 45 d y **14.09** del periódico con historial. La política diaria y sus costos de actualización se evalúan aparte en el notebook 4. Las referencias tradicionales obtuvieron PR-AUC de holdout **0.170** (regresión logística) y **0.381** (árbol de decisión); se interpretan como comparadores breves con codificación numérica heredada, no como búsqueda exhaustiva de hiperparámetros. Los árboles nuevos usan tratamiento nativo de nulos; el imputador de las dos referencias tradicionales se ajustó solo con train inicial.
 
+Esas dos referencias se evaluaron después con el **mismo protocolo por bloques** que los boosters —bloques de siete días, latencia de etiqueta de siete días, métricas al cupo del 5 %— para que la comparación fuera homóloga y no una cifra agregada frente a 243 mediciones. El resultado con [`traditional_temporal.py`](traditional_temporal.py) separa dos cosas:
+
+| Modelo | Estático | Periódico 45 d | Desv. entre bloques |
+|:--|--:|--:|--:|
+| Árbol de decisión | **0.385** | 0.376 | 0.06 |
+| Regresión logística | 0.288 | **0.323** | 0.16–0.19 |
+
+**La adaptación no rescata a los modelos tradicionales.** El árbol incluso empeora al reentrenarse con ventana de 45 días, y la regresión logística, aunque mejora, lo hace desde un nivel muy bajo y con una inestabilidad que la vuelve inutilizable: sus PR-AUC por bloque en holdout son 0.369, 0.126, 0.107, 0.395 y 0.445. Esa varianza es coherente con que no converja: con 185 variables y `max_iter=120` —el valor heredado, mantenido por comparabilidad— el solver agota las iteraciones. El contraste con los boosters, que mejoran con ventana deslizante en las tres familias y con significancia estadística, es el argumento real para preferir el enfoque avanzado: no es solo que rinda más, es que **responde a la adaptación**, que es la variable de estudio del trabajo. El [detalle por bloque](kaggle/experimentacion/outputs/traditional_block_metrics.csv) conserva las 40 mediciones.
+
 ## 5. Decisión secuencial y recompensa
 
 La primera acción ante una transacción es **aprobar**, **revisar** o **escalar**. El riesgo bajo se aprueba automáticamente; la banda intermedia consume el cupo diario de analistas; el riesgo alto se retiene temporalmente y se confirma antes de un bloqueo irreversible. La segunda acción es **mantener**, **recalibrar umbrales** con etiquetas maduras o **reentrenar** el modelo. Los umbrales de score se eligen en validación y se congelan para holdout; la recalibración usa solo bloques anteriores cuyas etiquetas ya habrían llegado. El cupo es 5 % de la mediana diaria de volumen en el train inicial y se aplica por día a cada estrategia.
