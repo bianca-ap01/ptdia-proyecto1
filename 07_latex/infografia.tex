@@ -25,56 +25,61 @@ path/.style={->,line width=1.8pt,teal,rounded corners=4mm}]
 \node[anchor=west,text=white,font=\bfseries\fontsize{26}{29}\selectfont] at (.45,25.8){Sistema adaptativo para detección de fraude financiero};
 \node[anchor=west,text=white!82,font=\fontsize{13.5}{16}\selectfont] at (.5,24.75){IEEE-CIS · Proyecto 1 · Evidencia alineada con la rúbrica de Planificación y Toma de Decisiones en IA};
 
-\node[anchor=west,text=navy,font=\bfseries\fontsize{18}{21}\selectfont] at (.35,23.25){Cómo se cubre la rúbrica};
+\node[anchor=west,text=navy,font=\bfseries\fontsize{18}{21}\selectfont] at (.35,23.25){Ciclo de vida del sistema};
 
-\node[rubric,fill=blue,anchor=north west] (r1) at (.2,22.75){\cardtitle{01 Problema, objetivos y métricas}\\[2.5mm]
-Caso: aprobar, revisar o escalar transacciones futuras.\\[2mm]
-Fraude en train: \textbf{3.50\%}.\\[2mm]
-Métricas: PR-AUC, ROC-AUC, Brier, costo, revisión y fraude detectado.};
+% --- CICLO DE VIDA: fila superior ---
+\node[flow,fill=blue,anchor=north west] (d) at (.2,22.6){\textbf{1 · Adquisición}\\[1mm]Transacciones + identidad\\590\,540 filas · 3.499\,\% fraude};
+\node[flow,fill=blue,right=1.0cm of d] (f){\textbf{2 · Preparación}\\[1mm]185 variables\\Encoders sólo con historial};
+\node[flow,fill=mint,right=1.0cm of f] (m){\textbf{3 · Modelo}\\[1mm]3 familias × 6 estrategias\\27 config · 141 ajustes};
+\node[flow,fill=gold,right=1.0cm of m] (pol){\textbf{4 · Decisión}\\[1mm]Aprobar / revisar / escalar\\Cupo 158 revisiones/día};
+\node[flow,fill=coral,right=1.0cm of pol] (ac){\textbf{5 · Acción}\\[1mm]90.2\,\% automático\\4.3\,\% escalado a confirmación};
 
-\node[rubric,fill=mint,anchor=north west] (r2) at (13.5,22.75){\cardtitle{02 Análisis y preparación}\\[2.5mm]
-EDA temporal: \textbf{590\,540} train, \textbf{506\,691} test.\\[2mm]
-Fraude semanal: \textbf{1.85--5.06\%}.\\[2mm]
-Split por tiempo \textbf{70/15/15}; sin leakage temporal.};
+% --- fila inferior: retroalimentacion ---
+\node[flow,fill=mint,below=2.3cm of ac] (mon){\textbf{6 · Monitoreo}\\[1mm]PSI y KS sin etiquetas\\PR-AUC con etiquetas maduras};
+\node[flow,fill=gold,left=1.0cm of mon] (reg){\textbf{7 · Regla de alerta}\\[1mm]PSI $>$ 0.25 \textbf{o} dos bloques\\$>$10\,\% bajo referencia};
+\node[flow,fill=blue,left=1.0cm of reg] (upd){\textbf{8 · Adaptación}\\[1mm]Recalibrar umbrales\\o reentrenar con ventana};
+\node[flow,fill=coral,left=1.0cm of upd] (val){\textbf{9 · Promoción}\\[1mm]Validar en bloque futuro\\antes de reemplazar};
 
-\node[rubric,fill=gold,anchor=north west] (r3) at (26.8,22.75){\cardtitle{03 Modelado y evaluación}\\[2.5mm]
-V01--V07 ejecutados en Kaggle.\\[2mm]
-Modelo elegido: V01 LightGBM.\\[2mm]
-Holdout: \textbf{PR-AUC 0.5436}, ROC-AUC 0.9051.};
+\draw[path] (d) -- (f);
+\draw[path] (f) -- (m);
+\draw[path] (m) -- (pol);
+\draw[path] (pol) -- (ac);
+\draw[path] (ac.south) -- (mon.north);
+\draw[path] (mon) -- (reg);
+\draw[path] (reg) -- (upd);
+\draw[path] (upd) -- (val);
+\draw[path] (val.west) -- ++(-1.0,0) |- (m.south);
 
-\node[rubric,fill=coral,anchor=north west] (r4) at (.2,16.75){\cardtitle{04 Sistema adaptativo}\\[2.5mm]
-Score, acción y monitoreo en un mismo ciclo.\\[2mm]
-V05 decide: aprobar / revisar / escalar.\\[2mm]
-V06 calibra incertidumbre y evalúa robustez.};
+\node[anchor=west,text=teal,font=\bfseries\fontsize{12}{14}\selectfont] at (1.2,13.4){El lazo 6→9 es lo que hace al sistema adaptativo: el modelo nunca se reemplaza sin validación en un bloque futuro.};
 
-\node[rubric,fill=blue,anchor=north west] (r5) at (13.5,16.75){\cardtitle{05 Producto entregado}\\[2.5mm]
-Repositorio GitHub, kernels públicos y outputs descargados.\\[2mm]
-Informe técnico, presentación, diagramas e infografía.\\[2mm]
-Despliegue propuesto: FastAPI, Docker, Cloud Build y Cloud Run.};
+% --- RESULTADOS MEDIDOS ---
+\node[anchor=west,text=navy,font=\bfseries\fontsize{18}{21}\selectfont] at (.35,12.4){Lo que medimos}; 
 
-\node[rubric,fill=mint,anchor=north west] (r6) at (26.8,16.75){\cardtitle{06 Presentación y defensa}\\[2.5mm]
-Deck preparado para \textbf{15--20 minutos}.\\[2mm]
-Cada decisión incluye evidencia y criterio.\\[2mm]
-Riesgo pendiente: agregar otro tradicional si se exige literalmente.};
+\node[rubric,fill=mint,anchor=north west,minimum height=4.3cm,text width=11.4cm] (k1) at (.2,11.8){\cardtitle{Adaptar sí mejora la detección}\\[2.5mm]
+PR-AUC media de holdout, ventana de 45 días frente a modelo congelado:\\[1.5mm]
+LightGBM $0.550 \rightarrow 0.597$ · XGBoost $0.499 \rightarrow 0.557$ · CatBoost $0.471 \rightarrow 0.517$\\[1.5mm]
+$t$ pareado significativo en las tres ($p=0.024$, $0.006$, $0.007$).};
 
-\node[anchor=west,text=navy,font=\bfseries\fontsize{18}{21}\selectfont] at (.35,10.8){Ciclo operativo propuesto};
+\node[rubric,fill=gold,anchor=north west,minimum height=4.3cm,text width=11.4cm] (k2) at (13.5,11.8){\cardtitle{Pero no se traduce en ahorro}\\[2.5mm]
+Costo ilustrativo por transacción en el escenario central:\\[1.5mm]
+Aprobar todo $23.379$ · V01 con política $\mathbf{8.818}$ · periódico 45\,d $8.925$\\[1.5mm]
+Evita 129 fraudes más, a cambio de 247 escalaciones legítimas más a USD 10.};
 
-\node[flow,fill=blue] (d) at (3.8,8.8){Datos transaccionales + identidad};
-\node[flow,fill=mint,right=1.1cm of d] (p) {Features temporales y control de leakage};
-\node[flow,fill=gold,right=1.1cm of p] (m) {Modelo V01 produce score};
-\node[flow,fill=coral,right=1.1cm of m] (a) {Política V05 decide acción};
-\node[flow,fill=mint,below=1.4cm of a] (v) {Monitoreo: KS, PSI, Brier, costo y UID};
-\node[flow,fill=gold,left=1.1cm of v] (u) {Actualizar umbrales, calibrar o reentrenar};
+\node[rubric,fill=coral,anchor=north west,minimum height=4.3cm,text width=11.4cm] (k3) at (26.8,11.8){\cardtitle{Dónde está la verdadera palanca}\\[2.5mm]
+Eficacia del analista de 60 a 100\,\%: mueve el costo \textbf{1.824} USD/txn.\\[1.5mm]
+Costo de reentrenar de USD 0 a 500: mueve el costo \textbf{0.028} USD/txn.\\[1.5mm]
+\textbf{65$\times$ de diferencia.} El límite es la revisión humana.};
 
-\draw[path] (d)--(p);
-\draw[path] (p)--(m);
-\draw[path] (m)--(a);
-\draw[path] (a)--(v);
-\draw[path] (v)--(u);
-\draw[path] (u.west) -- ++(-1.1,0) |- (m.south);
+\node[rubric,fill=blue,anchor=north west,minimum height=3.0cm,text width=17.6cm] (k4) at (.2,5.9){\cardtitle{El detector sin etiquetas no vio la degradación}\\[2.5mm]
+El PSI del score nunca superó \textbf{0.011} mientras la PR-AUC semanal caía de \textbf{0.732 a 0.473} ($-35\,\%$). El umbral convencional de 0.25 quedó 23$\times$ por encima de todo lo observado.\\[1.5mm]
+Concept drift sin covariate shift: la alerta combina ambas señales.};
 
-\node[anchor=west,align=left,text width=37.8cm,font=\small,text=navy] at (.45,2.9){\textbf{Decisión final:} usar V01 como modelo base, V05 como política inicial y V06 como soporte de calibración y robustez. V07 documenta que el MLP y el baseline lineal no reemplazan a LightGBM bajo el mismo split temporal.};
-\draw[navy!30] (.45,2.25)--(38.9,2.25);
-\node[anchor=west,text width=37.8cm,align=left,font=\footnotesize,text=navy!85] at (.45,1.3){\textbf{Fuente:} consigna UTEC, taller de despliegue GCP, EDA del equipo, notebook público de referencia y artefactos V01--V07 del repositorio. La adaptación por ventanas móviles queda como protocolo propuesto para operación futura.};
+\node[rubric,fill=mint,anchor=north west,minimum height=3.0cm,text width=19.2cm] (k5) at (19.0,5.9){\cardtitle{Auditamos nuestro propio trabajo}\\[2.5mm]
+\textbf{Fuga de V01:} medida, no supuesta. Con cuartiles contaminados PR-AUC $0.51656$; limpios $0.51910$. La versión con fuga rinde \textbf{0.0025 peor}: se declara, pero no otorga ventaja.\\[1.5mm]
+\textbf{Calibración:} el score sobreestima $4.11\times$. Isotónica baja Brier de $0.0479$ a $\mathbf{0.0219}$.};
+
+\node[anchor=west,align=left,text width=37.8cm,font=\small,text=navy] at (.45,1.55){\textbf{Recomendación:} mantener V01 con política y conservar armada la infraestructura adaptativa —ventanas, detector y protocolo de promoción—, suspendiendo el disparo automático de reentrenamiento hasta que un piloto mida la eficacia real del analista, que es el parámetro que domina la decisión.};
+
+\node[anchor=west,text width=37.8cm,align=left,font=\footnotesize,text=navy!85] at (.45,0.45){\textbf{Alcance:} todos los costos son supuestos ilustrativos y ninguno procede de una empresa real. La comparación es una simulación contrafactual con etiquetas históricas, no un ensayo causal. UID conocido/desconocido es un proxy operativo de cobertura, no un grupo demográfico protegido ni una prueba de equidad.};
 \end{tikzpicture}
 \end{document}
