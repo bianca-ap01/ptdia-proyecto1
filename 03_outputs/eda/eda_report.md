@@ -1,5 +1,7 @@
 # EDA propio - IEEE-CIS Fraud Detection
+
 ## Resumen ejecutivo
+
 - Train tiene 590,540 filas y test tiene 506,691 filas.
 - Tasa de fraude en train: 3.50%.
 - La tasa semanal de fraude varia entre 1.85% y 5.06%.
@@ -8,6 +10,7 @@
 - Maxima correlacion absoluta numerica con isFraud: 0.383.
 
 ## Decisiones recomendadas
+
 - **Usar PR-AUC como metrica principal**: Fraude en train = 3.50%; accuracy seria enganosa. Impacto: Reportar PR-AUC, recall, precision, F1 y FPR por ventana temporal.
 - **No usar TransactionDT crudo como feature**: Es la variable que define el orden temporal; usarla cruda puede aprender posicion historica. Impacto: Derivar hora/dia/semana y usar TransactionDT para split y monitoreo.
 - **Separar validacion temporal en UID conocido y UID desconocido**: 42.76% de filas tardias comparten candidate_uid con entrenamiento temprano. Impacto: Reportar desempeno por segmento y evitar conclusiones infladas.
@@ -19,6 +22,7 @@
 - **Modelar drift explicitamente**: La tasa semanal de fraude varia entre 1.85% y 5.06%. Impacto: Ventanas temporales, PSI/KS y comparacion static vs adaptive.
 
 ## Tablas generadas
+
 - `structural_summary.csv`
 - `missing_summary.csv`
 - `target_correlations.csv`
@@ -33,6 +37,7 @@
 - `decision_log.csv`
 
 ## Graficos generados
+
 - `plots/01_target_balance.png`
 - `plots/02_fraud_rate_by_week.png`
 - `plots/03_missing_train_test.png`

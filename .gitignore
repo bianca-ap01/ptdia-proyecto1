@@ -29,3 +29,6 @@ tmp/
 *.fdb_latexmk
 *.synctex.gz
 .texcache/
+
+# data
+ieee-fraud-detection/
