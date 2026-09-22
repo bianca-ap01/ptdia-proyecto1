@@ -16,6 +16,7 @@ experimental previa que lo sustenta.
 | 4 · Política de decisión y costo | [`final/04_politica_juego.ipynb`](final/04_politica_juego.ipynb) |
 | Verificación automática de resultados | [`final/verify_results.py`](final/verify_results.py) |
 | Salidas de cada etapa | `final/kaggle/<etapa>/outputs/` |
+| API de decisión (FastAPI + Cloud Run) | [`serving/`](serving/README.md) |
 
 Reproducir sin reentrenar:
 
