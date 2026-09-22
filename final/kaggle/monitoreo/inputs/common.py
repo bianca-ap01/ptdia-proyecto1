@@ -574,6 +574,14 @@ def _triggered(history: list[dict], current_start: float, reference_ap: float, l
     if block_number - last_update_number < 2 or not history:
         return False, "cooldown_or_first_block"
     # PSI needs no labels, but uses only the PREVIOUS completed block.
+    # This branch never fired in our run: the score PSI peaked at 0.0106
+    # (v01_score_windows.csv) while PR-AUC fell from 0.732 to 0.473, so the
+    # degradation was concept drift with no visible covariate shift. The .25
+    # threshold is the conventional value and is kept so the run stays
+    # comparable, but on this signal it sits 23x above anything observed and
+    # the labelled rule below is what actually protects the system. Lowering
+    # it without measuring the false-alarm rate would trade a detector that
+    # never fires for one that fires on noise.
     if np.isfinite(history[-1]["psi_score"]) and history[-1]["psi_score"] > .25:
         return True, "previous_score_psi_gt_025"
     matured = [h for h in history if h["end"] <= current_start - WEEK and np.isfinite(h["pr_auc"])]

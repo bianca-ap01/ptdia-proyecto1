@@ -1,0 +1,3 @@
+variant,brier,mean_score,observed_prevalence,overestimation_factor
+raw,0.04788,0.14304,0.0348,4.11
+isotonic,0.02192,0.03548,0.0348,1.02

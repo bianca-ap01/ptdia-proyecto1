@@ -99,6 +99,22 @@ Esa comparación es el resultado principal del trabajo y conviene enunciarla sin
 
 De ahí la recomendación operativa, que no es «no adaptar». La adaptación funciona y está demostrada en la dimensión que mide el modelo: las tres familias mejoran con ventana deslizante, con significancia estadística. Lo que no está demostrado es que esa mejora se traduzca en ahorro bajo los supuestos de costo actuales. Por eso se mantiene V01 con política y se conserva armada la infraestructura adaptativa —ventanas, detector, protocolo de promoción—, mientras el disparo automático de reentrenamiento queda suspendido hasta que un piloto mida la eficacia real del analista, que es el parámetro que domina la decisión. El aparato de medición que permite detectar esta reversión es el entregable; el modelo es secundario.
 
+### Incertidumbre: calibración y abstención
+
+El score de V01 ordena bien, pero no es una probabilidad: su media en holdout es **0.143** frente a una prevalencia observada de **0.035**, es decir, **sobreestima 4.11×**. Mientras la política solo compare el score contra un umbral, eso es indiferente. Deja de serlo en cuanto alguien lea ese número como «probabilidad de fraude» para justificar una decisión ante un cliente o para sumar riesgo esperado en dinero.
+
+Una isotónica ajustada **solo con validación** y aplicada a holdout corrige el nivel sin tocar el modelo ni el ranking: el Brier baja de **0.04788 a 0.02192** (**−54.2 %**) y la media calibrada queda en **0.0355**, a 1.02× de la prevalencia. La [curva de confiabilidad por decil](kaggle/sistema_final/outputs/calibration_bins.csv) y el [resumen](kaggle/sistema_final/outputs/calibration_summary.csv) se reproducen con [`calibration.py`](calibration.py). Ajustarla con holdout habría filtrado el periodo reservado hacia la calibración, que es el error que el protocolo temporal evita en todo lo demás.
+
+La banda de revisión funciona además como **región de abstención**: el sistema no decide solo, deriva esa franja a un analista. Medida sobre holdout, la separación de riesgo es la esperada:
+
+| Acción | Transacciones | Cobertura | Tasa de fraude |
+|:--|--:|--:|--:|
+| Aprobar (automático) | 79 921 | 90.2 % | 1.18 % |
+| Revisar (analista) | 4 892 | 5.5 % | 8.87 % |
+| Escalar (confirmación) | 3 768 | 4.3 % | 45.20 % |
+
+El 90.2 % automatizado retiene **1.18 %** de fraude residual, mientras que la franja escalada concentra **45.2 %**. Eso es lo que justifica que la autonomía plena se limite a la banda inferior. El [desglose](kaggle/sistema_final/outputs/abstention_summary.csv) permite auditar dónde conviene mover los cortes si cambia el cupo.
+
 Como indicadores sociales observables, el [desglose UID](kaggle/sistema_final/outputs/social_uid_proxy.csv) registra **11.5 escalaciones falsas por 1 000 legítimas** con UID conocido y **37.9** con UID desconocido. La cobertura de fraude referido es 64.0 % y 72.3 %, respectivamente. Esa diferencia exige investigar captura de identidad y fricción antes de operar; UID conocido/desconocido no es un grupo demográfico protegido ni prueba equidad.
 
 ## 6. Arquitectura y despliegue defendible
