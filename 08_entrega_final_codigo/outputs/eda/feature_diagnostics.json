@@ -1,0 +1,11 @@
+{
+  "association_rows": 391716,
+  "association_period": "train before validation minus 7 days",
+  "raw_features": 431,
+  "baseline": "LightGBM first grid configuration",
+  "model_features": 190,
+  "permutation_rows": 10000,
+  "permutation_features": 30,
+  "seed": 42,
+  "note": "Exploratory diagnostic only; not the model or policy chosen in later stages."
+}

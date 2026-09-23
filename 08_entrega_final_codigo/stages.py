@@ -9,7 +9,7 @@ from pathlib import Path
 
 import numpy as np
 import pandas as pd
-from scipy.stats import ks_2samp
+from scipy.stats import chi2_contingency, ks_2samp
 from sklearn.isotonic import IsotonicRegression
 
 from core import (DAY, WEEK, GRIDS, SCENARIOS, candidate_grid, config_digest, cuts,
@@ -63,6 +63,73 @@ def run_eda(root: Path | None = None) -> Path:
     missing = visible.groupby("month_relative")[["TransactionAmt", "D1", "C9", "id_02"]].apply(
         lambda x: x.isna().mean()).reset_index()
     missing.to_csv(out / "monthly_missingness.csv", index=False)
+    source = data_dir(root)
+    raw_columns = list(pd.read_csv(source / "train_transaction.csv", nrows=0).columns)
+    raw_columns += [c.replace("id-", "id_") if c.startswith("id-") else c
+                    for c in pd.read_csv(source / "train_identity.csv", nrows=0).columns]
+    raw_features = [c for c in dict.fromkeys(raw_columns)
+                    if c not in {"TransactionID", "TransactionDT", "isFraud"}]
+    all_missing = visible[raw_features].isna().groupby(visible.month_relative).mean()
+    all_missing.index.name = "month_relative"
+    all_missing = all_missing.reset_index().melt(
+        id_vars="month_relative", var_name="feature", value_name="missing_rate")
+    all_missing["rows"] = all_missing.month_relative.map(visible.groupby("month_relative").size())
+    all_missing.to_csv(out / "monthly_missingness_all.csv", index=False)
+    # Diagnostic associations use only labels available before validation.
+    model_df = df.drop(columns=["month_relative", "period"])
+    train_mask = (df.TransactionDT < train_end - WEEK).to_numpy()
+    train = model_df.loc[train_mask]
+    target = train.isFraud.astype(float)
+    associations = []
+    for name in raw_features:
+        values = train[name]
+        if pd.api.types.is_numeric_dtype(values):
+            signed = values.corr(target)
+            measure = "pearson_r"
+            strength = abs(signed)
+        else:
+            table = pd.crosstab(values.astype("string").fillna("__MISSING__"), target)
+            chi2 = chi2_contingency(table, correction=False).statistic if min(table.shape) > 1 else np.nan
+            signed = np.nan
+            measure = "cramers_v"
+            strength = np.sqrt(chi2 / len(train))
+        associations.append({"feature": name, "measure": measure, "association": strength,
+                             "signed_correlation": signed, "non_null_rows": int(values.notna().sum()),
+                             "missing_rate": float(values.isna().mean())})
+    pd.DataFrame(associations).to_csv(out / "feature_associations.csv", index=False)
+
+    # A separate LightGBM diagnostic follows the current window-specific feature selection.
+    snapshot = fit_snapshot(model_df, train_mask, "lightgbm", GRIDS["lightgbm"][0], train_end - WEEK)
+    model = snapshot["model"]
+    gain = pd.DataFrame({
+        "feature": snapshot["features"],
+        "gain": model.booster_.feature_importance(importance_type="gain"),
+        "splits": model.booster_.feature_importance(importance_type="split"),
+    }).sort_values("gain", ascending=False)
+    gain.to_csv(out / "feature_importance_gain.csv", index=False)
+    valid = model_df.loc[(df.TransactionDT > train_end) & (df.TransactionDT <= valid_end)]
+    sample = valid.sample(n=min(10_000, len(valid)), random_state=42)
+    x_valid = snapshot["encoder"].transform(sample)
+    y_valid = sample.isFraud.to_numpy()
+    baseline_ap = safe_ap(y_valid, model.predict_proba(x_valid)[:, 1])
+    rng = np.random.default_rng(42)
+    permutation = []
+    for name in gain.head(30).feature:
+        original = x_valid[name].to_numpy(copy=True)
+        x_valid[name] = rng.permutation(original)
+        permuted_ap = safe_ap(y_valid, model.predict_proba(x_valid)[:, 1])
+        x_valid[name] = original
+        permutation.append({"feature": name, "pr_auc_drop": baseline_ap - permuted_ap,
+                            "baseline_pr_auc": baseline_ap, "permuted_pr_auc": permuted_ap,
+                            "validation_rows": len(sample)})
+    pd.DataFrame(permutation).to_csv(out / "feature_importance_permutation.csv", index=False)
+    json_dump(out / "feature_diagnostics.json", {
+        "association_rows": len(train), "association_period": "train before validation minus 7 days",
+        "raw_features": len(raw_features), "baseline": "LightGBM first grid configuration",
+        "model_features": len(snapshot["features"]), "permutation_rows": len(sample),
+        "permutation_features": len(permutation), "seed": 42,
+        "note": "Exploratory diagnostic only; not the model or policy chosen in later stages.",
+    })
     first = visible.loc[visible.month_relative == visible.month_relative.min(), "TransactionAmt"].dropna()
     shift = []
     for month, part in visible.groupby("month_relative"):

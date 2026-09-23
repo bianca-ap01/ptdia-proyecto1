@@ -9,6 +9,9 @@ Este paquete implementa una secuencia reproducible y auditable. Los cuatro noteb
 | 3 | `03_costos_escenarios.ipynb` | Cuatro escenarios, umbrales, ranking por menor arrepentimiento máximo y elección congelada. |
 | 4 | `04_modelo_final.ipynb` | Evaluación retrospectiva, costo, calibración, capacidad y control de calidad con gate de promoción. |
 
+El EDA guarda `monthly_missingness.csv` como muestra de cuatro variables y `monthly_missingness_all.csv` con la tasa de faltantes de las 431 variables originales por periodo de 30 días. `plot.ipynb` resume el perfil completo y muestra las columnas con mayor cambio temporal.
+También guarda `feature_associations.csv` (Pearson para variables numéricas y V de Cramér para categóricas), `feature_importance_gain.csv` y `feature_importance_permutation.csv`. Estos diagnósticos se calculan con entrenamiento histórico y una muestra de validación; no sustituyen la selección de modelos y costos de las etapas siguientes. `plot.ipynb` grafica los rankings y distingue exclusiones explícitas, columnas usadas solo en el EDA, `DT_hour` como predictor actual y variables temporales de un EDA anterior que ya no se generan.
+
 ## Contrato temporal
 
 El corte cronológico es 70/15/15 por `TransactionDT`. Los dos folds internos evalúan los tramos 50–65 % y 75–90 % de la duración temporal del train inicial, de modo que ambos caben dentro de ese periodo en IEEE-CIS. Un ajuste usa etiquetas con al menos siete días de antigüedad. El último tramo de siete días de validación no puede informar la elección al inicio del holdout. No se usa la etiqueta del test sin etiqueta de la competencia. Las estadísticas de preprocesamiento y la selección de variables `V` se ajustan en cada ventana de entrenamiento. Cinco atributos por UID usan sólo eventos anteriores.
