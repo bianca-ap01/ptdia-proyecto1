@@ -25,15 +25,47 @@
 \titlepage
 \end{frame}
 
-\begin{frame}{Pregunta y decisión}\large
-¿Puede una política basada en riesgo reducir la pérdida simulada bajo un cupo diario de revisión?
-\vspace{5mm}
-\begin{block}{Tres acciones}
-Aprobar riesgo bajo \quad Revisar banda intermedia \quad Escalar riesgo alto
-\end{block}
+\begin{frame}{Problema de decisión y objetivo general}\small
+Una entidad que autoriza pagos debe decidir qué transacciones aprueba y cuáles envía a analistas. El fraude es minoritario, los datos cambian y las etiquetas llegan después de la decisión. Revisar todo excede la capacidad humana; aprobar todo deja pérdidas.
 \vspace{4mm}
-\small
-El modelo ordena transacciones; la política convierte el score en acciones. Medimos PR-AUC, recall, F1, calibración, costo y demanda operativa. El cupo primario equivale al 5\% de la mediana diaria del entrenamiento elegible: \textbf{159 revisiones por día}.
+\begin{block}{Objetivo general}
+Diseñar y evaluar un sistema temporal de apoyo a decisiones antifraude que convierta riesgo en acciones operativas sujetas a capacidad humana, con control de calidad y adaptación.
+\end{block}
+\vspace{3mm}
+\textbf{Decisión:} aprobar riesgo bajo, revisar la banda intermedia o escalar riesgo alto. El analista decide los casos revisados; el score no concluye culpabilidad.
+\end{frame}
+
+\begin{frame}{Cuatro objetivos específicos}\small
+\begin{enumerate}\setlength{\itemsep}{4mm}
+\item Analizar por periodos prevalencia, faltantes, anomalías y cambios de distribución; crear variables disponibles antes de decidir.
+\item Comparar modelos tradicionales y avanzados bajo un mismo protocolo cronológico y seleccionar hiperparámetros con validación histórica.
+\item Traducir el riesgo en aprobar, revisar o escalar mediante escenarios de costo y un cupo diario de revisión.
+\item Monitorear desempeño con etiquetas maduras y evaluar reentrenamiento y promoción tras degradación sostenida.
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{Restricciones y referencias de éxito}\small
+\begin{columns}[T]
+\column{.51\linewidth}
+\textbf{Siete restricciones agrupadas}
+\begin{itemize}\setlength{\itemsep}{1mm}
+\item Temporalidad y etiquetas tardías
+\item Identidad incompleta y variables anonimizadas
+\item Fraude minoritario
+\item Cupo de revisión inicial: 159/día
+\item Capacidad de escalación por validar
+\item Cómputo y promoción controlada
+\item Autonomía limitada y equidad demográfica no evaluable
+\end{itemize}
+\column{.46\linewidth}
+\textbf{Referencias verificables}
+\begin{itemize}\setlength{\itemsep}{2mm}
+\item PR-AUC aleatoria: prevalencia de validación, 3.43\%.
+\item Decisión base: aprobar todo, 34.078 por transacción en la subventana de selección.
+\item Éxito operativo: menor costo sin rebasar cupo, más revisión de cobertura UID.
+\item Latencia p95: requisito de piloto, aún sin medición para este pipeline.
+\end{itemize}
+\end{columns}
 \end{frame}
 
 \begin{frame}{EDA temporal: cambian etiqueta, monto y calidad}\small

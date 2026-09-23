@@ -38,7 +38,7 @@ La elección minimiza el peor arrepentimiento porcentual frente al menor costo d
 
 Los kernels se configuran como privados y CPU. Cada etapa guarda un manifiesto de estado. El kernel de costos depende de los outputs de experimentación; el final depende de ambos. Si una ejecución falla, `run_summary.json` identifica el error; no se reutilizan outputs de corridas anteriores como si fueran nuevos. El usuario autorizó `badexample`: las cuatro etapas terminaron y sus outputs IEEE-CIS se descargaron. `python verify.py` pasó sobre ellos. La prueba sintética local no es evidencia de desempeño. El estado preciso de cada etapa está en `run_manifest.json`.
 
-La validación eligió XGBoost periódico de 30 días con umbrales 0.3872/0.6521 y cupo de 159 revisiones iniciales por día. En el holdout histórico obtuvo PR-AUC 0.548 y, bajo eficacia 80/95, costo simulado 12.312 por transacción. El informe de siete páginas, la presentación y la infografía A3 están en `../07_latex/` y se basan en estos outputs nuevos. `../07_latex/make_figures.py` reconstruye los gráficos compartidos desde los CSV guardados.
+La validación eligió XGBoost periódico de 30 días con umbrales 0.3872/0.6521 y cupo de 159 revisiones iniciales por día. En el holdout histórico obtuvo PR-AUC 0.548 y, bajo eficacia 80/95, costo simulado 12.312 por transacción. El informe de ocho páginas, la presentación y la infografía A3 están en `../07_latex/` y se basan en estos outputs nuevos. `../07_latex/make_figures.py` reconstruye los gráficos compartidos desde los CSV guardados.
 
 ## Política de calidad
 
