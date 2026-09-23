@@ -8,6 +8,7 @@
 \usetikzlibrary{arrows.meta,positioning}
 \definecolor{navy}{HTML}{14324C}
 \definecolor{teal}{HTML}{008A89}
+\definecolor{coral}{HTML}{B94F3E}
 \hypersetup{colorlinks=true,linkcolor=navy,urlcolor=teal}
 \pagestyle{fancy}\fancyhf{}
 \lhead{\sffamily\small Grupo NaN · UTEC}
@@ -64,8 +65,8 @@ Autonomía y datos sociales & La recomendación no prueba fraude; no hay atribut
 \begin{table}[H]\centering\small
 \begin{tabularx}{\linewidth}{@{}p{25mm}X X@{}}\toprule
 Tipo & Medida principal & Baseline o regla de interpretación\\\midrule
-Técnica & PR-AUC, recall y F1; latencia de inferencia para despliegue. Brier apoya la revisión de calibración. & PR-AUC aleatoria $\approx$ prevalencia: 3.43\% en validación IEEE-CIS. Comparar además con regresión y árbol en los mismos folds. Latencia aún no medida para este pipeline.\\
-Decisión & Costo por transacción, pérdida evitada y carga diaria de ambas colas. & Aprobar todo: 34.078 por transacción en la subventana de selección; comparar cuatro escenarios y respetar el cupo inicial.\\
+Técnica & PR-AUC $\uparrow$, recall $\uparrow$, F1 $\uparrow$ y latencia p95 $\downarrow$. Brier $\downarrow$ apoya la calibración. & PR-AUC aleatoria $\approx$ prevalencia: 3.43\% en validación IEEE-CIS. Comparar además con regresión y árbol en los mismos folds. Latencia aún no medida para este pipeline.\\
+Decisión & Costo por transacción $\downarrow$, pérdida evitada $\uparrow$ y carga diaria de ambas colas $\downarrow$ bajo calidad suficiente. & Aprobar todo: 34.078 por transacción en la subventana de selección; comparar cuatro escenarios y respetar el cupo inicial.\\
 Social y operativa & Cobertura y PR-AUC por UID conocido/no visto; tasa de transacciones legítimas enviadas a revisión o escalación. & En el holdout histórico, 89.35\% recibe aprobación automática y 8.47\% de las legítimas entra en una cola; sin inferencia de equidad demográfica.\\\bottomrule
 \end{tabularx}
 \caption{Métricas conectadas con el error y referencias verificables.}
@@ -94,13 +95,13 @@ Comparamos dos modelos tradicionales, regresión logística y árbol de decisió
 
 \begin{table}[H]\centering\small
 \begin{tabular}{@{}lrl@{}}\toprule
-Modelo & PR-AUC interna del ajuste elegido & Hiperparámetros elegidos\\\midrule
-Regresión logística & 0.374 & $C=0.1$\\
+Modelo & PR-AUC interna $\uparrow$ & Hiperparámetros elegidos\\\midrule
+LightGBM & \textcolor{teal}{\textbf{0.560}} & 63 hojas; 100 observaciones por hoja\\
+XGBoost & 0.536 & profundidad 6; peso mínimo 30\\
 Árbol de decisión & 0.387 & profundidad 10; hoja mínima 100\\
-LightGBM & 0.560 & 63 hojas; 100 observaciones por hoja\\
-XGBoost & 0.536 & profundidad 6; peso mínimo 30\\\bottomrule
+Regresión logística & 0.374 & $C=0.1$\\\bottomrule
 \end{tabular}
-\caption{Selección exclusivamente dentro del periodo de entrenamiento inicial.}
+\caption{Orden descendente de PR-AUC interna; turquesa marca el mejor ranking, no la política de menor costo. Selección exclusivamente dentro del entrenamiento inicial.}
 \end{table}
 
 Los cuatro modelos estáticos comparten el mismo protocolo de validación. Para LightGBM y XGBoost también reproducimos ventanas periódicas de 30, 60 y 90 días, más una ventana de 60 días disparada por calidad. La versión disparada sin gate es comparador técnico; no participa en la selección económica. LightGBM periódico de 60 días obtuvo la mayor PR-AUC de validación completa (0.586), pero la política XGBoost de 30 días obtuvo el menor costo en los cuatro escenarios de la subventana destinada a decidir.
@@ -122,13 +123,13 @@ Probamos eficacias revisión/escalación 100/100, 90/98, 80/95 y 60/90. Para cad
 
 \begin{table}[H]\centering\small
 \begin{tabular}{@{}lrrr@{}}\toprule
-Eficacia revisión/escalación & Costo/txn validación & Costo/txn holdout & Pérdida evitada holdout\\\midrule
+Eficacia revisión/escalación & Costo/txn validación $\downarrow$ & Costo/txn holdout $\downarrow$ & Pérdida evitada $\uparrow$\\\midrule
 100/100 & 8.106 & 10.227 & 1.794 millones\\
 90/98 & 9.189 & 11.184 & 1.710 millones\\
-80/95 & 10.499 & 12.312 & 1.610 millones\\
-60/90 & 12.776 & 14.286 & 1.435 millones\\\bottomrule
+\textcolor{teal}{\textbf{80/95 (central)}} & \textcolor{teal}{10.499} & \textcolor{teal}{12.312} & \textcolor{teal}{1.610 millones}\\
+60/90 & \textcolor{coral}{12.776} & \textcolor{coral}{14.286} & \textcolor{coral}{1.435 millones}\\\bottomrule
 \end{tabular}
-\caption{Una única política elegida en validación, evaluada luego sin retocar umbrales. Unidades monetarias ilustrativas.}
+\caption{Escenarios ordenados de menor a mayor costo. Turquesa: escenario central del análisis; coral: supuesto más adverso. Una política elegida en validación, sin retocar umbrales.}
 \end{table}
 
 \begin{figure}[H]\centering
@@ -146,11 +147,11 @@ Con el escenario 80/95, aprobar todo costaría 2.700 millones ilustrativos; la p
 
 \begin{table}[H]\centering\small
 \begin{tabular}{@{}lrrrrr@{}}\toprule
-Periodo relativo & Filas & Fraudes & PR-AUC & F1 & Costo/txn 80/95\\\midrule
-Mes 6 & 83\,088 & 2\,842 & 0.542 & 0.480 & 12.077\\
-Mes 7 (parcial) & 5\,493 & 241 & 0.612 & 0.543 & 15.870\\\bottomrule
+Periodo relativo & PR-AUC $\uparrow$ & Costo/txn $\downarrow$ & F1 $\uparrow$ & Filas & Fraudes\\\midrule
+Mes 6 & 0.542 & 12.077 & 0.480 & 83\,088 & 2\,842\\
+Mes 7 (parcial) & 0.612 & 15.870 & 0.543 & 5\,493 & 241\\\bottomrule
 \end{tabular}
-\caption{Evaluación mensual; el último periodo contiene sólo parte de un mes.}
+\caption{Orden cronológico para mostrar evolución, con métricas decisivas primero. Escenario de costo 80/95; el último periodo es parcial.}
 \end{table}
 
 El 55.4\% de las filas del holdout tiene UID no visto antes (49\,069; PR-AUC 0.570); el 44.6\% restante tiene UID conocido (39\,512; PR-AUC 0.487). Este contraste identifica un segmento a monitorear, sin inferir causalidad ni trato desigual a personas.
@@ -173,9 +174,9 @@ La cota de PR-AUC semanal, 0.4897, es el percentil 10 de las semanas de validaci
 
 \begin{table}[H]\centering\small
 \begin{tabular}{@{}lrrrr@{}}\toprule
-Periodo & Última PR-AUC madura & Cota & Acción & PR-AUC posterior observada\\\midrule
-Mes 6 & 0.497 & 0.490 & Mantener & 0.512\\
-Mes 7 (parcial) & 0.497 & 0.490 & Mantener & 0.571\\\bottomrule
+Periodo & Última PR-AUC $\uparrow$ & Cota & Acción & PR-AUC posterior $\uparrow$\\\midrule
+Mes 6 & 0.497 & 0.490 & \textcolor{teal}{Mantener} & 0.512\\
+Mes 7 (parcial) & 0.497 & 0.490 & \textcolor{teal}{Mantener} & 0.571\\\bottomrule
 \end{tabular}
 \caption{Bitácora mensual de métrica, umbral, decisión y resultado del controlador sombra.}
 \end{table}

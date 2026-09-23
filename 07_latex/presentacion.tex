@@ -7,6 +7,7 @@
 \newcolumntype{Y}{>{\raggedright\arraybackslash}X}
 \definecolor{navy}{HTML}{14324C}
 \definecolor{teal}{HTML}{008A89}
+\definecolor{coral}{HTML}{B94F3E}
 \definecolor{pale}{HTML}{EAF5F4}
 \setbeamercolor{structure}{fg=teal}
 \setbeamercolor{frametitle}{fg=white,bg=navy}
@@ -91,16 +92,16 @@ Los hiperparámetros y umbrales se congelan en validación antes de evaluar el h
 
 \begin{frame}{Cuatro modelos, hiperparámetros por pasado}\small
 \begin{tabular}{@{}lrl@{}}\toprule
-Modelo & PR-AUC interna & Ajuste seleccionado\\\midrule
-Regresión logística & 0.374 & $C=0.1$\\
+Modelo & PR-AUC interna $\uparrow$ & Ajuste seleccionado\\\midrule
+LightGBM & \textcolor{teal}{\textbf{0.560}} & 63 hojas; mínimo 100\\
+XGBoost & 0.536 & profundidad 6; peso mínimo 30\\
 Árbol de decisión & 0.387 & profundidad 10; hoja mínima 100\\
-LightGBM & \textbf{0.560} & 63 hojas; mínimo 100\\
-XGBoost & 0.536 & profundidad 6; peso mínimo 30\\\bottomrule
+Regresión logística & 0.374 & $C=0.1$\\\bottomrule
 \end{tabular}
 \par
 \vspace{6mm}
 \begin{itemize}
-\item Dos modelos tradicionales y dos avanzados.
+\item Dos tradicionales y dos avanzados, ordenados por PR-AUC; turquesa marca el mejor ranking.
 \item Grid compacto y fijado antes del holdout; 28 ajustes en dos folds.
 \item Elección de hiperparámetros por PR-AUC media, peor fold y complejidad.
 \end{itemize}
@@ -131,11 +132,11 @@ C=0.65\,N_{\rm revisión}+4\,N_{\rm escalación\ directa}
 Se optimizaron umbrales dentro de validación para cada candidato. La regla minimiza el peor porcentaje de arrepentimiento frente al menor costo de cada escenario.
 \vspace{3mm}
 \begin{tabular}{@{}lrr@{}}\toprule
-Eficacia revisión/escalación & Costo/txn elegido & Pérdida evitada\\\midrule
+Eficacia revisión/escalación & Costo/txn $\downarrow$ & Pérdida evitada $\uparrow$\\\midrule
 100/100 & 8.106 & 1.202 millones\\
 90/98 & 9.189 & 1.152 millones\\
-80/95 & 10.499 & 1.091 millones\\
-60/90 & 12.776 & 0.986 millones\\\bottomrule
+\textcolor{teal}{\textbf{80/95 (central)}} & \textcolor{teal}{10.499} & \textcolor{teal}{1.091 millones}\\
+60/90 & \textcolor{coral}{12.776} & \textcolor{coral}{0.986 millones}\\\bottomrule
 \end{tabular}
 \par
 \vspace{3mm}
@@ -147,10 +148,10 @@ XGBoost periódico, ventana 30 días; umbrales 0.3872 y 0.6521; cupo 159 revisio
 \begin{frame}{Holdout retrospectivo: predicción}\small
 \begin{tabular}{@{}lr@{}}\toprule
 Métrica & Resultado\\\midrule
-Transacciones / fraudes & 88\,581 / 3\,083\\
-PR-AUC & \textbf{0.548}\\
-Recall / F1 al umbral de escalación & 0.597 / 0.485\\
-Brier bruto / calibrado & 0.06863 / 0.02195\\\bottomrule
+PR-AUC $\uparrow$ & \textcolor{teal}{\textbf{0.548}}\\
+Recall $\uparrow$ / F1 $\uparrow$ al umbral de escalación & 0.597 / 0.485\\
+Brier bruto / calibrado $\downarrow$ & 0.06863 / \textcolor{teal}{0.02195}\\
+Transacciones / fraudes & 88\,581 / 3\,083\\\bottomrule
 \end{tabular}
 \par
 \vspace{4mm}
@@ -171,16 +172,16 @@ La isotónica se ajustó sólo con la primera semana de validación. No cambia r
 
 \begin{frame}{Resultados mensuales y cobertura UID}\small
 \begin{tabular}{@{}lrrrr@{}}\toprule
-Periodo & Filas & PR-AUC & F1 & Costo/txn 80/95\\\midrule
-Mes 6 & 83\,088 & 0.542 & 0.480 & 12.077\\
-Mes 7, parcial & 5\,493 & 0.612 & 0.543 & 15.870\\\bottomrule
+Periodo & PR-AUC $\uparrow$ & Costo/txn $\downarrow$ & F1 $\uparrow$ & Filas\\\midrule
+Mes 6 & 0.542 & 12.077 & 0.480 & 83\,088\\
+Mes 7, parcial & 0.612 & 15.870 & 0.543 & 5\,493\\\bottomrule
 \end{tabular}
 \par
 \vspace{5mm}
 \begin{tabular}{@{}lrr@{}}\toprule
-Cobertura UID & Filas & PR-AUC\\\midrule
-No visto antes & 49\,069 & 0.570\\
-Conocido & 39\,512 & 0.487\\\bottomrule
+Cobertura UID & PR-AUC $\uparrow$ & Filas\\\midrule
+No visto antes & 0.570 & 49\,069\\
+Conocido & 0.487 & 39\,512\\\bottomrule
 \end{tabular}
 \par
 \vspace{3mm}
