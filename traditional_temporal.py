@@ -30,7 +30,7 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.tree import DecisionTreeClassifier
 
 HERE = Path(__file__).resolve().parent
-DATA = HERE.parent / "ieee-fraud-detection"
+DATA = HERE / "ieee-fraud-detection"
 OUT = HERE / "kaggle" / "experimentacion" / "outputs" / "traditional_block_metrics.csv"
 
 SEED = 42
@@ -227,7 +227,7 @@ def main():
         .pr_auc.agg(["mean", "std", "count"])
         .round(4).to_string()
     )
-    print(f"\nEscrito: {OUT.relative_to(HERE.parent)} ({len(result)} filas)")
+    print(f"\nEscrito: {OUT.relative_to(HERE)} ({len(result)} filas)")
 
 
 if __name__ == "__main__":

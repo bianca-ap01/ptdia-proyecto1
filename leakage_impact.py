@@ -25,7 +25,7 @@ import pandas as pd
 from sklearn.metrics import average_precision_score
 
 HERE = Path(__file__).resolve().parent
-DATA = HERE.parent / "ieee-fraud-detection"
+DATA = HERE / "ieee-fraud-detection"
 OUT = HERE / "kaggle" / "experimentacion" / "outputs" / "leakage_impact.csv"
 
 SEED = 42
@@ -179,7 +179,7 @@ def main():
     delta = summary.pr_auc_holdout.iloc[0] - summary.pr_auc_holdout.iloc[1]
     print("\n" + summary.to_string(index=False))
     print(f"\nVentaja de la fuga en holdout: {delta:+.5f} PR-AUC")
-    print(f"Escrito: {OUT.relative_to(HERE.parent)}")
+    print(f"Escrito: {OUT.relative_to(HERE)}")
 
 
 if __name__ == "__main__":

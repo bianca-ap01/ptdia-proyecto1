@@ -26,7 +26,7 @@ from sklearn.metrics import average_precision_score
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parent
 DATA = ROOT / "ieee-fraud-detection"
-FINAL = ROOT / "final"
+FINAL = ROOT
 ARTIFACTS = HERE / "artifacts"
 
 SEED = 42

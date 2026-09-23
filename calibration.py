@@ -158,7 +158,7 @@ def main():
             f"de las transacciones, con prevalencia residual "
             f"{float(approve['fraud_rate'].iloc[0]):.4f}."
         )
-    print(f"\nEscrito en {OUTDIR.relative_to(HERE.parent)}/")
+    print(f"\nEscrito en {OUTDIR.relative_to(HERE)}/")
 
 
 if __name__ == "__main__":

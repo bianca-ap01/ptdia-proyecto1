@@ -173,7 +173,7 @@ Bloques favorables & 5/5 & 5/5 & 5/5\\
 \end{tabular}
 \end{center}
 \vspace{1mm}
-\footnotesize Adaptar supera a no adaptar en las tres familias. \textbf{45 vs.\ 30 días cabe dentro del ruido}: sostenemos la ventana deslizante, no el ajuste fino de su tamaño.
+\footnotesize Adaptar supera a no adaptar en las tres familias. El óptimo está en el rango \textbf{30--45 días}; dentro de él la diferencia cabe en el ruido, así que adoptamos 45\,d por su media sin reclamar superioridad sobre 30.
 \end{frame}
 
 \begin{frame}{La adaptación no rescata a los tradicionales}\small
@@ -306,9 +306,9 @@ Por eso la alerta es una \textbf{disyunción}: PSI sobre umbral \emph{o} dos blo
 \end{block}
 \end{frame}
 
-\begin{frame}{Dos auditorías de nuestro propio trabajo}\small
-\begin{block}{1. La fuga de V01: medida, no supuesta}
-V01 calculó los cuartiles del monto sobre todas las filas, no sobre su ventana histórica. En vez de declararla y seguir, entrenamos el mismo modelo con y sin contaminación:\\[2mm]
+\begin{frame}{Dos controles de validez}\small
+\begin{block}{1. La fuga de V01, cuantificada}
+El indicador de monto atípico de V01 usa cuartiles calculados sobre todas las filas. Entrenamos el mismo modelo con y sin esa contaminación:\\[2mm]
 \begin{center}
 \begin{tabular}{@{}lrr@{}}\toprule
  & Con fuga & Limpio\\\midrule
@@ -318,7 +318,7 @@ PR-AUC holdout & 0.51656 & \textbf{0.51910}\\\bottomrule
 \vspace{1mm}
 La versión contaminada rinde \textbf{0.0025 peor}. La fuga es real y se declara, pero \textbf{no otorga ventaja} y no sesga la comparación.
 \end{block}
-\begin{block}{2. Features temporales: cumplidas y explicadas}
+\begin{block}{2. Features temporales: evaluadas}
 Cinco variables de memoria por entidad con \texttt{shift(1)} dentro del UID. El modelo las usa —posiciones 19 a 43 de 190 por importancia— pero aportan $+0.0006$: las columnas \texttt{C*} y \texttt{D*} ya codifican recurrencia por entidad.
 \end{block}
 \end{frame}
@@ -344,7 +344,7 @@ Mantener V01 con política, conservar armada la infraestructura adaptativa —ve
 \end{block}
 \begin{itemize}
 \item Adaptar mejora la discriminación en las tres familias, con significancia estadística.
-\item Pero esa mejora no se convierte en ahorro: el cuello de botella es la capacidad de revisión, no el modelo.
+\item Esa mejora no se convierte en ahorro: el cuello de botella es la capacidad de revisión, no el modelo.
 \item La calibración isotónica evita comunicar scores brutos como probabilidades.
 \item El aparato de medición que detecta esa reversión es el entregable; el modelo es secundario.
 \end{itemize}
