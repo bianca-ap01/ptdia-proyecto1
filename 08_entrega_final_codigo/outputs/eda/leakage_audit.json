@@ -1,0 +1,23 @@
+{
+  "excluded_from_predictors": [
+    "TransactionID",
+    "TransactionDT",
+    "isFraud",
+    "uid"
+  ],
+  "fitted_only_on_history": [
+    "V-column ranking",
+    "category maps and frequencies",
+    "amount IQR",
+    "imputation"
+  ],
+  "causal_prior_event_features": [
+    "uid_prior_count",
+    "uid_prior_amount",
+    "uid_prior_mean",
+    "uid_seconds_since_prior",
+    "uid_amount_vs_prior_mean"
+  ],
+  "remaining_uncertainty": "Anonymized IEEE-CIS columns have no operational availability contract.",
+  "holdout_labels_used": false
+}

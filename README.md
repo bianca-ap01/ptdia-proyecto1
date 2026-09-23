@@ -4,7 +4,7 @@ Sistema inteligente adaptativo sobre datos no estacionarios.
 
 ## Nueva entrega de código
 
-La carpeta **[`08_entrega_final_codigo/`](08_entrega_final_codigo/README.md)** contiene los cuatro notebooks, el código compartido, el protocolo de validación temporal y el verificador. La ejecución completa con IEEE-CIS y la actualización de cifras en el informe y las diapositivas siguen pendientes: la cuenta Kaggle configurada no coincide con la cuenta del grupo y la revisión automática rechazó subirle más código. [`08_entrega_final_codigo/run_manifest.json`](08_entrega_final_codigo/run_manifest.json) registra ese estado.
+La carpeta **[`08_entrega_final_codigo/`](08_entrega_final_codigo/README.md)** contiene los cuatro notebooks, el código compartido, el protocolo de validación temporal y el verificador. El usuario autorizó ejecutar en la cuenta Kaggle configurada (`badexample`). EDA terminó y sus salidas IEEE-CIS se descargaron; experimentación está en curso. La evaluación, la verificación integral y la actualización de cifras en el informe y las diapositivas siguen pendientes. [`08_entrega_final_codigo/run_manifest.json`](08_entrega_final_codigo/run_manifest.json) registra el estado por etapa.
 
 `final/` conserva la entrega histórica y sus resultados anteriores; las cifras de sus documentos no deben atribuirse a los notebooks nuevos.
 

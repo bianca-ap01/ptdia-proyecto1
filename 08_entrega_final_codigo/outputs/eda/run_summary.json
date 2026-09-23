@@ -1,0 +1,9 @@
+{
+  "stage": "eda",
+  "status": "complete",
+  "rows": 590540,
+  "train_cut": 10437998.1,
+  "valid_cut": 13151845.999999998,
+  "observed_months": 6,
+  "holdout_labels_used": false
+}
