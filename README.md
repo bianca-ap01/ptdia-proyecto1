@@ -2,14 +2,19 @@
 
 Sistema inteligente adaptativo sobre datos no estacionarios.
 
-## Entrega evaluable
+## Nueva entrega de código
 
-El entregable es la carpeta **`final/`**. Todo lo demás es la bitácora
-experimental previa que lo sustenta.
+La carpeta **[`08_entrega_final_codigo/`](08_entrega_final_codigo/README.md)** contiene los cuatro notebooks, el código compartido, el protocolo de validación temporal y el verificador. La ejecución completa con IEEE-CIS y la actualización de cifras en el informe y las diapositivas siguen pendientes: la cuenta Kaggle configurada no coincide con la cuenta del grupo y la revisión automática rechazó subirle más código. [`08_entrega_final_codigo/run_manifest.json`](08_entrega_final_codigo/run_manifest.json) registra ese estado.
+
+`final/` conserva la entrega histórica y sus resultados anteriores; las cifras de sus documentos no deben atribuirse a los notebooks nuevos.
+
+## Entrega histórica
 
 | Qué | Dónde |
 | --- | --- |
 | Informe técnico | [`final/REPORTE.md`](final/REPORTE.md) |
+| Auditoría actual de validación, costos y rúbrica | [`final/AUDITORIA_RUBRICA.md`](final/AUDITORIA_RUBRICA.md) |
+| Sensibilidad de costos con selección en validación | [`final/cost_sensitivity_valid.csv`](final/cost_sensitivity_valid.csv) · [`final/cost_sensitivity.py`](final/cost_sensitivity.py) |
 | 1 · Análisis exploratorio temporal | [`final/01_eda.ipynb`](final/01_eda.ipynb) |
 | 2 · Monitoreo y detección de drift | [`final/02_monitoreo_drift.ipynb`](final/02_monitoreo_drift.ipynb) |
 | 3 · Modelos y estrategias de adaptación | [`final/03_modelos_adaptacion.ipynb`](final/03_modelos_adaptacion.ipynb) |
@@ -41,8 +46,8 @@ precedieron a la entrega. Se conservan por trazabilidad de decisiones.
 | `03_outputs/` | Resultados descargados o generados por version. | Metricas, predicciones, reportes, logs y graficos. |
 | `04_scripts/` | Scripts locales de respaldo. | Politica de decision V05 y robustez V06 antes de publicarlas en Kaggle. |
 | `05_reports/` | Reportes narrativos por version. | Material base para la entrega final. |
-| `06_delivery/` | Artefactos finales alineados a rubrica. | Informe de 8 paginas, arquitectura, despliegue, drift, infografia y guion. |
-| `07_latex/` | Entregables compilables en LaTeX. | Informe PDF, presentación PDF e infografía PDF. |
+| `06_delivery/` | Borradores previos alineados a la rubrica. | Conservan cifras de V05/V06 que no corresponden a la evaluación de `final/`; no usarlos como resultados actuales. |
+| `07_latex/` | Entregables compilables en LaTeX. | Informe PDF, presentación PDF e infografía PDF; contrastar siempre sus cifras con `final/REPORTE.md`. |
 
 ## Versiones
 
@@ -89,6 +94,6 @@ precedieron a la entrega. Se conservan por trazabilidad de decisiones.
 - `07_latex/presentacion.pdf`
 - `07_latex/infografia.pdf`
 
-## Decision actual
+## Decisión histórica
 
-Mantener V01 como modelo base documentado, usar V05 como primera politica operativa, usar V06 como auditoria de robustez/calibracion y usar V07 como benchmark adicional MLP/tradicional para cerrar experimentacion.
+La evaluación de `final/` mantuvo V01 estático como referencia operativa. La selección por costo en su validación favoreció LightGBM periódico de 45 días, pero esa ventaja no se confirmó en su holdout. Esos resultados son anteriores al protocolo de `08_entrega_final_codigo/` y no constituyen la evaluación de los notebooks nuevos.

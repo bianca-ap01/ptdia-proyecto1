@@ -221,7 +221,21 @@ Costo de reentrenar de USD 0 a 500: mueve el costo \textbf{0.028} USD/txn.\\[2mm
 Una diferencia de \textbf{65$\times$}. El sistema está limitado por la \textbf{capacidad de revisión humana}, no por la calidad del clasificador.
 \end{block}
 \vspace{1mm}
-\footnotesize Todos los costos son supuestos ilustrativos; ninguno procede de una empresa real.
+\scriptsize Costos de esta tabla: supuestos ilustrativos. Referencias para nueva sensibilidad: Forrester TEI (2026), USD 0.65/revisión y USD 4 para seguimiento de algunas falsas alertas; LexisNexis (2025), multiplicador total 5.75 para servicios financieros de EE.\,UU. Aún no se aplican a esta tabla.
+\end{frame}
+
+\begin{frame}{Sensibilidad con referencias externas: selección en validación}\small
+\begin{tabularx}{\linewidth}{@{}Xrr@{}}\toprule
+Escenario de costo ilustrativo & V01 estático & Periódico 45 d\\\midrule
+Fórmula literal: USD 4/toda escalación; prevención perfecta & 8.025 & \textbf{7.783}\\
+USD 4/escalación legítima; eficacia 80/95\,\% & 9.942 & \textbf{9.722}\\
+USD 4/toda escalación; eficacia 60/95\,\% & 11.147 & \textbf{10.937}\\\bottomrule
+\end{tabularx}
+\vspace{2mm}
+\begin{block}{Lectura}
+En las tres sensibilidades, los umbrales se optimizaron sólo con validación y ganó la ventana de 45 días. Los números son costo por transacción sin actualización.
+\end{block}
+\footnotesize Forrester TEI (2026): USD 0.65/revisión y USD 4 de seguimiento de algunas falsas alertas. LexisNexis (2025): multiplicador total 5.75 por USD 1 de pérdida directa. Puede haber solapamiento de costos. El holdout ya inspeccionado no sirve como nueva prueba final.
 \end{frame}
 
 \begin{frame}{Incertidumbre: calibración y abstención}\small
@@ -275,18 +289,18 @@ Aprobación automática para bajo riesgo. Revisión humana para incertidumbre. E
 \end{block}
 \end{frame}
 
-\begin{frame}{Despliegue propuesto en GCP}\small
+\begin{frame}{Servicio desplegado y brechas operativas}\small
 \begin{tabularx}{\linewidth}{@{}p{.24\linewidth}X X@{}}\toprule
 Componente & Función & Evidencia o control\\\midrule
-FastAPI & Exponer \texttt{POST /predict} & Entrada, score, decisión y versión\\
-Docker & Empaquetar código y dependencias & Misma imagen para prueba y producción\\
-Artifact Registry & Versionar imágenes & Trazabilidad de releases\\
-Cloud Build & Construir desde GitHub & Automatizar pipeline de despliegue\\
-Cloud Run & Servir contenedor HTTP & Escalado administrado y logs integrados\\
-Monitoring & Vigilar latencia, errores y drift & Alertas operativas y técnicas\\\bottomrule
+FastAPI & \texttt{POST /predict}, \texttt{/health}, \texttt{/metrics} & Score, probabilidad calibrada y acción\\
+Docker & Empaquetar código y artefactos & Imagen reproducible del servicio\\
+Artifact Registry & Almacenar imagen & Versión desplegable\\
+Cloud Build & Construir y publicar imagen & \texttt{cloudbuild.yaml} versionado\\
+Cloud Run & Servir contenedor HTTP & Servicio desplegado en \texttt{us-central1}\\
+Pendiente & Cola diaria y etiquetas maduras & Cupo y rendimiento no cerrados por la API\\\bottomrule
 \end{tabularx}
 \vfill
-\footnotesize El despliegue queda como diseño técnico basado en el taller GCP. Antes de operar faltan pruebas de carga, integración y seguridad.
+\footnotesize La API está desplegada para demostración. Antes de operar faltan la cola de 158 revisiones/día, auditoría durable, autenticación, pruebas de carga e integración de etiquetas maduras.
 \end{frame}
 
 \begin{frame}{Dónde falla el detector de drift}\small
@@ -328,7 +342,7 @@ Cinco variables de memoria por entidad con \texttt{shift(1)} dentro del UID. El 
 Límite & Cómo se controla\\\midrule
 Costos normalizados & Repetir sensibilidad cuando existan costos reales\\
 Dataset anonimizado & Evitar causalidad fuerte sobre variables sin significado de negocio\\
-Revisión 5.10\% & Aplicar cupo operativo estricto antes de producción\\
+Cupo 158/día sólo en simulación & Añadir una cola con estado al servicio desplegado\\
 Equidad demográfica no observable & Usar proxies operativos disponibles y reportar la limitación\\
 Drift futuro desconocido & Monitoreo por ventanas y validación antes de promover modelos\\\bottomrule
 \end{tabularx}
@@ -349,7 +363,7 @@ Mantener V01 con política, conservar armada la infraestructura adaptativa —ve
 \item El aparato de medición que detecta esa reversión es el entregable; el modelo es secundario.
 \end{itemize}
 \vfill
-\footnotesize La defensa central es conservadora: se elige la alternativa más estable y trazable, y se reporta la reversión en holdout en lugar de reseleccionar sobre el periodo reservado.
+\footnotesize La recomendación de V01 se formuló tras observar la reversión en holdout; su ventaja económica como política seleccionada allí requiere otro periodo futuro de evaluación.
 \end{frame}
 
 \begin{frame}{Infografía del ciclo completo}

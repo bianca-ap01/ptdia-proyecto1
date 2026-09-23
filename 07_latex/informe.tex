@@ -33,7 +33,7 @@
 \end{center}
 \vspace{-4pt}\hrule\vspace{4pt}
 
-\textbf{Resumen.} Se diseña y evalúa un sistema inteligente adaptativo para detección de fraude financiero con datos temporales. El sistema integra transacciones e identidad, estima un score con un modelo LightGBM, traduce el score en acciones operativas y propone monitoreo de drift, calibración y reentrenamiento con ventanas deslizantes. Los resultados provienen de artefactos V01--V07 publicados como kernels de Kaggle y descargados al repositorio. La recomendación final es usar V01 como modelo base, V05 como política inicial y V06 como soporte de robustez/calibración. La defensa se organiza según la rúbrica del curso: problema, datos, modelado, sistema adaptativo, producto entregable y presentación.
+\textbf{Resumen.} Se diseña y evalúa un sistema inteligente adaptativo para detección de fraude financiero con datos temporales. El sistema integra transacciones e identidad, estima un score con LightGBM, traduce el score en acciones con cupo diario y propone monitoreo de drift, calibración y reentrenamiento con ventanas deslizantes. La evaluación final comprende cuatro etapas reproducibles en \texttt{final/}; V01--V07 se conservan como bitácora previa. La selección por costo en validación favoreció la ventana periódica de 45 días, pero su ventaja no se confirmó en holdout. Mantener V01 es una recomendación exploratoria que requiere un periodo futuro adicional para evaluarse de forma independiente.
 
 \section{Problema, objetivos y restricciones}
 
@@ -106,7 +106,7 @@ Adaptar supera a no adaptar en las tres familias, con intervalos que excluyen el
 
 Al cupo operativo del 5\,\%, LightGBM pasa de F1 0.488 estático a 0.521 con periódico de 45\,d; XGBoost de 0.444 a 0.504 y CatBoost de 0.438 a 0.478. Las referencias tradicionales quedan muy por debajo en holdout —regresión logística 0.170 y árbol de decisión 0.381 de PR-AUC—, con la salvedad de que usan imputación mediana y codificación numérica heredada, mientras los árboles tratan nulos de forma nativa: parte de la brecha es tratamiento de datos, no capacidad del modelo. Esas dos referencias se evaluaron además con el mismo protocolo por bloques, para que la comparación fuera homóloga: el árbol pasa de 0.385 estático a 0.376 con ventana de 45\,d —es decir, \emph{empeora} al adaptarse— y la regresión logística sube de 0.288 a 0.323 pero con desviación entre bloques de 0.16 a 0.19, oscilando entre 0.107 y 0.445 según el bloque. La adaptación no rescata a los modelos tradicionales. El contraste con los boosters, que mejoran con ventana deslizante en las tres familias y con significancia estadística, es el argumento real para preferir el enfoque avanzado: no sólo rinde más, sino que \textbf{responde a la adaptación}, que es la variable de estudio de este trabajo.
 
-\textbf{Dos auditorías del propio trabajo.} Primero, V01 había calculado los cuartiles del monto sobre todas las filas en lugar de su ventana histórica. Se midió en vez de suponerse: entrenando el mismo modelo con y sin esa contaminación, la PR-AUC de holdout resulta 0.51656 con fuga y 0.51910 sin ella, es decir, la versión contaminada rinde 0.0025 \emph{peor}. La fuga es real y se declara, pero no otorga ventaja y no sesga la comparación. Segundo, el enunciado pide atributos con dimensión temporal; se probaron cinco variables de memoria por entidad construidas con \texttt{shift(1)} dentro del UID. El modelo las usa —posiciones 19 a 43 de 190 por importancia— pero aportan $+0.0006$ de PR-AUC, dentro del ruido: las columnas anonimizadas \texttt{C*} y \texttt{D*} ya codifican recurrencia por entidad.
+\textbf{Dos auditorías del propio trabajo.} Primero, V01 había calculado los cuartiles del monto sobre todas las filas en lugar de su ventana histórica. Se midió en vez de suponerse: entrenando el mismo modelo con y sin esa contaminación, la PR-AUC de holdout resulta 0.51656 con fuga y 0.51910 sin ella, es decir, la versión contaminada rinde 0.0025 \emph{peor}. La fuga es real y se declara; en esta auditoría aislada no favorece a V01. Segundo, el enunciado pide atributos con dimensión temporal; se probaron cinco variables de memoria por entidad construidas con \texttt{shift(1)} dentro del UID. El modelo las usa —posiciones 19 a 43 de 190 por importancia— pero aportan $+0.0006$ de PR-AUC, dentro del ruido: las columnas anonimizadas \texttt{C*} y \texttt{D*} ya codifican recurrencia por entidad.
 
 \section{Arquitectura, incertidumbre y decisión}
 
@@ -143,7 +143,9 @@ Escalar (confirmación) & 3\,768 & 4.3\,\% & 45.20\,\%\\\bottomrule
 
 El 90.2\,\% decidido de forma automática retiene 1.18\,\% de fraude residual, mientras la franja escalada concentra 45.20\,\%. Eso justifica limitar la autonomía plena a la banda inferior: escalar es retención temporal con confirmación humana, nunca bloqueo irreversible autónomo.
 
-Los costos son supuestos ilustrativos, no cifras de una empresa real: un fraude aprobado cuesta $4.41\times$ el monto, una revisión USD 2, una legítima escalada USD 10 y cada reentrenamiento USD 100.
+Los costos evaluados son supuestos ilustrativos, no cifras de una empresa real: un fraude aprobado cuesta $4.41\times$ el monto, una revisión USD 2, una legítima escalada USD 10 y cada reentrenamiento USD 100. Como contraste externo, Forrester (2026) modela 0.75 minutos por alerta y USD 52 por hora de analista, equivalentes a USD 0.65 por revisión; sus USD 4 corresponden a seguimiento de un subconjunto de falsas alertas. LexisNexis (2025) estima USD 5.75 de costo total por cada USD 1 de pérdida directa para servicios financieros de EE.\,UU. Esos valores no son tarifas del dataset IEEE-CIS. La divisa de \texttt{TransactionAmt} es desconocida y el multiplicador total puede solaparse con costos operativos.
+
+Con las predicciones guardadas se reoptimizaron umbrales y estrategia \emph{sólo en validación} bajo tres sensibilidades; el cupo permanece en 158 revisiones diarias y no se incluye costo de actualización. En las tres gana LightGBM periódico de 45 días. La fórmula literal propuesta ---USD 0.65 por revisión + USD 4 por cada escalación + $5.75\times$ monto de fraude aprobado, con prevención perfecta--- da 7.783 por transacción frente a 8.025 de V01 estático. Al cobrar USD 4 sólo por escalación legítima y permitir pérdidas residuales con eficacia 80/95\,\% de revisión/escalamiento, son 9.722 frente a 9.942; con USD 4 por toda escalación y eficacia 60/95\,\%, 10.937 frente a 11.147. Son comparaciones \emph{de validación}, no una nueva evaluación final: el holdout ya influyó en decisiones históricas. El detalle reproducible está en \texttt{final/cost\_sensitivity.py} y \texttt{final/cost\_sensitivity\_valid.csv}.
 
 \begin{table}[H]\centering\small
 \begin{tabular}{@{}lrrrr@{}}\toprule
@@ -155,7 +157,7 @@ LightGBM periódico, 45\,d & 8.925 & 817 & 4\,898 & 4\,015\\\bottomrule
 \end{tabular}
 \end{table}
 
-Bajo estos supuestos la política reduce el costo simulado 62.3\,\% frente a aprobar todo. Pero el resultado central del trabajo es otro: mover la eficacia del analista de 60 a 100\,\% desplaza el costo 1.824 USD/txn, mientras mover el cargo por reentrenar de USD 0 a 500 lo desplaza 0.028, una diferencia de 65$\times$. \textbf{El sistema está limitado por la capacidad de revisión humana, no por la calidad del clasificador}: ganar 0.046 de PR-AUC no se convierte en ahorro porque, con cupo fijo, un modelo que ordena mejor no puede revisar más y empuja masa hacia el escalamiento. La estrategia seleccionada en validación por costo —periódico de 45\,d, 7.690 frente a 7.858 de V01— no confirmó su ventaja en holdout, y se reporta la reversión en lugar de reseleccionar sobre el periodo reservado.
+Bajo estos supuestos la política reduce el costo simulado 62.3\,\% frente a aprobar todo. Pero el resultado central del trabajo es otro: mover la eficacia del analista de 60 a 100\,\% desplaza el costo 1.824 USD/txn, mientras mover el cargo por reentrenar de USD 0 a 500 lo desplaza 0.028, una diferencia de 65$\times$. \textbf{El sistema está limitado por la capacidad de revisión humana}: ganar 0.046 de PR-AUC no se convierte en ahorro porque, con cupo fijo, un modelo que ordena mejor no puede revisar más y empuja masa hacia el escalamiento. La estrategia seleccionada en validación por costo —periódico de 45\,d, 7.690 frente a 7.858 de V01— no confirmó su ventaja en holdout. La recomendación posterior de mantener V01 se formuló tras observar esa reversión: su costo en este mismo holdout es exploratorio como evaluación de una política recién elegida, y debe confirmarse en otro periodo futuro.
 
 Como indicadores sociales observables, el desglose por UID registra 11.5 escalaciones falsas por cada 1\,000 legítimas con UID conocido y 37.9 con UID desconocido, con cobertura de fraude referido de 64.0\,\% y 72.3\,\%. Esa brecha de 3.3$\times$ exige investigar captura de identidad antes de operar; UID conocido/desconocido no es un grupo demográfico protegido ni prueba equidad.
 
@@ -173,7 +175,7 @@ Un sistema que se reentrena por su cuenta introduce riesgos que un modelo congel
 
 \section{Despliegue y ciclo de vida}
 
-La propuesta de despliegue sigue el taller de GCP: API, contenedor, Artifact Registry, Cloud Build y Cloud Run. La API \texttt{POST /predict} recibe una transacción, genera features, calcula score, aplica la política y retorna score, probabilidad calibrada opcional, decisión y versiones. Cloud Run es adecuado porque sirve contenedores HTTP, escala según demanda y se integra con Cloud Logging/Monitoring. Según la documentación oficial, Cloud Build puede construir la imagen, almacenarla en Artifact Registry y desplegarla en Cloud Run de forma automatizada.
+El servicio desplegado usa API, contenedor, Artifact Registry, Cloud Build y Cloud Run. \texttt{POST /predict} recibe una transacción, genera variables, calcula score, aplica umbrales y retorna score, probabilidad calibrada, acción y versión. La cola que impone el cupo diario en la simulación todavía no forma parte de la API. Cloud Run sirve el contenedor HTTP y Cloud Build construye, publica y despliega la imagen; el monitoreo con etiquetas maduras sigue siendo parte del protocolo propuesto.
 
 \begin{table}[H]\centering\small
 \begin{tabularx}{\linewidth}{@{}p{.26\linewidth}p{.22\linewidth}X@{}}\toprule
@@ -191,25 +193,27 @@ La detección de drift combina señales inmediatas y señales con etiquetas tard
 
 \begin{table}[H]\centering\small
 \begin{tabularx}{\linewidth}{@{}p{.22\linewidth}X X@{}}\toprule
-Escenario por simular & Entrenamiento antes del bloque $t$ & Comparación en el bloque $t$\\\midrule
-Sin olvido & Todo el historial disponible & Referencia de permanencia.\\
-Ventana corta & Últimas 4 semanas etiquetadas & Reacción rápida; mayor varianza.\\
-Ventana media & Últimas 8 semanas etiquetadas & Compromiso entre recencia y muestra.\\
-Ventana larga & Últimas 12 semanas etiquetadas & Más estabilidad; posible lentitud.\\\bottomrule
+Escenario evaluado & Entrenamiento antes del bloque $t$ & Lectura en holdout\\\midrule
+Estático & 70\,\% inicial, sin actualizar & Referencia congelada.\\
+Ventana 14 días & Últimos 14 días elegibles & Menor memoria; PR-AUC inferior.\\
+Ventana 30 días & Últimos 30 días elegibles & Cerca de 45 días en LightGBM y XGBoost.\\
+Ventana 45 días & Últimos 45 días elegibles & Mejor PR-AUC media periódica.\\\bottomrule
 \end{tabularx}
 \end{table}
 
-Cada iteración entrena con etiquetas disponibles antes de $t$, calibra en una subventana pasada, evalúa en el bloque futuro y agrega PR-AUC, recall, Brier, costo y métricas por UID. Un modelo nuevo sólo se promueve si mejora o iguala V01 en holdout temporal reciente, no empeora UID desconocido y respeta la capacidad operativa.
+En el experimento, cada ajuste usa etiquetas disponibles antes de $t$ y se evalúa en el bloque futuro. Un ciclo operativo futuro también debería calibrar con una subventana pasada, registrar PR-AUC, recall, Brier, costo y métricas por UID, y promover un modelo sólo si mejora o iguala al vigente en un bloque futuro reservado, no empeora UID desconocido y respeta la capacidad.
 
 \section{Limitaciones y cierre}
 
-Los costos son normalizados, no monetarios reales; el dataset está anonimizado; la equidad demográfica no puede auditarse directamente; y la política V05 excede levemente el cupo de revisión. Aun así, el proyecto cubre el ciclo de vida solicitado: definición del problema, EDA temporal, modelado, decisión, despliegue y adaptación, con evidencia reproducible en Kaggle para EDA y V01--V07. La recomendación final es V01 + V05 + monitoreo/calibración V06; V07 queda como benchmark complementario.
+Los costos son ilustrativos, no pérdidas monetarias observadas; el dataset está anonimizado y la equidad demográfica no puede auditarse directamente. La política final limita la revisión a 158 casos diarios en la simulación; la API actual decide una transacción a la vez y requiere una cola con estado para aplicar ese cupo. El proyecto cubre definición del problema, EDA temporal, modelado, decisión, despliegue propuesto y adaptación. La mejora de PR-AUC con ventanas deslizantes se sostiene como resultado de modelado; su valor económico y la recomendación de V01 requieren validación adicional bajo costos operativos medidos.
 
 \section*{Referencias}
 \small
 \aparef{Bifet, A., \& Gavalda, R. (2007). Learning from time-changing data with adaptive windowing. \emph{Proceedings of the SIAM International Conference on Data Mining}.}
 \aparef{Gama, J., Zliobaite, I., Bifet, A., Pechenizkiy, M., \& Bouchachia, A. (2014). A survey on concept drift adaptation. \emph{ACM Computing Surveys, 46}(4), Article 44. https://doi.org/10.1145/2523813}
+\aparef{Forrester Consulting. (2026). \emph{The Total Economic Impact of Mastercard Decision Intelligence and Rules Services}. Estudio encargado por Mastercard. https://tei.forrester.com/go/mastercard/decisionintelligenceandrulesservices/}
 \aparef{Google Cloud. (2026). \emph{Deploying to Cloud Run using Cloud Build}. https://docs.cloud.google.com/build/docs/deploying-builds/deploy-cloud-run}
+\aparef{LexisNexis Risk Solutions. (2025). \emph{True Cost of Fraud Study: North America Financial Services and Lending}. https://risk.lexisnexis.com/insights-resources/research/US-CA-true-cost-of-fraud-study}
 \aparef{Niculescu-Mizil, A., \& Caruana, R. (2005). Predicting good probabilities with supervised learning. \emph{Proceedings of the 22nd International Conference on Machine Learning}, 625--632. https://doi.org/10.1145/1102351.1102430}
 \aparef{Saito, T., \& Rehmsmeier, M. (2015). The precision-recall plot is more informative than the ROC plot when evaluating binary classifiers on imbalanced datasets. \emph{PLOS ONE, 10}(3), e0118432. https://doi.org/10.1371/journal.pone.0118432}
 \aparef{Zadrozny, B., \& Elkan, C. (2002). Transforming classifier scores into accurate multiclass probability estimates. \emph{Proceedings of the Eighth ACM SIGKDD International Conference on Knowledge Discovery and Data Mining}, 694--699. https://doi.org/10.1145/775047.775151}

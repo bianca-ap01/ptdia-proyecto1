@@ -75,11 +75,11 @@ El PSI del score nunca superó \textbf{0.011} mientras la PR-AUC semanal caía d
 Concept drift sin covariate shift: la alerta combina ambas señales.};
 
 \node[rubric,fill=mint,anchor=north west,minimum height=3.0cm,text width=19.2cm] (k5) at (19.0,5.9){\cardtitle{Auditamos nuestro propio trabajo}\\[2.5mm]
-\textbf{Fuga de V01:} medida, no supuesta. Con cuartiles contaminados PR-AUC $0.51656$; limpios $0.51910$. La versión con fuga rinde \textbf{0.0025 peor}: se declara, pero no otorga ventaja.\\[1.5mm]
+\textbf{Fuga de V01:} medida, no supuesta. Con cuartiles contaminados PR-AUC $0.51656$; limpios $0.51910$. La versión con fuga rinde \textbf{0.0025 peor} en esta auditoría aislada.\\[1.5mm]
 \textbf{Calibración:} el score sobreestima $4.11\times$. Isotónica baja Brier de $0.0479$ a $\mathbf{0.0219}$.};
 
-\node[anchor=west,align=left,text width=37.8cm,font=\small,text=navy] at (.45,1.55){\textbf{Recomendación:} mantener V01 con política y conservar armada la infraestructura adaptativa —ventanas, detector y protocolo de promoción—, suspendiendo el disparo automático de reentrenamiento hasta que un piloto mida la eficacia real del analista, que es el parámetro que domina la decisión.};
+\node[anchor=west,align=left,text width=37.8cm,font=\small,text=navy] at (.45,1.55){\textbf{Recomendación exploratoria:} mantener V01 con política y conservar la infraestructura adaptativa. Se formuló tras ver la reversión en holdout; un periodo futuro debe probarla. Medir en piloto la eficacia real del analista antes de automatizar el reentrenamiento.};
 
-\node[anchor=west,text width=37.8cm,align=left,font=\footnotesize,text=navy!85] at (.45,0.45){\textbf{Alcance:} todos los costos son supuestos ilustrativos y ninguno procede de una empresa real. La comparación es una simulación contrafactual con etiquetas históricas, no un ensayo causal. UID conocido/desconocido es un proxy operativo de cobertura, no un grupo demográfico protegido ni una prueba de equidad.};
+\node[anchor=west,text width=37.8cm,align=left,font=\footnotesize,text=navy!85] at (.45,0.45){\textbf{Alcance:} el costo central es ilustrativo; la sensibilidad con cifras de Forrester y LexisNexis se seleccionó sólo en validación. La comparación usa etiquetas históricas, no es un ensayo causal. UID conocido/desconocido es un proxy operativo, no una prueba de equidad demográfica.};
 \end{tikzpicture}
 \end{document}

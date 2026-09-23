@@ -1,5 +1,7 @@
 # Auditoria contra planteo y rubrica del profesor
 
+> **Auditoría histórica.** La entrega final ya incluye regresión logística y árbol de decisión como dos referencias tradicionales; la brecha indicada abajo quedó cerrada. Consulte `final/REPORTE.md` para el estado actual.
+
 Fuente revisada: `p1/00_brief/UTEC_2026_1__Planificación_y_Toma_de_Decisiones_en_IA (1).pdf`
 
 ## 1. Lectura general
