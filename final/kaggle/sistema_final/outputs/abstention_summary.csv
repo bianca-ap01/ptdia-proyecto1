@@ -1,0 +1,4 @@
+action,rows,share,fraud_rate,frauds
+approve,79921,0.9022,0.01184,946
+review,4892,0.0552,0.08872,434
+escalate,3768,0.0425,0.45196,1703

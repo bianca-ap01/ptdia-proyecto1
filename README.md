@@ -1,6 +1,37 @@
-# Project 1 - IEEE-CIS Fraud Detection
+# Proyecto 1 — IEEE-CIS Fraud Detection
 
-Estructura del trabajo de modelado.
+Sistema inteligente adaptativo sobre datos no estacionarios.
+
+## Entrega evaluable
+
+El entregable es la carpeta **`final/`**. Todo lo demás es la bitácora
+experimental previa que lo sustenta.
+
+| Qué | Dónde |
+| --- | --- |
+| Informe técnico | [`final/REPORTE.md`](final/REPORTE.md) |
+| 1 · Análisis exploratorio temporal | [`final/01_eda.ipynb`](final/01_eda.ipynb) |
+| 2 · Monitoreo y detección de drift | [`final/02_monitoreo_drift.ipynb`](final/02_monitoreo_drift.ipynb) |
+| 3 · Modelos y estrategias de adaptación | [`final/03_modelos_adaptacion.ipynb`](final/03_modelos_adaptacion.ipynb) |
+| 4 · Política de decisión y costo | [`final/04_politica_juego.ipynb`](final/04_politica_juego.ipynb) |
+| Verificación automática de resultados | [`final/verify_results.py`](final/verify_results.py) |
+| Salidas de cada etapa | `final/kaggle/<etapa>/outputs/` |
+| API de decisión (FastAPI + Cloud Run) | [`serving/`](serving/README.md) |
+
+Reproducir sin reentrenar:
+
+```bash
+pip install -e .
+python final/verify_results.py   # comprueba cortes, cupo y reconciliación de costo
+```
+
+Los datos crudos (~1.3 GB) no se versionan: se descargan de la competencia
+`ieee-fraud-detection` de Kaggle a `ieee-fraud-detection/`.
+
+## Bitácora experimental (histórico)
+
+Las carpetas `01_planning/` … `07_latex/` documentan las versiones V01–V07 que
+precedieron a la entrega. Se conservan por trazabilidad de decisiones.
 
 | Carpeta | Contenido | Uso |
 | --- | --- | --- |

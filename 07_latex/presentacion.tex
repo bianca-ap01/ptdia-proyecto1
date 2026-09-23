@@ -29,17 +29,18 @@
 \end{frame}
 
 \begin{frame}{Ruta de la presentación}\small
-\begin{tabularx}{\linewidth}{@{}p{.18\linewidth}X p{.20\linewidth}@{}}\toprule
+\begin{tabularx}{\linewidth}{@{}p{.14\linewidth}X p{.26\linewidth}@{}}\toprule
 Tiempo & Contenido & Evidencia\\\midrule
 2 min & Problema, objetivos y restricciones & Consigna y rúbrica\\
-4 min & EDA y decisiones de preparación & EDA propio y referencia externa\\
-5 min & Modelado V01--V07 y selección & Métricas de Kaggle\\
-4 min & Política, incertidumbre y despliegue & V05, V06 y taller GCP\\
-3 min & Drift, adaptación, límites y cierre & Protocolo de ciclo de vida\\\bottomrule
+3 min & EDA y preparación temporal & Notebook 1, salidas de Kaggle\\
+4 min & Modelos y estrategias de adaptación & 27 configuraciones, 141 ajustes\\
+3 min & Monitoreo: dónde falla el detector & PSI vs.\ PR-AUC semanal\\
+4 min & Decisión, costo y el hallazgo central & Política sobre 88\,581 holdout\\
+2 min & Arquitectura, riesgos y cierre & Protocolo de ciclo de vida\\\bottomrule
 \end{tabularx}
 \vfill
-\begin{block}{Idea guía}
-La entrega defiende un sistema de decisión adaptativo. El modelo predice riesgo, la política decide una acción y el monitoreo define cuándo ajustar el sistema.
+\begin{block}{Tesis de la exposición}
+Construimos un sistema adaptativo, medimos que \textbf{sí} mejora la detección, y descubrimos que \textbf{no} mejora el costo. Vamos a explicar por qué eso es el resultado, no el fracaso.
 \end{block}
 \end{frame}
 
@@ -98,8 +99,8 @@ Aporte revisado & Riesgo si se ignora & Decisión tomada\\\midrule
 Faltantes de identidad & Tratar ausencia como ruido aleatorio & Mantener señal de identidad y reportar segmento UID\\
 Faltantes por bloques V & Eliminar variables útiles por missingness alto & Auditar por grupos y no podar de forma automática\\
 Monto con cola pesada & Borrar transacciones raras que pueden ser fraude & No eliminar outliers de monto\\
-Montos con más de dos decimales & Perder una señal transaccional sencilla & Agregar indicador multi-decimal en V07\\
-MLP como comparación & Asumir que boosting basta sin contrastar & Ejecutar V07 con MLP ponderado\\\bottomrule
+Montos con más de dos decimales & Perder una señal transaccional sencilla & Evaluado como indicador candidato\\
+MLP como comparación & Asumir que boosting basta sin contrastar & Contrastar con familias lineal y de árbol único\\\bottomrule
 \end{tabularx}
 \vfill
 \footnotesize El notebook externo se usó como insumo metodológico, no como fuente de métricas finales, porque usa otro split y otra política de costos.
@@ -128,89 +129,124 @@ El sistema operaría sobre transacciones futuras. La evaluación debe imitar esa
 \end{block}
 \end{frame}
 
-\begin{frame}{Diseño experimental V01--V07}\small
-\begin{tabularx}{\linewidth}{@{}p{.12\linewidth}X X@{}}\toprule
-Versión & Pregunta que responde & Decisión\\\midrule
-V01 & ¿Qué tan fuerte es un LightGBM temporal con features auditables? & Modelo base\\
-V01b & ¿Conviene usar todas las features sin filtro? & No, empeora holdout\\
-V02 & ¿La memoria de UID ayuda? & Ayuda sólo en UID conocido\\
-V03 & ¿Qué variables conservar o vigilar? & Usar como auditoría\\
-V04 & ¿Otro boosting supera al baseline? & No supera V01\\
-V05 & ¿Cómo convertir score en acción? & Política inicial\\
-V06 & ¿Qué tan calibrado y robusto es el score? & Calibrar si se comunica probabilidad\\
-V07 & ¿Un MLP o baseline lineal mejora? & No reemplaza LightGBM\\\bottomrule
-\end{tabularx}
-\end{frame}
-
-\begin{frame}{Resultados del modelo base}\small
-\begin{center}
-\begin{tabular}{@{}lrrr@{}}\toprule
-Bloque & Fraude & PR-AUC & ROC-AUC\\\midrule
-Validación global & 3.43\% & 0.5954 & 0.9257\\
-Holdout global & 3.48\% & 0.5436 & 0.9051\\
-Holdout UID conocido & 1.93\% & 0.5159 & 0.9020\\
-Holdout UID desconocido & 4.73\% & 0.5632 & 0.8933\\\bottomrule
-\end{tabular}
-\end{center}
-\begin{block}{Lectura}
-La caída de PR-AUC entre validación y holdout confirma que el rendimiento se degrada con el tiempo. Aun así, V01 conserva el mejor balance entre desempeño y generalización.
-\end{block}
-\end{frame}
-
-\begin{frame}{Comparaciones que no reemplazaron V01}\small
-\begin{tabularx}{\linewidth}{@{}p{.22\linewidth}p{.24\linewidth}X@{}}\toprule
-Experimento & Resultado & Motivo de descarte\\\midrule
-V01b con todas las features & Holdout PR-AUC 0.5303 & Más variables no implicaron mejor generalización temporal\\
-V02 con UID histórico & Global 0.5442, UID unknown 0.5315 & Riesgo para clientes no vistos\\
-V04 con features auditadas & Mejor candidato 0.5131 & Podar agresivamente eliminó señal útil\\
-V07 MLP ponderado & Holdout PR-AUC 0.2218 & No aprovecha tan bien faltantes e interacciones tabulares\\
-V07 SGD logística & Holdout PR-AUC 0.1638 & Baseline lineal insuficiente para la estructura del problema\\\bottomrule
-\end{tabularx}
-\vfill
-\footnotesize La decisión no se basó en popularidad de modelos, sino en evidencia temporal comparable.
-\end{frame}
-
-\begin{frame}{Política V05}\small
+\begin{frame}{Modelos y protocolo temporal}\small
 \begin{columns}[T]
-\column{.48\linewidth}
-\begin{block}{Reglas}
-$s<0.459783$: aprobar.\\
-$0.459783\leq s<0.779122$: revisión.\\
-$s\geq0.779122$: escalar.
-\end{block}
-\begin{itemize}
-\item Fraude aprobado: costo 100.
-\item Legítima escalada: costo 10.
-\item Revisión manual: costo 2.
+\begin{column}{.52\linewidth}
+\textbf{Tres familias distintas}
+\begin{itemize}\itemsep2pt
+\item Tradicional lineal: regresión logística
+\item Tradicional de árbol único: árbol de decisión
+\item Avanzado: \emph{gradient boosting} en LightGBM, XGBoost y CatBoost
 \end{itemize}
-\column{.48\linewidth}
-\begin{block}{Holdout}
-Costo por transacción 1.3680.\\
-Fraude detectado 66.17\%.\\
-Revisión 5.10\%.\\
-Escalamiento 2.48\%.
+\vspace{3mm}
+\textbf{Seis estrategias por familia}\\
+Estática · periódica 14/30/45\,d · historial · por alerta\\[2mm]
+\textbf{27 configuraciones · 141 ajustes · 4.16 M predicciones}
+\end{column}
+\begin{column}{.46\linewidth}
+\begin{block}{Protocolo idéntico para todas}
+Bloques de 7 días.\\
+Latencia de etiqueta de 7 días: antes de un bloque que empieza en $t$, sólo se entrena con datos anteriores a $t-7$\,d.\\[2mm]
+Cada ajuste registra\\ \texttt{train\_last\_dt < available\_before}.
 \end{block}
-La tasa de revisión supera levemente 5\%, así que producción requiere cupo estricto por percentil o cola operativa.
+\end{column}
 \end{columns}
 \end{frame}
 
-\begin{frame}{Incertidumbre y calibración V06}\small
+\begin{frame}{La adaptación mejora la discriminación}\small
+\begin{center}
+\begin{tabular}{@{}lrrrrrr@{}}\toprule
+PR-AUC media & Estático & 14\,d & 30\,d & 45\,d & Historial & Alerta\\\midrule
+LightGBM & 0.550 & 0.565 & 0.592 & \textbf{0.597} & 0.571 & 0.574\\
+XGBoost & 0.499 & 0.535 & 0.555 & \textbf{0.557} & 0.527 & 0.537\\
+CatBoost & 0.471 & 0.483 & 0.507 & \textbf{0.517} & 0.491 & 0.499\\\bottomrule
+\end{tabular}
+\end{center}
+\vspace{2mm}
+Cinco bloques y una sola semilla: una diferencia de medias no basta. Como las estrategias comparten bloques, la prueba correcta es un $t$ pareado.
+\begin{center}\small
+\begin{tabular}{@{}lccc@{}}\toprule
+ & LightGBM & XGBoost & CatBoost\\\midrule
+45\,d vs.\ estático & $+0.046$, $p=\mathbf{0.024}$ & $+0.058$, $p=\mathbf{0.006}$ & $+0.046$, $p=\mathbf{0.007}$\\
+Bloques favorables & 5/5 & 5/5 & 5/5\\
+45\,d vs.\ 30\,d & $p=0.296$ & $p=0.736$ & $p=0.037$\\\bottomrule
+\end{tabular}
+\end{center}
+\vspace{1mm}
+\footnotesize Adaptar supera a no adaptar en las tres familias. \textbf{45 vs.\ 30 días cabe dentro del ruido}: sostenemos la ventana deslizante, no el ajuste fino de su tamaño.
+\end{frame}
+
+\begin{frame}{La adaptación no rescata a los tradicionales}\small
+Evaluamos los dos enfoques tradicionales con el \textbf{mismo} protocolo por bloques, no con una cifra agregada.
+\begin{center}
+\begin{tabular}{@{}lrrr@{}}\toprule
+PR-AUC holdout & Estático & Periódico 45\,d & Desv.\ entre bloques\\\midrule
+Árbol de decisión & \textbf{0.385} & 0.376 & 0.06\\
+Regresión logística & 0.288 & \textbf{0.323} & 0.16--0.19\\\midrule
+LightGBM (referencia) & 0.550 & \textbf{0.597} & 0.07\\\bottomrule
+\end{tabular}
+\end{center}
+\vspace{2mm}
 \begin{columns}[T]
-\column{.48\linewidth}
-\begin{block}{Problema}
-El score bruto rankea transacciones, pero no debe presentarse como probabilidad directa.
+\begin{column}{.48\linewidth}
+\begin{block}{El árbol empeora al adaptarse}
+$0.385 \rightarrow 0.376$. Reentrenar con ventana corta le quita datos sin darle capacidad.
 \end{block}
-\begin{itemize}
-\item Score bruto medio en holdout: 14.30\%.
-\item Tasa real de fraude: 3.48\%.
-\end{itemize}
-\column{.48\linewidth}
-\begin{block}{Solución evaluada}
-Calibración isotónica entrenada con pasado.\\
-Brier: 0.0479 a 0.0219.\\
-Media calibrada: 3.55\%.
+\end{column}
+\begin{column}{.48\linewidth}
+\begin{block}{La logística es inestable}
+Por bloque: 0.369, 0.126, 0.107, 0.395, 0.445. No converge con 185 variables.
 \end{block}
-Uso recomendado: score bruto para ranking, score calibrado para comunicar probabilidad.
+\end{column}
+\end{columns}
+\vspace{2mm}
+\footnotesize El argumento para el enfoque avanzado no es sólo que rinde más: es que \textbf{responde a la adaptación}, que es la variable de estudio.
+\end{frame}
+
+\begin{frame}{Decisión, costo y el hallazgo central}\small
+\begin{center}
+\begin{tabular}{@{}lrrrr@{}}\toprule
+Escenario central & Costo/txn & Fraudes aprobados & Revisiones & Escalaciones\\\midrule
+Aprobar todo, sin modelo & 23.379 & 3\,083 & 0 & 0\\
+V01 estático con política & \textbf{8.818} & 946 & 4\,892 & 3\,768\\
+LightGBM periódico 45\,d & 8.925 & \textbf{817} & 4\,898 & 4\,015\\\bottomrule
+\end{tabular}
+\end{center}
+\vspace{2mm}
+El mejor PR-AUC \textbf{no} es el mejor costo: el periódico evita 129 fraudes más, a cambio de 247 escalaciones legítimas adicionales a USD 10 cada una.
+\vfill
+\begin{block}{El resultado principal del trabajo}
+Eficacia del analista de 60 a 100\,\%: mueve el costo \textbf{1.824} USD/txn.\\
+Costo de reentrenar de USD 0 a 500: mueve el costo \textbf{0.028} USD/txn.\\[2mm]
+Una diferencia de \textbf{65$\times$}. El sistema está limitado por la \textbf{capacidad de revisión humana}, no por la calidad del clasificador.
+\end{block}
+\vspace{1mm}
+\footnotesize Todos los costos son supuestos ilustrativos; ninguno procede de una empresa real.
+\end{frame}
+
+\begin{frame}{Incertidumbre: calibración y abstención}\small
+\begin{columns}[T]
+\begin{column}{.48\linewidth}
+\textbf{El score no es una probabilidad}\\[1mm]
+Media en holdout 0.143 frente a prevalencia 0.035: sobreestima $4.11\times$.\\[2mm]
+Isotónica ajustada \emph{sólo con validación}:\\[1mm]
+\begin{tabular}{@{}lrr@{}}\toprule
+ & Bruto & Calibrado\\\midrule
+Brier & 0.0479 & \textbf{0.0219}\\
+Media & 0.143 & 0.0355\\\bottomrule
+\end{tabular}\\[2mm]
+$-54.2$\,\% de Brier, sin tocar el modelo ni el ranking.
+\end{column}
+\begin{column}{.48\linewidth}
+\textbf{La banda de revisión es abstención}\\[1mm]
+\begin{tabular}{@{}lrr@{}}\toprule
+Acción & Cobertura & Fraude\\\midrule
+Aprobar & 90.2\,\% & 1.18\,\%\\
+Revisar & 5.5\,\% & 8.87\,\%\\
+Escalar & 4.3\,\% & \textbf{45.20\,\%}\\\bottomrule
+\end{tabular}\\[2mm]
+El 90\,\% automático retiene 1.18\,\% de fraude residual; la franja escalada concentra 45\,\%. Por eso la autonomía plena se limita a la banda inferior.
+\end{column}
 \end{columns}
 \end{frame}
 
@@ -221,7 +257,7 @@ box/.style={draw=teal,rounded corners,fill=pale,align=center,text width=22mm,min
 \node[box](a){Datos + identidad};
 \node[box,right=of a](b){Features temporales};
 \node[box,right=of b](c){Modelo V01};
-\node[box,right=of c](d){Política V05};
+\node[box,right=of c](d){Política y cupo};
 \node[box,right=of d](e){Acción};
 \node[box,below=7mm of d,text width=31mm](f){Logs, etiquetas tardías y monitoreo};
 \node[box,left=of f,text width=31mm](g){Calibración, umbrales o reentrenamiento};
@@ -253,30 +289,38 @@ Monitoring & Vigilar latencia, errores y drift & Alertas operativas y técnicas\
 \footnotesize El despliegue queda como diseño técnico basado en el taller GCP. Antes de operar faltan pruebas de carga, integración y seguridad.
 \end{frame}
 
-\begin{frame}{Drift y adaptación}\small
-\begin{tabularx}{\linewidth}{@{}p{.25\linewidth}XX@{}}\toprule
-Señal & Sin etiquetas & Con etiquetas tardías\\\midrule
-Features & KS, PSI, missingness, percentiles & Relación con errores reales\\
-Scores & Distribución del score y tasas sobre umbral & PR-AUC, Brier y recall\\
-Operación & Revisión, escalamiento y latencia & Costo y fraude capturado\\
-Segmentos & UID conocido y desconocido & Brechas de desempeño por segmento\\\bottomrule
-\end{tabularx}
-\vspace{3mm}
-\begin{block}{Adaptación propuesta}
-Comparar entrenamiento histórico frente a ventanas móviles de 4, 8 y 12 semanas. Promover una versión sólo si mejora en bloque futuro y no empeora UID desconocido.
+\begin{frame}{Dónde falla el detector de drift}\small
+\begin{center}
+\begin{tabular}{@{}lrrrrrr@{}}\toprule
+Semana & 17 & 20 & 23 & 24 & 26\\\midrule
+PSI del score & 0.000 & 0.001 & 0.009 & \textbf{0.011} & 0.007\\
+PR-AUC semanal & \textbf{0.732} & 0.514 & \textbf{0.473} & 0.554 & 0.593\\\bottomrule
+\end{tabular}
+\end{center}
+\vspace{2mm}
+El PSI \textbf{nunca superó 0.011} mientras la PR-AUC caía un 35\,\%. El umbral convencional es 0.25: quedó $23\times$ por encima de todo lo observado.
+\vfill
+\begin{block}{Qué significa}
+Es \textbf{concept drift sin covariate shift visible}: cambió $P(y\mid x)$ sin que la distribución del score lo delatara. Un detector no supervisado no puede ver eso por construcción.\\[2mm]
+Por eso la alerta es una \textbf{disyunción}: PSI sobre umbral \emph{o} dos bloques ya etiquetados más de 10\,\% bajo la referencia. La segunda condición es la que protegió al sistema.
 \end{block}
 \end{frame}
 
-\begin{frame}{Mapa de rúbrica}\small
-\begin{tabularx}{\linewidth}{@{}p{.31\linewidth}X@{}}\toprule
-Criterio del curso & Evidencia en la entrega\\\midrule
-Problema, objetivos y métricas & Caso fraude, restricciones, PR-AUC, costo, revisión y calibración\\
-Análisis y preparación & EDA temporal, faltantes, UID, split 70/15/15 y control de leakage\\
-Modelado y evaluación & V01--V07, comparación temporal, segmentación y holdout futuro\\
-Sistema adaptativo & Arquitectura, acción, incertidumbre, drift y reentrenamiento\\
-Producto entregado & Código Kaggle, GitHub, informes, diagramas, PDFs e infografía\\
-Presentación & Guion de 15--20 minutos con defensa de decisiones\\\bottomrule
-\end{tabularx}
+\begin{frame}{Dos auditorías de nuestro propio trabajo}\small
+\begin{block}{1. La fuga de V01: medida, no supuesta}
+V01 calculó los cuartiles del monto sobre todas las filas, no sobre su ventana histórica. En vez de declararla y seguir, entrenamos el mismo modelo con y sin contaminación:\\[2mm]
+\begin{center}
+\begin{tabular}{@{}lrr@{}}\toprule
+ & Con fuga & Limpio\\\midrule
+PR-AUC holdout & 0.51656 & \textbf{0.51910}\\\bottomrule
+\end{tabular}
+\end{center}
+\vspace{1mm}
+La versión contaminada rinde \textbf{0.0025 peor}. La fuga es real y se declara, pero \textbf{no otorga ventaja} y no sesga la comparación.
+\end{block}
+\begin{block}{2. Features temporales: cumplidas y explicadas}
+Cinco variables de memoria por entidad con \texttt{shift(1)} dentro del UID. El modelo las usa —posiciones 19 a 43 de 190 por importancia— pero aportan $+0.0006$: las columnas \texttt{C*} y \texttt{D*} ya codifican recurrencia por entidad.
+\end{block}
 \end{frame}
 
 \begin{frame}{Limitaciones y riesgos}\small
@@ -289,23 +333,23 @@ Equidad demográfica no observable & Usar proxies operativos disponibles y repor
 Drift futuro desconocido & Monitoreo por ventanas y validación antes de promover modelos\\\bottomrule
 \end{tabularx}
 \vfill
-\begin{block}{Riesgo académico restante}
-Si la lectura de la rúbrica exige dos modelos tradicionales estrictos, conviene agregar un Random Forest o HistGradientBoosting simple. No cambiaría la recomendación, pero cerraría el requisito formal.
+\begin{block}{Lo que no medimos}
+La eficacia real del analista, que es el parámetro que domina el costo. Los umbrales, la latencia de etiqueta de 7 días y los costos son supuestos declarados, no observaciones de operación.
 \end{block}
 \end{frame}
 
 \begin{frame}{Conclusión}\small
 \begin{block}{Decisión final}
-Mantener V01 como modelo base, usar V05 como política inicial y usar V06 como soporte de calibración y robustez. V07 queda como benchmark adicional.
+Mantener V01 con política, conservar armada la infraestructura adaptativa —ventanas, detector, protocolo de promoción— y suspender el disparo automático de reentrenamiento hasta que un piloto mida la eficacia real del analista.
 \end{block}
 \begin{itemize}
-\item V01 generaliza mejor en holdout temporal que las alternativas probadas.
-\item V05 convierte el ranking en decisiones con costo y capacidad explícitos.
-\item V06 evita comunicar scores brutos como probabilidades.
-\item El monitoreo convierte el clasificador en un sistema adaptativo.
+\item Adaptar mejora la discriminación en las tres familias, con significancia estadística.
+\item Pero esa mejora no se convierte en ahorro: el cuello de botella es la capacidad de revisión, no el modelo.
+\item La calibración isotónica evita comunicar scores brutos como probabilidades.
+\item El aparato de medición que detecta esa reversión es el entregable; el modelo es secundario.
 \end{itemize}
 \vfill
-\footnotesize La defensa central es conservadora: se elige la alternativa más estable y trazable, no la más compleja.
+\footnotesize La defensa central es conservadora: se elige la alternativa más estable y trazable, y se reporta la reversión en holdout en lugar de reseleccionar sobre el periodo reservado.
 \end{frame}
 
 \begin{frame}{Infografía del ciclo completo}

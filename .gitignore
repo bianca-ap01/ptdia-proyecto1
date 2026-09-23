@@ -29,3 +29,9 @@ tmp/
 *.fdb_latexmk
 *.synctex.gz
 .texcache/
+
+# Datos crudos de la competencia (descargar desde Kaggle, ~1.3 GB)
+ieee-fraud-detection/
+
+# Respaldo comprimido de final/ (identico al directorio, no versionar)
+final.zip

@@ -75,37 +75,38 @@ El EDA externo revisado de Fabryzzio complementó la lectura del equipo en cuatr
 
 \section{Modelado y evaluación temporal}
 
-La línea base V01 usa LightGBM con 185 atributos y \emph{early stopping}. La selección se justifica por la naturaleza tabular del dataset: variables numéricas, categóricas codificadas, faltantes e interacciones no lineales. Posteriormente se ejecutaron controles: V01b con todas las features, V02 con features UID históricas, V03 de auditoría de variables, V04 con LightGBM, XGBoost y CatBoost sobre sets auditados, y V07 con baseline tradicional y MLP. EDA y V01--V07 quedan trazables como kernels públicos de Kaggle.
+Se comparan tres familias distintas sobre la misma superficie de 185 variables: dos enfoques tradicionales —regresión logística y árbol de decisión— y un enfoque avanzado de \emph{gradient boosting}, instanciado en LightGBM, XGBoost y CatBoost para verificar que los hallazgos no dependan de una implementación. La elección se justifica por la naturaleza tabular del dataset: variables numéricas y categóricas, faltantes masivos e interacciones no lineales, donde los árboles manejan nulos de forma nativa. Cada familia se evalúa con estrategia estática, reentrenamiento periódico con ventanas de 14, 30 y 45 días o historial acumulado, y reentrenamiento disparado por alerta: 27 configuraciones, 141 ajustes y 4\,158\,810 filas de predicción.
+
+El protocolo es idéntico para todas: bloques consecutivos de siete días y una latencia de etiqueta de siete días, de modo que antes de un bloque que empieza en $t$ solo se entrena con transacciones anteriores a $t-7$ días. Cada ajuste registra \texttt{train\_last\_dt < available\_before}, verificable en el registro de ajustes.
 
 \begin{table}[H]\centering\small
-\begin{tabularx}{\linewidth}{@{}p{.12\linewidth}X p{.23\linewidth}p{.22\linewidth}@{}}\toprule
-Versión & Objetivo & Resultado principal & Decisión\\\midrule
-V01 & Baseline temporal LightGBM & Holdout PR-AUC 0.5436 & Modelo base.\\
-V01b & Usar todas las features & Holdout PR-AUC 0.5303 & No reemplaza V01.\\
-V02 & Features UID históricas & UID conocido mejora; UID desconocido empeora & No adoptar como modelo único.\\
-V03 & Auditoría de importancia y drift & 44 keep, 9 monitor & Usar para monitoreo.\\
-V04 & Comparar LightGBM/XGBoost/CatBoost & Ninguno supera V01 & Mantener V01.\\
-V05 & Traducir score en acción & Costo holdout 1.3680 & Política inicial.\\
-V06 & Robustez y calibración & Brier 0.0479 a 0.0219 & Calibrar probabilidades.\\
-V07 & Comparar MLP y baseline lineal & MLP PR-AUC 0.2218 & Benchmark, no reemplazo.\\\bottomrule
-\end{tabularx}
-\end{table}
-
-Cada versión responde a una pregunta concreta. V01 mide el desempeño base con un algoritmo adecuado para datos tabulares. V01b prueba si aumentar la superficie de variables mejora la generalización; no lo hace. V02 mide si la memoria de cliente aporta señal; aporta en UID conocido, pero no en UID desconocido, por lo que sería riesgoso adoptarla como regla única. V03 separa variables para conservar, monitorear o revisar. V04 contrasta alternativas de boosting. V05 evalúa la parte de decisión, V06 la incertidumbre y V07 la comparación con red neuronal y baseline tradicional. Esta secuencia documenta el proceso pedido por la rúbrica, no sólo el resultado final.
-
-\begin{table}[H]\centering\small
-\begin{tabular}{@{}lrrr@{}}\toprule
-Evaluación V01 & Prevalencia & PR-AUC & ROC-AUC\\\midrule
-Validación global & 3.43\% & 0.5954 & 0.9257\\
-Holdout global & 3.48\% & 0.5436 & 0.9051\\
-Holdout UID conocido & 1.93\% & 0.5159 & 0.9020\\
-Holdout UID desconocido & 4.73\% & 0.5632 & 0.8933\\\bottomrule
+\begin{tabular}{@{}lrrrrrr@{}}\toprule
+Modelo & Estático & Per. 14\,d & Per. 30\,d & Per. 45\,d & Per. hist. & Alerta 45\,d\\\midrule
+LightGBM & 0.550 & 0.565 & 0.592 & \textbf{0.597} & 0.571 & 0.574\\
+XGBoost & 0.499 & 0.535 & 0.555 & \textbf{0.557} & 0.527 & 0.537\\
+CatBoost & 0.471 & 0.483 & 0.507 & \textbf{0.517} & 0.491 & 0.499\\\bottomrule
 \end{tabular}
+\caption{PR-AUC media de los cinco bloques de holdout.}
 \end{table}
 
-La caída de PR-AUC entre validación y holdout es consistente con degradación temporal. V02 demuestra que el historial UID sí contiene señal: en holdout UID conocido, \texttt{uid\_freq\_amt} sube de 0.5946 a 0.6831; sin embargo, UID desconocido cae de 0.5458 a 0.5315. Por ello no se adopta como modelo único. V04 confirma que podar agresivamente features reduce señal: el mejor candidato auditado queda en 0.5131 de PR-AUC holdout, por debajo de V01. V07 agrega un MLP ponderado y una regresión logística SGD: en holdout obtienen PR-AUC 0.2218 y 0.1638, por debajo de LightGBM de referencia con 0.5313.
+Con cinco bloques y una sola semilla, una diferencia de medias no basta para afirmar un ranking. Como las estrategias comparten los mismos bloques, la prueba adecuada es un $t$ pareado, que elimina la varianza entre bloques —la dominante, con desviaciones de 0.05 a 0.07 dentro de cada configuración.
 
-\textbf{Nota sobre la rúbrica.} V07 agrega un baseline tradicional lineal y un MLP. Si el docente exige literalmente dos modelos tradicionales distintos, aún conviene agregar un bosque aleatorio simple; esto no cambiaría la recomendación actual, pero cerraría ese ítem formal.
+\begin{table}[H]\centering\small
+\begin{tabular}{@{}lccc@{}}\toprule
+Comparación & LightGBM & XGBoost & CatBoost\\\midrule
+Periódico 45\,d vs.\ estático & $+0.046$, $p=\mathbf{0.024}$ & $+0.058$, $p=\mathbf{0.006}$ & $+0.046$, $p=\mathbf{0.007}$\\
+Bloques favorables & 5/5 & 5/5 & 5/5\\
+IC 95\,\% de la diferencia & $[+0.010,+0.082]$ & $[+0.028,+0.088]$ & $[+0.021,+0.071]$\\
+Periódico 45\,d vs.\ 30\,d & $+0.005$, $p=0.296$ & $+0.002$, $p=0.736$ & $+0.010$, $p=0.037$\\\bottomrule
+\end{tabular}
+\caption{Significancia del ranking de estrategias.}
+\end{table}
+
+Adaptar supera a no adaptar en las tres familias, con intervalos que excluyen el cero. En cambio 45 días no es distinguible de 30 en LightGBM ni XGBoost: esa diferencia cabe dentro del ruido, y la preferencia por 45\,d se sostiene como tendencia del patrón cóncavo, no como resultado estadístico. Lo que el experimento sustenta es el valor de la ventana deslizante frente al modelo congelado, no el ajuste fino de su tamaño.
+
+Al cupo operativo del 5\,\%, LightGBM pasa de F1 0.488 estático a 0.521 con periódico de 45\,d; XGBoost de 0.444 a 0.504 y CatBoost de 0.438 a 0.478. Las referencias tradicionales quedan muy por debajo en holdout —regresión logística 0.170 y árbol de decisión 0.381 de PR-AUC—, con la salvedad de que usan imputación mediana y codificación numérica heredada, mientras los árboles tratan nulos de forma nativa: parte de la brecha es tratamiento de datos, no capacidad del modelo. Esas dos referencias se evaluaron además con el mismo protocolo por bloques, para que la comparación fuera homóloga: el árbol pasa de 0.385 estático a 0.376 con ventana de 45\,d —es decir, \emph{empeora} al adaptarse— y la regresión logística sube de 0.288 a 0.323 pero con desviación entre bloques de 0.16 a 0.19, oscilando entre 0.107 y 0.445 según el bloque. La adaptación no rescata a los modelos tradicionales. El contraste con los boosters, que mejoran con ventana deslizante en las tres familias y con significancia estadística, es el argumento real para preferir el enfoque avanzado: no sólo rinde más, sino que \textbf{responde a la adaptación}, que es la variable de estudio de este trabajo.
+
+\textbf{Dos auditorías del propio trabajo.} Primero, V01 había calculado los cuartiles del monto sobre todas las filas en lugar de su ventana histórica. Se midió en vez de suponerse: entrenando el mismo modelo con y sin esa contaminación, la PR-AUC de holdout resulta 0.51656 con fuga y 0.51910 sin ella, es decir, la versión contaminada rinde 0.0025 \emph{peor}. La fuga es real y se declara, pero no otorga ventaja y no sesga la comparación. Segundo, el enunciado pide atributos con dimensión temporal; se probaron cinco variables de memoria por entidad construidas con \texttt{shift(1)} dentro del UID. El modelo las usa —posiciones 19 a 43 de 190 por importancia— pero aportan $+0.0006$ de PR-AUC, dentro del ruido: las columnas anonimizadas \texttt{C*} y \texttt{D*} ya codifican recurrencia por entidad.
 
 \section{Arquitectura, incertidumbre y decisión}
 
@@ -126,46 +127,49 @@ act/.style={draw=teal!60,rounded corners=2pt,align=center,text width=18mm,minimu
 \caption{Arquitectura funcional propuesta para predicción, decisión y adaptación.}
 \end{figure}
 
-V06 muestra que el score bruto no debe interpretarse directamente como probabilidad: en holdout su promedio fue 14.30\% mientras la tasa real fue 3.48\%. La calibración isotónica redujo Brier de 0.0479 a 0.0219 y alineó el promedio calibrado a 3.55\%. Esto es coherente con la literatura: modelos fuertes pueden rankear bien pero producir probabilidades sesgadas, por lo que Platt scaling o isotonic regression son herramientas apropiadas para calibración (Niculescu-Mizil \& Caruana, 2005; Zadrozny \& Elkan, 2002).
+El score no debe interpretarse como probabilidad: en holdout su promedio es 0.143 mientras la prevalencia observada es 0.035, una sobreestimación de 4.11$\times$. Una isotónica ajustada \emph{solo con validación} y aplicada a holdout corrige el nivel sin tocar el modelo ni el ranking: Brier baja de 0.04788 a 0.02192 ($-54.2$\,\%) y la media calibrada queda en 0.0355, a 1.02$\times$ de la prevalencia. Ajustarla con holdout habría filtrado el periodo reservado hacia la calibración, que es el error que el protocolo temporal evita en todo lo demás. Esto es coherente con la literatura: modelos fuertes pueden rankear bien y producir probabilidades sesgadas (Niculescu-Mizil \& Caruana, 2005; Zadrozny \& Elkan, 2002).
+
+La política traduce el score en tres acciones, con umbrales elegidos en validación y congelados para holdout. El cupo diario es 158 revisiones, el 5\,\% de la mediana diaria de volumen del train inicial, y se aplica por día. El holdout evaluado tiene 88\,581 transacciones con 3\,083 fraudes.
 
 \begin{table}[H]\centering\small
-\begin{tabularx}{\linewidth}{@{}p{.18\linewidth}p{.22\linewidth}X@{}}\toprule
-Acción & Regla V05 & Control de incertidumbre\\\midrule
-Aprobar & $s<0.459783$ & Registrar decisión y permitir auditoría posterior.\\
-Revisar & $0.459783\leq s<0.779122$ & Analista valida el caso y aporta etiqueta diferida.\\
-Escalar & $s\geq0.779122$ & Bloqueo temporal o verificación adicional con revisión humana.\\\bottomrule
-\end{tabularx}
+\begin{tabular}{@{}lrrr@{}}\toprule
+Acción & Transacciones & Cobertura & Tasa de fraude\\\midrule
+Aprobar (automático) & 79\,921 & 90.2\,\% & 1.18\,\%\\
+Revisar (analista) & 4\,892 & 5.5\,\% & 8.87\,\%\\
+Escalar (confirmación) & 3\,768 & 4.3\,\% & 45.20\,\%\\\bottomrule
+\end{tabular}
+\caption{La banda de revisión funciona como región de abstención.}
 \end{table}
 
-En V05, los costos normalizados son 100 por fraude aprobado, 10 por legítima escalada y 2 por revisión manual. La política se selecciona en validación y se aplica a holdout sin recalibrar. La corrida pública de Kaggle confirma los mismos umbrales y métricas que el script local.
+El 90.2\,\% decidido de forma automática retiene 1.18\,\% de fraude residual, mientras la franja escalada concentra 45.20\,\%. Eso justifica limitar la autonomía plena a la banda inferior: escalar es retención temporal con confirmación humana, nunca bloqueo irreversible autónomo.
+
+Los costos son supuestos ilustrativos, no cifras de una empresa real: un fraude aprobado cuesta $4.41\times$ el monto, una revisión USD 2, una legítima escalada USD 10 y cada reentrenamiento USD 100.
 
 \begin{table}[H]\centering\small
 \begin{tabular}{@{}lrrrr@{}}\toprule
-Política en holdout & Costo/txn & Fraude detectado & Revisión & Escalamiento\\\midrule
-Aprobar todo & 3.4804 & 0.00\% & 0.00\% & 0.00\%\\
-Revisar top 5\% & 1.5247 & 59.20\% & 5.23\% & 0.00\%\\
-Escalar top 1\% & 2.5959 & 25.75\% & 0.00\% & 1.01\%\\
-V05 & \textbf{1.3680} & \textbf{66.17\%} & 5.10\% & 2.48\%\\\bottomrule
+Escenario central & Costo/txn & Fraudes aprobados & Revisiones & Escalaciones\\\midrule
+Aprobar todo, sin modelo & 23.379 & 3\,083 & 0 & 0\\
+V01 estático con política & \textbf{8.818} & 946 & 4\,892 & 3\,768\\
+LightGBM periódico, historial & 8.856 & 869 & 4\,898 & 4\,025\\
+LightGBM periódico, 45\,d & 8.925 & 817 & 4\,898 & 4\,015\\\bottomrule
 \end{tabular}
 \end{table}
 
-V05 supera a reglas simples, aunque la revisión en holdout (5.10\%) excede levemente el objetivo de 5\%. En producción, si el cupo fuera estricto, se recomienda usar umbrales por percentil temporal o una cola con capacidad fija. V06, también ejecutado como kernel público, confirma que la política responde de forma coherente ante escenarios alternativos de costo y capacidad.
+Bajo estos supuestos la política reduce el costo simulado 62.3\,\% frente a aprobar todo. Pero el resultado central del trabajo es otro: mover la eficacia del analista de 60 a 100\,\% desplaza el costo 1.824 USD/txn, mientras mover el cargo por reentrenar de USD 0 a 500 lo desplaza 0.028, una diferencia de 65$\times$. \textbf{El sistema está limitado por la capacidad de revisión humana, no por la calidad del clasificador}: ganar 0.046 de PR-AUC no se convierte en ahorro porque, con cupo fijo, un modelo que ordena mejor no puede revisar más y empuja masa hacia el escalamiento. La estrategia seleccionada en validación por costo —periódico de 45\,d, 7.690 frente a 7.858 de V01— no confirmó su ventaja en holdout, y se reporta la reversión en lugar de reseleccionar sobre el periodo reservado.
 
-\section{Cobertura de la rúbrica}
+Como indicadores sociales observables, el desglose por UID registra 11.5 escalaciones falsas por cada 1\,000 legítimas con UID conocido y 37.9 con UID desconocido, con cobertura de fraude referido de 64.0\,\% y 72.3\,\%. Esa brecha de 3.3$\times$ exige investigar captura de identidad antes de operar; UID conocido/desconocido no es un grupo demográfico protegido ni prueba equidad.
 
-\begin{table}[H]\centering\small
-\begin{tabularx}{\linewidth}{@{}p{.28\linewidth}X@{}}\toprule
-Criterio de evaluación & Evidencia incluida\\\midrule
-Problema, objetivos, restricciones y métricas & Caso de fraude financiero, objetivos técnicos y operativos, PR-AUC, costo, revisión, escalamiento y calibración.\\
-Análisis y preparación de datos & EDA temporal, tasa semanal, faltantes, UID, adversarial validation, split 70/15/15 y control de leakage temporal.\\
-Modelado y evaluación & V01--V07 ejecutados en Kaggle, comparación temporal, holdout futuro y segmentación UID.\\
-Sistema adaptativo & Arquitectura con predicción, decisión, acción, monitoreo, calibración y reentrenamiento por ventanas.\\
-Calidad del producto & Repositorio GitHub, kernels públicos, reportes por versión, informe técnico, presentación e infografía.\\
-Presentación & Deck ampliado para 15--20 minutos, con decisiones y fundamentos por etapa.\\\bottomrule
-\end{tabularx}
-\end{table}
+\section{Riesgos de un sistema que se adapta solo}
 
-Esta cobertura evita una entrega centrada sólo en el modelo. La guía del curso exige explicar cómo el sistema adquiere datos, predice, decide, actúa, mide incertidumbre y se adapta ante cambios. Por eso la solución final se presenta como un ciclo de vida completo.
+Un sistema que se reentrena por su cuenta introduce riesgos que un modelo congelado no tiene, y conviene nombrarlos.
+
+\textbf{Confianza.} Los scores de distintos ajustes no comparten escala de calibración: un PSI alto puede reflejar que el modelo cambió, no que cambió la población. Interpretar esa señal como drift dispararía reentrenamientos en cadena, cada uno justificando el siguiente. Por eso la recalibración de umbrales se separa del reentrenamiento del modelo y usa solo bloques con etiquetas ya maduras.
+
+\textbf{Estabilidad.} El detector sin etiquetas falló en el caso que importaba: el PSI del score nunca superó 0.011 mientras la PR-AUC semanal caía de 0.732 a 0.473. Es concept drift sin covariate shift visible, justamente lo que un detector no supervisado no puede ver por construcción. La regla de alerta es por eso una disyunción: PSI sobre umbral \emph{o} dos bloques ya etiquetados más de 10\,\% bajo la referencia. La segunda condición es la que protege al sistema; la primera, sobre esta señal, nunca se activó.
+
+\textbf{Decisión automatizada.} El 90.2\,\% de las transacciones se aprueba sin intervención, y ahí vive 1.18\,\% de fraude residual que nadie revisa. La cola de escalamiento, además, no está dimensionada: 3\,768 escalaciones en unos 31 días implican unas 120 diarias de confirmación que se suman al cupo de revisión y que este trabajo no presupuesta. Antes de operar habría que fijar su límite.
+
+\textbf{Fricción desigual.} El proxy por UID muestra 3.3$\times$ más escalaciones falsas sobre entidades desconocidas. No es un grupo protegido, pero si la captura de identidad correlaciona con canal o dispositivo, el sistema trasladaría fricción de forma sistemática a una población. Se reporta como riesgo a investigar, no como métrica de equidad aprobada.
 
 \section{Despliegue y ciclo de vida}
 
