@@ -18,7 +18,7 @@ from pathlib import Path
 from typing import Any, Optional, Union
 
 import joblib
-import lightgbm as lgb
+import xgboost as xgb
 import numpy as np
 from fastapi import FastAPI
 from pydantic import BaseModel, Field
@@ -31,7 +31,8 @@ DAY = 86400
 WINDOW = 5000
 
 config: dict[str, Any] = json.loads((ARTIFACTS / "serving_config.json").read_text())
-booster = lgb.Booster(model_file=str(ARTIFACTS / "model.txt"))
+booster = xgb.Booster()
+booster.load_model(str(ARTIFACTS / "model.json"))
 calibrator = joblib.load(ARTIFACTS / "calibrator.joblib")
 
 FEATURES: list[str] = config["features"]
@@ -56,9 +57,9 @@ app = FastAPI(
 class Transaction(BaseModel):
     """Una transaccion. Solo TransactionAmt es obligatorio.
 
-    El resto de las 185 variables se aceptan en `features`; las ausentes
+    El resto de las variables se aceptan en `features`; las ausentes
     quedan como NaN, que es exactamente lo que el modelo vio en
-    entrenamiento: LightGBM trata los nulos de forma nativa y el dataset
+    entrenamiento: los arboles tratan los nulos de forma nativa y el dataset
     original tiene faltantes masivos.
     """
 
@@ -144,9 +145,9 @@ def decide(score: float) -> str:
 def psi(observed: list, deciles: list) -> float:
     """PSI del score contra los deciles de validacion.
 
-    Vale recordar lo que el trabajo midio: esta senal no detecto la caida de
-    PR-AUC de 0.732 a 0.473, porque el drift era de concepto y no de
-    covariables. Se expone para vigilancia, no como unica alarma.
+    El informe muestra que una senal sin etiquetas no basta por si sola: la
+    regla de adaptacion exige ademas dos brechas maduras de PR-AUC. Se expone
+    para vigilancia, no como unica alarma.
     """
     if len(observed) < 100:
         return float("nan")
@@ -167,14 +168,15 @@ def health() -> dict:
         "model": config.get("model"),
         "features": len(FEATURES),
         "thresholds": {"review": REVIEW_THR, "escalate": ESCALATE_THR},
-        "pr_auc_holdout": config.get("metrics", {}).get("pr_auc_holdout"),
+        "review_capacity_per_day": config.get("review_capacity_per_day"),
+        "metrics": config.get("metrics", {}),
     }
 
 
 @app.post("/predict", response_model=Decision)
 def predict(payload: Transaction) -> Decision:
     started = time.perf_counter()
-    score = float(booster.predict(encode(payload))[0])
+    score = float(booster.predict(xgb.DMatrix(encode(payload), feature_names=FEATURES))[0])
     action = decide(score)
 
     recent_scores.append(score)
