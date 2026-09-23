@@ -37,9 +37,11 @@ def verify_outputs():
     assert set(cv.model) == {"logistic", "tree", "lightgbm", "xgboost"}
     assert set(cv.fold) == {1, 2}
     assert (cv.train_last_dt < cv.available_before).all()
+    assert (cv.available_before <= cv.eval_start - 7 * 86_400).all()
     fits = pd.read_csv(exp / "fit_log.csv")
     assert (fits.train_last_dt < fits.available_before).all()
     config = json.loads((exp / "selected_hyperparameters.json").read_text())
+    assert (cv.eval_end < config["train_cut"]).all()
     digest = config.pop("digest")
     assert digest == config_digest(config)
     config["digest"] = digest

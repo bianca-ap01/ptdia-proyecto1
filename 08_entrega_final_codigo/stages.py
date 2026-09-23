@@ -96,10 +96,11 @@ def run_eda(root: Path | None = None) -> Path:
 
 def _inner_folds(df: pd.DataFrame, train_end: float):
     origin = float(df.TransactionDT.min())
-    for number, (start_day, stop_day) in enumerate(((60, 90), (90, 120)), 1):
-        start, stop = origin + start_day * DAY, origin + stop_day * DAY
-        if stop > train_end:
-            raise ValueError("Two inner folds do not fit inside the initial training period")
+    span = train_end - origin
+    if span < 60 * DAY:
+        raise ValueError("Initial training period is too short for two embargoed folds")
+    for number, (start_fraction, stop_fraction) in enumerate(((.50, .65), (.75, .90)), 1):
+        start, stop = origin + start_fraction * span, origin + stop_fraction * span
         train_mask = (df.TransactionDT < start - WEEK).to_numpy()
         valid_mask = ((df.TransactionDT >= start) & (df.TransactionDT < stop)).to_numpy()
         yield number, start, stop, train_mask, valid_mask
@@ -163,7 +164,8 @@ def run_experiment(root: Path | None = None) -> Path:
                 part = df.loc[valid_mask]
                 score = score_snapshot(snapshot, part)
                 cv.append({"model": name, "param_index": param_index, "params": json.dumps(params, sort_keys=True),
-                           "fold": fold, "pr_auc": safe_ap(part.isFraud, score),
+                           "fold": fold, "eval_start": start, "eval_end": stop,
+                           "pr_auc": safe_ap(part.isFraud, score),
                            "train_last_dt": snapshot["fit_max_dt"], "available_before": start - WEEK,
                            "train_rows": snapshot["train_rows"], "eval_rows": len(part),
                            "feature_count": len(snapshot["features"])})
@@ -186,7 +188,7 @@ def run_experiment(root: Path | None = None) -> Path:
                           "inner_mean_pr_auc": float(rank.iloc[0]["mean"]),
                           "quality_floor": float(aps.quantile(.10))}
     config = {"selected": selected, "train_cut": train_end, "valid_cut": valid_end,
-              "label_delay_days": 7, "fold_days": [[60, 90], [90, 120]],
+              "label_delay_days": 7, "fold_train_span_fractions": [[.50, .65], [.75, .90]],
               "models": list(GRIDS), "adaptive_windows_days": [30, 60, 90]}
     config["digest"] = config_digest(config)
     json_dump(out / "selected_hyperparameters.json", config)

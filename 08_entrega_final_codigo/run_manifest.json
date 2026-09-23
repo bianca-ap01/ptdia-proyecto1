@@ -13,7 +13,7 @@
   "kaggle_owner_authorized_by_user": "badexample",
   "kaggle_kernels": {
     "eda": {"slug": "badexample/ptdia-entrega-final-eda", "version": 1, "status": "complete", "outputs_downloaded": true},
-    "experimentacion": {"slug": "badexample/ptdia-entrega-final-experimentacion", "version": 1, "status": "running", "outputs_downloaded": false},
+    "experimentacion": {"slug": "badexample/ptdia-entrega-final-experimentacion", "version": 2, "status": "running", "outputs_downloaded": false, "version_1_failure": "Fixed inner folds extended beyond the actual initial training period; corrected to train-span fractions in version 2."},
     "costos": {"slug": "badexample/ptdia-entrega-final-costos", "status": "waiting_for_experimentacion"},
     "modelo_final": {"slug": "badexample/ptdia-entrega-final-modelo-final", "status": "waiting_for_costos"}
   },

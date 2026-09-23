@@ -11,7 +11,7 @@ Este paquete implementa una secuencia reproducible y auditable. Los cuatro noteb
 
 ## Contrato temporal
 
-El corte cronológico es 70/15/15 por `TransactionDT`. Los dos folds internos del train evalúan los días relativos 60–89 y 90–119. Un ajuste usa etiquetas con al menos siete días de antigüedad. El último tramo de siete días de validación no puede informar la elección al inicio del holdout. No se usa la etiqueta del test sin etiqueta de la competencia. Las estadísticas de preprocesamiento y la selección de variables `V` se ajustan en cada ventana de entrenamiento. Cinco atributos por UID usan sólo eventos anteriores.
+El corte cronológico es 70/15/15 por `TransactionDT`. Los dos folds internos evalúan los tramos 50–65 % y 75–90 % de la duración temporal del train inicial, de modo que ambos caben dentro de ese periodo en IEEE-CIS. Un ajuste usa etiquetas con al menos siete días de antigüedad. El último tramo de siete días de validación no puede informar la elección al inicio del holdout. No se usa la etiqueta del test sin etiqueta de la competencia. Las estadísticas de preprocesamiento y la selección de variables `V` se ajustan en cada ventana de entrenamiento. Cinco atributos por UID usan sólo eventos anteriores.
 
 El holdout de IEEE-CIS **ya fue inspeccionado por versiones históricas del proyecto**. La nueva implementación congela elecciones antes de acceder a sus etiquetas, pero el resultado sigue siendo retrospectivo. No se afirma un test independiente nuevo.
 
