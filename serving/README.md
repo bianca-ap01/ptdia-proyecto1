@@ -66,7 +66,20 @@ reproducir el comportamiento del informe hace falta un componente de cola que
 lleve el conteo diario; servirlo sin cupo equivale al escenario de capacidad
 infinita, que el propio estudio marca como límite optimista.
 
-## Desplegar
+## Servicio desplegado
+
+**https://fraude-api-agz3gnkzgq-uc.a.run.app** — proyecto `ptdia-fraude-9491`,
+región `us-central1`.
+
+```bash
+curl https://fraude-api-agz3gnkzgq-uc.a.run.app/health
+```
+
+Latencia medida desde Lima sobre doce solicitudes: **mediana 404 ms**
+(rango 364–617), contra **2.8 ms** de cómputo interno. Cerca del 99 % del
+tiempo es red, no modelo.
+
+## Desplegar desde cero
 
 Requiere una cuenta de facturación **activa**; Cloud Run y Cloud Build no
 operan sin ella.
