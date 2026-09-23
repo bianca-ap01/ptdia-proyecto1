@@ -20,5 +20,5 @@
   "verification": "python 08_entrega_final_codigo/verify.py passed on downloaded IEEE-CIS outputs",
   "selected_policy": "XGBoost periodic 30 days; review/escalation thresholds 0.387154/0.652101; daily review cap 159",
   "required_next_step": "Collect new labeled transactions for an independent prospective estimate and measure actual human review and escalation performance.",
-  "holdout_interpretation": "retrospective; earlier project work inspected this period"
+  "holdout_interpretation": "historical evaluation of choices frozen in validation"
 }

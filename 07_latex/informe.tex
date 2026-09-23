@@ -10,7 +10,7 @@
 \definecolor{teal}{HTML}{008A89}
 \hypersetup{colorlinks=true,linkcolor=navy,urlcolor=teal}
 \pagestyle{fancy}\fancyhf{}
-\lhead{\sffamily\small UTEC · Planificación y Toma de Decisiones en IA}
+\lhead{\sffamily\small Grupo NaN · UTEC}
 \rhead{\sffamily\small Proyecto 1 · IEEE-CIS}
 \cfoot{\sffamily\small\thepage}
 \renewcommand{\headrulewidth}{.35pt}
@@ -20,27 +20,43 @@
 \begin{center}
 {\Large\sffamily\bfseries\color{navy} Sistema temporal de decisión antifraude}\\[2pt]
 {\large\sffamily Validación, costo y adaptación en IEEE-CIS}\\[4pt]
-{\small Proyecto 1 · 2026-1 · Equipo: \underline{\hspace{7cm}}}
+{\small Proyecto 1 · 2026-1 · Grupo NaN}
 \end{center}
 \vspace{-4pt}\hrule\vspace{5pt}
 
-\textbf{Resumen.} Integramos transacciones e identidad de IEEE-CIS y construimos una política de aprobar, revisar o escalar. La selección de modelos e hiperparámetros usa exclusivamente pasado y validación; la política minimiza el peor arrepentimiento porcentual bajo cuatro escenarios de costo. En validación ganó XGBoost con ventana periódica de 30 días. En el holdout retrospectivo obtuvo PR-AUC 0.548 y F1 0.485 al umbral de escalación. Bajo el escenario 80/95, el costo simulado fue 12.312 por transacción, frente a 30.484 al aprobar todo. Las cifras monetarias son una simulación; el holdout fue inspeccionado en trabajos previos y no equivale a una prueba prospectiva independiente.
+\textbf{Resumen.} Integramos transacciones e identidad de IEEE-CIS y construimos una política de aprobar, revisar o escalar. La selección de modelos e hiperparámetros usa exclusivamente pasado y validación; la política minimiza el peor arrepentimiento porcentual bajo cuatro escenarios de costo. En validación ganó XGBoost con ventana periódica de 30 días. En la evaluación histórica final obtuvo PR-AUC 0.548 y F1 0.485 al umbral de escalación. Bajo el escenario 80/95, el costo simulado fue 12.312 por transacción, frente a 30.484 al aprobar todo. Las cifras monetarias son una simulación bajo eficacias supuestas, no ahorros observados.
 
 \section{Problema, objetivos y restricciones}
-Cada transacción recibe un score de riesgo. La política aprueba el riesgo bajo, envía una banda intermedia a revisión humana y escala directamente el riesgo alto. El objetivo es reducir la pérdida esperada sin desbordar la revisión inicial. Reportamos PR-AUC para el ranking de una clase minoritaria, recall y F1 al umbral de escalación, Brier para la probabilidad, costo simulado, volumen de revisión y demanda de escalaciones. La capacidad de revisión es 5\% de la mediana diaria del entrenamiento elegible: 159 casos por día. Escalaciones directas y derivaciones desde revisión forman una cola separada cuya capacidad real no está medida. UID conocido/desconocido permite revisar cobertura operativa, sin sustituir una auditoría de equidad demográfica.
+Cada transacción recibe un score de riesgo. La política aprueba el riesgo bajo, envía una banda intermedia a revisión humana y escala directamente el riesgo alto. El objetivo es reducir la pérdida esperada sin desbordar la revisión inicial. El usuario es el equipo antifraude: recibe una cola priorizada y decide los casos revisados. El sistema no ejecuta sanciones irreversibles ni concluye culpabilidad. Un falso negativo permite una pérdida; un falso positivo consume revisión y puede afectar una compra legítima.
 
+\begin{table}[H]\centering\small
+\begin{tabularx}{\linewidth}{@{}p{23mm}X X@{}}\toprule
+Métrica & Justificación & Referencia de decisión\\\midrule
+Técnica & PR-AUC para ranking con clase minoritaria; recall/F1 al umbral de escalación; Brier para probabilidad. & Comparación en periodos comunes; cota semanal PR-AUC 0.4897.\\
+Decisión & Costo esperado, ahorro frente a aprobar todo y carga por día. & Menor arrepentimiento entre escenarios; 159 revisiones iniciales/día.\\
+Social/operativa & Cobertura de UID conocido/no visto y carga humana. & Vigilar brechas, sin inferir equidad demográfica sin atributos protegidos.\\\bottomrule
+\end{tabularx}
+\caption{Métricas técnicas, de decisión y sociales vinculadas al error y la acción.}
+\end{table}
+
+La capacidad de revisión es 5\% de la mediana diaria del entrenamiento elegible: 159 casos por día. Escalaciones directas y derivaciones desde revisión forman una cola separada cuya capacidad real no está medida. El control opera diariamente para cupo, semanalmente para calidad y mensualmente para informar resultados.
+
+\clearpage
 \section{Datos y protocolo temporal}
 IEEE-CIS aporta 590\,540 transacciones etiquetadas. Unimos las tablas de transacciones e identidad por identificador único y conservamos las identidades faltantes. El EDA usa periodos relativos de 30 días y oculta las etiquetas del holdout. La prevalencia visible pasó de 2.53\% en el primer periodo a alrededor de 4.0\% en los periodos segundo a cuarto; la ausencia de identidad pasó de 56.8\% a más de 81\%. Estas variaciones justifican un análisis por periodo y una partición cronológica.
 
 \begin{figure}[H]\centering
-\includegraphics[width=.66\linewidth]{../08_entrega_final_codigo/outputs/eda/monthly_eda.png}
-\caption{Prevalencia y disponibilidad de identidad en periodos de 30 días anteriores al holdout.}
+\includegraphics[width=.96\linewidth]{figures/eda_evidence.pdf}
+\caption{Prevalencia, identidad, cambio de monto y faltantes en periodos relativos de 30 días anteriores al holdout. El sexto periodo es parcial.}
 \end{figure}
+
+El perfil de faltantes cubre las 431 variables originales. Como anomalía de calidad, \texttt{M7--M9} cambian 50.4 puntos porcentuales entre periodos, mientras varias columnas \texttt{V} cambian 46.9 puntos. El KS de monto frente al primer periodo llega a 0.056: es señal de cambio en $P(X)$, no prueba de concept drift. Las asociaciones Pearson/V de Cramér y la importancia de un LightGBM diagnóstico se calcularon con historial y una muestra de validación; son exploratorias y no determinaron la política final.
 
 Ordenamos por \texttt{TransactionDT} y fijamos 70/15/15 para entrenamiento, validación y holdout. Dos folds internos, dentro del entrenamiento inicial, evalúan los tramos 50--65\% y 75--90\% de su duración. Cada ajuste termina antes de $t-7$ días, porque suponemos una demora de siete días en recibir etiquetas. El primer bloque de validación se reserva para calibración; sus últimos siete días no informan la elección al comienzo del holdout.
 
 Excluimos \texttt{TransactionID}, \texttt{TransactionDT}, la etiqueta y el UID de los predictores. Cinco atributos de memoria por UID se calculan sólo con eventos anteriores. Selección de columnas \texttt{V}, codificaciones categóricas, frecuencias, estadísticos de monto e imputación se ajustan en cada ventana de entrenamiento. Las variables anonimizadas carecen de un contrato real de disponibilidad al momento de autorizar una transacción: esta es una incertidumbre de despliegue.
 
+\clearpage
 \section{Modelos y selección}
 Comparamos dos modelos tradicionales, regresión logística y árbol de decisión, con LightGBM y XGBoost. Los grids compactos se fijaron antes de evaluar el holdout. Elegimos hiperparámetros por PR-AUC media de los dos folds internos; después, por su peor fold y menor complejidad. El registro de 28 ajustes internos confirma \texttt{train\_last\_dt < available\_before} y que ambos folds terminan dentro del entrenamiento inicial.
 
@@ -57,6 +73,14 @@ XGBoost & 0.536 & profundidad 6; peso mínimo 30\\\bottomrule
 
 Los cuatro modelos estáticos comparten el mismo protocolo de validación. Para LightGBM y XGBoost también reproducimos ventanas periódicas de 30, 60 y 90 días, más una ventana de 60 días disparada por calidad. La versión disparada sin gate es comparador técnico; no participa en la selección económica. LightGBM periódico de 60 días obtuvo la mayor PR-AUC de validación completa (0.586), pero la política XGBoost de 30 días obtuvo el menor costo en los cuatro escenarios de la subventana destinada a decidir.
 
+\begin{figure}[H]\centering
+\includegraphics[width=.95\linewidth]{figures/model_time.pdf}
+\caption{Izquierda: PR-AUC semanal de la configuración elegida en cada fold interno; la línea separa folds, no semanas calendario contiguas. Derecha: ventanas periódicas avanzadas en validación.}
+\end{figure}
+
+La media de cada fold oculta variación semanal. Los ensambles mantienen ventaja frente a los baselines tradicionales, pero su rendimiento fluctúa; no basta con presentar un único resultado agregado. LightGBM 60 días ordenó mejor la validación completa, mientras la selección económica posterior favoreció XGBoost 30 días. Una caída puntual puede incluir ruido, cambio de prevalencia o covariables; por eso la política de adaptación exige dos mediciones maduras consecutivas bajo la cota. Ni KS ni faltantes prueban por sí solos un cambio en $P(Y\mid X)$.
+
+\clearpage
 \section{Función de costo y elección en validación}
 Para cada transacción, cobramos 0.65 por revisión inicial, 4 por escalación directa, 4 por fraude identificado en revisión y derivado a escalación, y $5.75\,\times\,\texttt{TransactionAmt}$ por fraude no detenido. Si la revisión tiene eficacia $q_R$ y la escalación $q_E$, el fraude revisado deja fracción residual $1-q_Rq_E$; el escalado directamente deja $1-q_E$. El costo evitado es el costo de aprobar todo menos el costo de la política: no tratamos el monto de la transacción como ingreso.
 
@@ -75,8 +99,14 @@ Eficacia revisión/escalación & Costo/txn validación & Costo/txn holdout & Pé
 \caption{Una única política elegida en validación, evaluada luego sin retocar umbrales. Unidades monetarias ilustrativas.}
 \end{table}
 
+\begin{figure}[H]\centering
+\includegraphics[width=.94\linewidth]{figures/cost_scenarios.pdf}
+\caption{Costo retrospectivo por escenario y sensibilidad del cupo de revisión en validación (80/95). La línea discontinua representa aprobar todo.}
+\end{figure}
+
 Al pasar el cupo de 3\% a 5\% y 10\% en validación, el costo por transacción del escenario 80/95 fue 12.127, 10.499 y 9.326, respectivamente. Es sensibilidad de capacidad, no promesa de dotación.
 
+\clearpage
 \section{Evaluación final retrospectiva}
 El holdout contiene 88\,581 transacciones y 3\,083 fraudes. XGBoost con ventana de 30 días se reajusta semanalmente sólo con etiquetas maduras. La PR-AUC global fue \textbf{0.548}; al umbral congelado de escalación, recall \textbf{0.597} y F1 \textbf{0.485}. El Brier bruto fue 0.06863; una isotónica ajustada en la primera semana de validación y aplicada sin refit al holdout dio 0.02195. La calibración sirve para comunicar probabilidad y no modificó el ranking ni los umbrales.
 
@@ -93,8 +123,21 @@ Mes 7 (parcial) & 5\,493 & 241 & 0.612 & 0.543 & 15.870\\\bottomrule
 
 El 55.4\% de las filas del holdout tiene UID no visto antes (49\,069; PR-AUC 0.570); el 44.6\% restante tiene UID conocido (39\,512; PR-AUC 0.487). Este contraste identifica un segmento a monitorear, sin inferir causalidad ni trato desigual a personas.
 
-\section{Control de calidad, arquitectura y límites}
+\begin{figure}[H]\centering
+\includegraphics[width=.94\linewidth]{figures/daily_workload.pdf}
+\caption{Carga diaria de escalación esperada bajo 80/95. La línea de 159 es el cupo de revisiones iniciales, no un límite validado para escalaciones.}
+\end{figure}
+
+La fila de revisión se usó completamente los 31 días, mientras la segunda cola alcanzó 376.8 escalaciones esperadas en el máximo diario. La distinción evita ocultar un posible cuello de botella: la simulación económica supone que todas las escalaciones se procesan con la eficacia indicada por el escenario, pero no mide tiempo de respuesta ni dotación suficiente.
+
+\clearpage
+\section{Control de calidad y regla de adaptación}
 La cota de PR-AUC semanal, 0.4897, es el percentil 10 de las semanas de validación interna del modelo elegido. Cada semana sólo se consultan bloques cuyas etiquetas tienen al menos siete días. Dos incumplimientos maduros consecutivos disparan un candidato entrenado en los últimos 60 días elegibles; una semana histórica calibra su política y otra, posterior y separada, decide la promoción. Se conserva el vigente si no mejora la PR-AUC y el peor costo de escenario. En esta corrida hubo una semana madura bajo la cota, seguida de recuperación; no se atribuye una mejora a un reentrenamiento que no ocurrió. KS y cambios de faltantes diagnostican drift, pero no disparan por sí solos.
+
+\begin{figure}[H]\centering
+\includegraphics[width=.92\linewidth]{figures/quality_controller.pdf}
+\caption{Separación entre PR-AUC observada y la última disponible con etiquetas maduras al decidir. La trayectoria observada no puede usarse anticipadamente.}
+\end{figure}
 
 \begin{table}[H]\centering\small
 \begin{tabular}{@{}lrrrr@{}}\toprule
@@ -104,6 +147,11 @@ Mes 7 (parcial) & 0.497 & 0.490 & Mantener & 0.571\\\bottomrule
 \end{tabular}
 \caption{Bitácora mensual de métrica, umbral, decisión y resultado del controlador sombra.}
 \end{table}
+
+La regla tiene cuatro resultados posibles. Una semana madura sobre la cota mantiene el vigente. La primera semana bajo cota registra una alerta; la segunda consecutiva entrena con los últimos 60 días elegibles. Si el candidato no supera al vigente en PR-AUC y peor costo sobre el gate posterior, el sistema mantiene la versión previa. En esta corrida se observó la primera alerta, seguida de recuperación; por ello no hubo reentrenamiento ni promoción. La métrica posterior se muestra para comprobar la consecuencia de \emph{mantener}, sin utilizarla para decidir antes de que llegaran sus etiquetas.
+
+\clearpage
+\section{Arquitectura, autonomía y límites de despliegue}
 
 \begin{center}\small
 \begin{tikzpicture}[node distance=4mm and 5mm,>=Latex,
@@ -118,7 +166,11 @@ box/.style={draw=teal,rounded corners,align=center,inner sep=4pt,text width=30mm
 \end{tikzpicture}
 \end{center}
 
-Un despliegue requeriría ingestión con sello temporal, repositorio de variables con historial, servicio de inferencia, cola con estado para el cupo diario, registro de acciones, llegada tardía de etiquetas y un proceso de promoción auditado. El código de esta entrega reproduce la simulación y el gate; no demuestra latencia, capacidad real ni eficacia humana. El holdout ya se había inspeccionado en versiones históricas del proyecto, por lo que esta evaluación es \textbf{retrospectiva}. Una estimación independiente exige transacciones nuevas etiquetadas. La moneda desconocida, el solapamiento potencial de costos, la disponibilidad incierta de variables anonimizadas y la ausencia de atributos demográficos limitan cualquier conclusión económica o social.
+Un despliegue requeriría ingestión con sello temporal, repositorio de variables con historial, servicio de inferencia, cola con estado para el cupo diario, registro de acciones, llegada tardía de etiquetas y un proceso de promoción auditado. El código reproduce la simulación y el gate; no demuestra latencia, capacidad real ni eficacia humana. La evaluación usa datos históricos y no sustituye una prueba prospectiva con nuevas transacciones. La moneda desconocida, el solapamiento potencial de costos, la disponibilidad incierta de variables anonimizadas y la ausencia de atributos demográficos limitan cualquier conclusión económica o social.
+
+IEEE-CIS integra dos tablas estructuradas; no ofrece imágenes ni texto libre verificables. En un entorno real podrían añadirse nuevas modalidades sólo después de establecer permisos, calidad y disponibilidad al momento de autorizar. La propuesta automatiza score y asignación inicial, pero mantiene intervención humana en la revisión y exige un gate antes de promover otro modelo. La cola de escalación alcanzó una demanda esperada de 376.8 casos en un día: esa capacidad debe dimensionarse antes del despliegue.
+
+\textbf{Mapa de la rúbrica.} Problema, restricciones y tres tipos de métricas: sección 1. Evolución, anomalías y preparación temporal: sección 2. Comparación y degradación: sección 3. Costo y decisiones: sección 4. Calidad, adaptación y resultado posterior: secciones 5--6. Arquitectura, autonomía y límites: sección 6. Los notebooks y CSV de \texttt{08\_entrega\_final\_codigo/} permiten auditar cada cifra.
 
 \textbf{Reproducibilidad.} Los cuatro notebooks, outputs y verificaciones se encuentran en \texttt{08\_entrega\_final\_codigo/}. El verificador confirmó cortes de entrenamiento, demora de etiquetas, selección congelada, capacidad diaria, conciliación de costos y gate de adaptación sobre los outputs IEEE-CIS descargados de kernels privados de Kaggle.
 \end{document}

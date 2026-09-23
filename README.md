@@ -4,7 +4,7 @@ Sistema inteligente adaptativo sobre datos no estacionarios.
 
 ## Nueva entrega de código
 
-La carpeta **[`08_entrega_final_codigo/`](08_entrega_final_codigo/README.md)** contiene los cuatro notebooks, el código compartido, el protocolo de validación temporal, outputs IEEE-CIS descargados y el verificador. Las cuatro etapas terminaron en kernels privados de la cuenta Kaggle autorizada (`badexample`) y la verificación integral pasó. El [informe](07_latex/informe.pdf), la [presentación](07_latex/presentacion.pdf) y la [infografía](07_latex/infografia.pdf) se actualizaron con esos resultados. [`08_entrega_final_codigo/run_manifest.json`](08_entrega_final_codigo/run_manifest.json) registra el estado por etapa y la limitación retrospectiva del holdout.
+La carpeta **[`08_entrega_final_codigo/`](08_entrega_final_codigo/README.md)** contiene los cuatro notebooks, el código compartido, el protocolo de validación temporal, outputs IEEE-CIS descargados y el verificador. Las cuatro etapas terminaron en kernels privados de la cuenta Kaggle autorizada (`badexample`) y la verificación integral pasó. El [informe](07_latex/informe.pdf), la [presentación](07_latex/presentacion.pdf) y la [infografía](07_latex/infografia.pdf) se actualizaron con esos resultados. [`08_entrega_final_codigo/run_manifest.json`](08_entrega_final_codigo/run_manifest.json) registra el estado por etapa y el carácter histórico de la evaluación final.
 
 `final/` conserva la entrega histórica y sus resultados anteriores; las cifras de sus documentos no deben atribuirse a los notebooks nuevos.
 

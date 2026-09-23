@@ -48,7 +48,7 @@ def code(value, ident):
 
 
 def notebook(stage, title, purpose):
-    cells = [md(f"# {title}\n\n{purpose}\n\n**Protocolo:** IEEE-CIS, orden temporal 70/15/15, siete días de demora de etiquetas, semilla 42. El holdout fue inspeccionado en versiones anteriores: toda evaluación allí es retrospectiva.\n", "intro"),
+    cells = [md(f"# {title}\n\n{purpose}\n\n**Protocolo:** IEEE-CIS, orden temporal 70/15/15, siete días de demora de etiquetas, semilla 42. Modelo, hiperparámetros y umbrales se congelan antes de evaluar el holdout histórico.\n", "intro"),
              md("## Entorno y rutas\n\nEl mismo notebook corre en Kaggle con la competencia adjunta o localmente tras descargar los CSV.\n", "environment"),
              code("from pathlib import Path\nROOT = Path.cwd()\nif (ROOT / '08_entrega_final_codigo').exists():\n    ROOT = ROOT / '08_entrega_final_codigo'\n__file__ = str(ROOT / 'stages.py')\nprint('Paquete:', ROOT)", "setup")]
     for filename, label, omit in (("core.py", "datos, modelos y costos", False),

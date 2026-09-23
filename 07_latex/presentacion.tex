@@ -16,7 +16,7 @@
 \setbeamertemplate{footline}{\hfill\insertframenumber\hspace{4mm}\vspace{2mm}}
 \title{Sistema temporal de decisión antifraude}
 \subtitle{IEEE-CIS Fraud Detection · Proyecto 1}
-\author{Equipo: \underline{\hspace{6cm}}}
+\author{Grupo NaN}
 \institute{UTEC · Planificación y Toma de Decisiones en IA}
 \date{2026-1}
 \begin{document}
@@ -36,16 +36,10 @@ Aprobar riesgo bajo \quad Revisar banda intermedia \quad Escalar riesgo alto
 El modelo ordena transacciones; la política convierte el score en acciones. Medimos PR-AUC, recall, F1, calibración, costo y demanda operativa. El cupo primario equivale al 5\% de la mediana diaria del entrenamiento elegible: \textbf{159 revisiones por día}.
 \end{frame}
 
-\begin{frame}{EDA temporal: la población cambia}
-\begin{columns}[T]
-\column{.66\linewidth}
-\includegraphics[width=\linewidth]{../08_entrega_final_codigo/outputs/eda/monthly_eda.png}
-\column{.32\linewidth}\small
-590\,540 transacciones etiquetadas.\\[3mm]
-La prevalencia visible pasó de 2.53\% en el primer periodo a alrededor de 4\% en los siguientes.\\[3mm]
-La ausencia de identidad pasó de 56.8\% a más de 81\%.\\[3mm]
-Los periodos son relativos de 30 días; las etiquetas del holdout están ocultas aquí.
-\end{columns}
+\begin{frame}{EDA temporal: cambian etiqueta, monto y calidad}\small
+\centering\includegraphics[width=.98\linewidth,height=.73\textheight,keepaspectratio]{figures/eda_evidence.pdf}
+\par\vspace{2mm}
+\raggedright La prevalencia pasó de 2.53\% a cerca de 4\%; la identidad ausente superó 81\%. \texttt{M7--M9} cambiaron 50.4 puntos de faltantes. El sexto periodo es parcial.
 \end{frame}
 
 \begin{frame}{Protocolo temporal y controles de fuga}\small
@@ -58,8 +52,8 @@ Preprocesamiento & Encoder, frecuencias, imputación, cuartiles y selección de 
 Memoria UID & Cinco variables hechas sólo con eventos anteriores\\\bottomrule
 \end{tabularx}
 \vspace{4mm}
-\begin{block}{Límite}
-El holdout fue inspeccionado en versiones históricas: la nueva evaluación es retrospectiva.
+\begin{block}{Regla de evaluación}
+Los hiperparámetros y umbrales se congelan en validación antes de evaluar el holdout histórico.
 \end{block}
 \end{frame}
 
@@ -80,19 +74,10 @@ XGBoost & 0.536 & profundidad 6; peso mínimo 30\\\bottomrule
 \end{itemize}
 \end{frame}
 
-\begin{frame}{Ventanas y comparación en validación}\small
-\begin{tabular}{@{}lrrrr@{}}\toprule
-Modelo & Estático & 30 días & 60 días & 90 días\\\midrule
-LightGBM & 0.523 & 0.576 & \textbf{0.586} & 0.569\\
-XGBoost & 0.504 & 0.536 & 0.544 & 0.535\\\bottomrule
-\end{tabular}
-\par
-\vspace{4mm}
-Valores: PR-AUC de la validación completa. La ventana de 60 días de LightGBM obtuvo el mejor ranking. La selección final combina score y umbrales con costo en una subventana de validación; por eso puede escoger otra estrategia.
-\vspace{3mm}
-\begin{block}{Actualización por calidad}
-También se reprodujo una ventana de 60 días disparada por desempeño. Su replay sin gate fue comparador técnico y no candidato de política desplegable.
-\end{block}
+\begin{frame}{El rendimiento cambia entre semanas y ventanas}\small
+\centering\includegraphics[width=.98\linewidth,height=.72\textheight,keepaspectratio]{figures/model_time.pdf}
+\par\vspace{2mm}
+\raggedright LightGBM 60 días logró la mayor PR-AUC de validación (0.586). XGBoost 30 días ganó cuando se evaluaron score, umbrales y costo conjuntamente. La variante disparada sin gate quedó como comparador técnico.
 \end{frame}
 
 \begin{frame}{Función de costo: cifras y supuestos}\small
@@ -140,17 +125,16 @@ Brier bruto / calibrado & 0.06863 / 0.02195\\\bottomrule
 La isotónica se ajustó sólo con la primera semana de validación. No cambia ranking ni umbrales. El modelo periódico usa sólo etiquetas con siete días de antigüedad. Las elecciones se congelaron antes de consultar las etiquetas de este periodo.
 \end{frame}
 
-\begin{frame}{Holdout: costo y trabajo humano}\small
-\begin{tabular}{@{}lrr@{}}\toprule
-Eficacia revisión/escalación & Costo/txn & Pérdida evitada vs. aprobar todo\\\midrule
-100/100 & 10.227 & 1.794 millones\\
-90/98 & 11.184 & 1.710 millones\\
-80/95 & \textbf{12.312} & \textbf{1.610 millones}\\
-60/90 & 14.286 & 1.435 millones\\\bottomrule
-\end{tabular}
-\par
-\vspace{3mm}
-En 80/95: 4\,929 revisiones, 4\,505 escalaciones directas y 280 derivaciones esperadas desde revisión. La demanda total de escalación promedió 154.4 al día y llegó a 376.8; no existe un cupo validado para esa cola. El costo de aprobar todo sería 30.484 por transacción.
+\begin{frame}{Cuatro escenarios; una política congelada}\small
+\centering\includegraphics[width=.98\linewidth,height=.71\textheight,keepaspectratio]{figures/cost_scenarios.pdf}
+\par\vspace{2mm}
+\raggedright En 80/95: \textbf{12.312 por transacción} y \textbf{1.610 millones} de pérdida simulada evitada frente a aprobar todo. El cupo 3/5/10\% modifica costo en validación; exige recursos humanos reales.
+\end{frame}
+
+\begin{frame}{La escalación necesita capacidad propia}\small
+\centering\includegraphics[width=.98\linewidth,height=.70\textheight,keepaspectratio]{figures/daily_workload.pdf}
+\par\vspace{2mm}
+\raggedright En 80/95 hubo 4\,929 revisiones iniciales, 4\,505 escalaciones directas y 280 derivaciones esperadas. La cola de escalación llegó a \textbf{376.8 casos esperados en un día}; su capacidad aún no está validada.
 \end{frame}
 
 \begin{frame}{Resultados mensuales y cobertura UID}\small
@@ -171,17 +155,10 @@ Conocido & 39\,512 & 0.487\\\bottomrule
 El último mes está incompleto. UID es un proxy de cobertura operativa, no una variable demográfica.
 \end{frame}
 
-\begin{frame}{Política de calidad y acción observada}\small
-La cota es PR-AUC semanal \textbf{0.4897}, percentil 10 de las semanas de validación interna. Dos bloques maduros consecutivos bajo ella disparan un candidato de 60 días. Calibración y gate usan semanas pasadas distintas.
-\par\vspace{6mm}
-\begin{tabular}{@{}lrrrr@{}}\toprule
-Periodo & Última PR-AUC madura & Cota & Acción & PR-AUC posterior\\\midrule
-Mes 6 & 0.497 & 0.490 & Mantener & 0.512\\
-Mes 7, parcial & 0.497 & 0.490 & Mantener & 0.571\\\bottomrule
-\end{tabular}
-\par
-\vspace{3mm}
-Una semana madura cayó bajo la cota; la siguiente se recuperó. No hubo dos incumplimientos consecutivos ni promoción. KS y faltantes son diagnósticos, no disparadores aislados.
+\begin{frame}{Calidad: una alerta y recuperación}\small
+\centering\includegraphics[width=.98\linewidth,height=.69\textheight,keepaspectratio]{figures/quality_controller.pdf}
+\par\vspace{2mm}
+\raggedright La cota \textbf{0.4897} usa validación interna. Dos incumplimientos maduros activan candidato de 60 días y gate pasado separado. Aquí hubo una alerta y recuperación: \textbf{mantener}, sin promoción.
 \end{frame}
 
 \begin{frame}{Arquitectura operativa propuesta}\small
@@ -205,7 +182,7 @@ El código reproduce esta lógica de decisión y promoción sobre datos históri
 \begin{itemize}
 \item La mejora simulada depende de eficacias 100/100 a 60/90, no observadas en IEEE-CIS.
 \item La divisa de \texttt{TransactionAmt} es desconocida; el multiplicador 5.75 puede solaparse con costos operativos.
-\item El holdout fue inspeccionado históricamente. La evaluación es retrospectiva; transacciones futuras etiquetadas darían una estimación independiente.
+\item La evaluación es histórica; una prueba con nuevas transacciones mediría desempeño prospectivo.
 \item En esta corrida, la regla de calidad mantuvo el modelo. No se puede atribuir una mejora a un reentrenamiento que no ocurrió.
 \end{itemize}
 \vspace{3mm}
