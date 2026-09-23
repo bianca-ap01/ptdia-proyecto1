@@ -78,7 +78,7 @@ def main():
     summary.to_csv(OUT, index=False)
 
     print(summary.to_string(index=False))
-    print(f"\nEscrito: {OUT.relative_to(HERE.parent)}")
+    print(f"\nEscrito: {OUT.relative_to(HERE)}")
 
     adapt = summary[summary.comparison == "periodic45_vs_static"]
     window = summary[summary.comparison == "periodic45_vs_periodic30"]

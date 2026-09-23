@@ -21,7 +21,7 @@ for stage, notebook in SOURCES.items():
     shutil.copy2(ROOT / "common.py", folder / "common.py")
     shutil.copy2(ROOT / "v01_features.json", folder / "v01_features.json")
     if stage in ("monitoreo", "experimentacion"):
-        source = ROOT.parent / "03_outputs" / "v01_baseline_temporal"
+        source = ROOT / "archivo" / "03_outputs" / "v01_baseline_temporal"
         target = folder / "v01_reference"
         target.mkdir(exist_ok=True)
         for name in ("baseline_valid_predictions.csv", "baseline_holdout_predictions.csv"):
