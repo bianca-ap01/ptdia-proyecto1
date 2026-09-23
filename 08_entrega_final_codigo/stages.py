@@ -53,13 +53,27 @@ def run_eda(root: Path | None = None) -> Path:
     period = np.where(df.TransactionDT <= train_end, "train",
                       np.where(df.TransactionDT <= valid_end, "valid", "holdout_hidden"))
     df["period"] = period
-    visible = df.loc[df.period != "holdout_hidden"]
+    visible = df.loc[df.period != "holdout_hidden"].copy()
+    visible["day_relative"] = day.loc[visible.index]
     monthly = visible.groupby("month_relative", sort=True).agg(
         rows=("isFraud", "size"), fraud=("isFraud", "sum"),
         fraud_rate=("isFraud", "mean"), median_amount=("TransactionAmt", "median"),
         identity_missing=("has_identity", lambda x: 1 - x.mean()),
     ).reset_index()
     monthly.to_csv(out / "monthly_eda.csv", index=False)
+    temporal = []
+    for span in (1, 7, 30):
+        grouped = visible.groupby(visible.day_relative // span, sort=True).agg(
+            rows=("isFraud", "size"), fraud_rate=("isFraud", "mean"),
+            identity_missing=("has_identity", lambda x: 1 - x.mean()),
+            first_day=("day_relative", "min"), last_day=("day_relative", "max"),
+        )
+        grouped.index.name = "period_index"
+        grouped = grouped.reset_index()
+        grouped.insert(0, "window_days", span)
+        grouped["mid_day"] = (grouped.first_day + grouped.last_day) / 2
+        temporal.append(grouped)
+    pd.concat(temporal, ignore_index=True).to_csv(out / "temporal_eda.csv", index=False)
     missing = visible.groupby("month_relative")[["TransactionAmt", "D1", "C9", "id_02"]].apply(
         lambda x: x.isna().mean()).reset_index()
     missing.to_csv(out / "monthly_missingness.csv", index=False)
