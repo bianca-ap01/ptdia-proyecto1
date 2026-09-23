@@ -1,5 +1,7 @@
 # Guion de presentacion 15-20 minutos
 
+> **Guion histórico V01–V07.** Las cifras de V05 aquí citadas no son las de la evaluación final. Para la exposición, use el informe y la presentación de `07_latex/` contrastados con `final/REPORTE.md`.
+
 ## Distribucion sugerida
 
 | Tiempo | Seccion | Responsable sugerido |

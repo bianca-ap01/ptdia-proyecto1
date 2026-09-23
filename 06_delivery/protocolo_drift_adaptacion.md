@@ -1,5 +1,7 @@
 # Protocolo de deteccion y adaptacion al concept drift
 
+> **Propuesta histórica.** La evaluación final ya ejecutó ventanas de 14, 30 y 45 días e historial acumulado. El protocolo y sus resultados actuales están en `final/REPORTE.md`.
+
 ## Objetivo
 
 Definir como el sistema detecta cambios en la distribucion y como decide entre continuar operando, recalibrar umbrales o reentrenar el modelo.

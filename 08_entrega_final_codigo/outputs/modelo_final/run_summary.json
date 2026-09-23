@@ -1,0 +1,8 @@
+{
+  "stage": "modelo_final",
+  "status": "complete",
+  "rows": 88581,
+  "selected_choice_digest": "cfd6f0d294519acb23a5627f1377b1f3785bc9599c9acfdbc5208ecb2408cf4b",
+  "retrospective_holdout": true,
+  "holdout_evaluation_count": 1
+}

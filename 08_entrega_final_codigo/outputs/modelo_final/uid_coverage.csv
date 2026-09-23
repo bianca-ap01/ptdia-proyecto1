@@ -1,0 +1,3 @@
+uid_known_before_holdout,rows,pr_auc,direct_escalations
+False,49069,0.5701240285794456,3418
+True,39512,0.4868960293989684,1087

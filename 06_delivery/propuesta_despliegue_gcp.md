@@ -1,5 +1,7 @@
 # Propuesta de despliegue en GCP
 
+> **Propuesta histórica.** Existe una API desplegada descrita en `serving/README.md`; esa API todavía no aplica el cupo diario de la simulación final. Use `final/REPORTE.md` para el estado actual.
+
 ## Base usada
 
 El taller de despliegue propone un flujo practico:

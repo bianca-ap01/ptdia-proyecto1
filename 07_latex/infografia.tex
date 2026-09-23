@@ -1,7 +1,7 @@
 \documentclass[a3paper,landscape]{article}
 \usepackage[provide=*,spanish]{babel}
 \usepackage{fontspec}
-\setsansfont{Latin Modern Sans}
+\setsansfont{Arial}
 \renewcommand{\familydefault}{\sfdefault}
 \usepackage[margin=10mm]{geometry}
 \usepackage{tikz,xcolor,hyperref}
@@ -22,23 +22,23 @@ flow/.style={draw=teal!45,rounded corners=3mm,very thick,align=center,text width
 path/.style={->,line width=1.8pt,teal,rounded corners=4mm}]
 
 \fill[navy] (-.2,24.1) rectangle (39.4,26.9);
-\node[anchor=west,text=white,font=\bfseries\fontsize{26}{29}\selectfont] at (.45,25.8){Sistema adaptativo para detección de fraude financiero};
-\node[anchor=west,text=white!82,font=\fontsize{13.5}{16}\selectfont] at (.5,24.75){IEEE-CIS · Proyecto 1 · Evidencia alineada con la rúbrica de Planificación y Toma de Decisiones en IA};
+\node[anchor=west,text=white,font=\bfseries\fontsize{26}{29}\selectfont] at (.45,25.8){Grupo NaN · Del dato a la decisión antifraude};
+\node[anchor=west,text=white!82,font=\fontsize{13.5}{16}\selectfont] at (.5,24.75){IEEE-CIS · Validación temporal · Escenarios de costo · Control de calidad};
 
 \node[anchor=west,text=navy,font=\bfseries\fontsize{18}{21}\selectfont] at (.35,23.25){Ciclo de vida del sistema};
 
 % --- CICLO DE VIDA: fila superior ---
-\node[flow,fill=blue,anchor=north west] (d) at (.2,22.6){\textbf{1 · Adquisición}\\[1mm]Transacciones + identidad\\590\,540 filas · 3.499\,\% fraude};
-\node[flow,fill=blue,right=1.0cm of d] (f){\textbf{2 · Preparación}\\[1mm]185 variables\\Encoders sólo con historial};
-\node[flow,fill=mint,right=1.0cm of f] (m){\textbf{3 · Modelo}\\[1mm]3 familias × 6 estrategias\\27 config · 141 ajustes};
-\node[flow,fill=gold,right=1.0cm of m] (pol){\textbf{4 · Decisión}\\[1mm]Aprobar / revisar / escalar\\Cupo 158 revisiones/día};
-\node[flow,fill=coral,right=1.0cm of pol] (ac){\textbf{5 · Acción}\\[1mm]90.2\,\% automático\\4.3\,\% escalado a confirmación};
+\node[flow,fill=blue,anchor=north west] (d) at (.2,22.6){\textbf{1 · Adquisición}\\[1mm]Transacciones + identidad\\590\,540 filas etiquetadas};
+\node[flow,fill=blue,right=1.0cm of d] (f){\textbf{2 · Preparación}\\[1mm]Corte temporal 70/15/15\\Encoder sólo con historial};
+\node[flow,fill=mint,right=1.0cm of f] (m){\textbf{3 · Modelado}\\[1mm]Dos tradicionales + dos avanzados\\28 ajustes en folds internos};
+\node[flow,fill=gold,right=1.0cm of m] (pol){\textbf{4 · Decisión}\\[1mm]Costo en validación\\XGBoost periódico 30 días};
+\node[flow,fill=coral,right=1.0cm of pol] (ac){\textbf{5 · Acción}\\[1mm]Aprobar / revisar / escalar\\Cupo 159 revisiones/día};
 
 % --- fila inferior: retroalimentacion ---
-\node[flow,fill=mint,below=2.3cm of ac] (mon){\textbf{6 · Monitoreo}\\[1mm]PSI y KS sin etiquetas\\PR-AUC con etiquetas maduras};
-\node[flow,fill=gold,left=1.0cm of mon] (reg){\textbf{7 · Regla de alerta}\\[1mm]PSI $>$ 0.25 \textbf{o} dos bloques\\$>$10\,\% bajo referencia};
-\node[flow,fill=blue,left=1.0cm of reg] (upd){\textbf{8 · Adaptación}\\[1mm]Recalibrar umbrales\\o reentrenar con ventana};
-\node[flow,fill=coral,left=1.0cm of upd] (val){\textbf{9 · Promoción}\\[1mm]Validar en bloque futuro\\antes de reemplazar};
+\node[flow,fill=mint,below=2.3cm of ac] (mon){\textbf{6 · Monitoreo}\\[1mm]Métricas por mes\\PR-AUC semanal con etiquetas maduras};
+\node[flow,fill=gold,left=1.0cm of mon] (reg){\textbf{7 · Regla de calidad}\\[1mm]Cota PR-AUC 0.4897\\Dos incumplimientos seguidos};
+\node[flow,fill=blue,left=1.0cm of reg] (upd){\textbf{8 · Adaptación}\\[1mm]Candidato con 60 días\\Calibrar con pasado};
+\node[flow,fill=coral,left=1.0cm of upd] (val){\textbf{9 · Promoción}\\[1mm]Gate pasado separado\\Mantener si no mejora};
 
 \draw[path] (d) -- (f);
 \draw[path] (f) -- (m);
@@ -50,36 +50,36 @@ path/.style={->,line width=1.8pt,teal,rounded corners=4mm}]
 \draw[path] (upd) -- (val);
 \draw[path] (val.west) -- ++(-1.0,0) |- (m.south);
 
-\node[anchor=west,text=teal,font=\bfseries\fontsize{12}{14}\selectfont] at (1.2,13.4){El lazo 6→9 es lo que hace al sistema adaptativo: el modelo nunca se reemplaza sin validación en un bloque futuro.};
+\node[anchor=west,text=teal,font=\bfseries\fontsize{12}{14}\selectfont] at (1.2,13.4){Costo = 0.65 × revisión + 4 × escalación + 5.75 × monto de fraude no detenido; 4 USD es supuesto de flujo.};
 
 % --- RESULTADOS MEDIDOS ---
 \node[anchor=west,text=navy,font=\bfseries\fontsize{18}{21}\selectfont] at (.35,12.4){Lo que medimos}; 
 
-\node[rubric,fill=mint,anchor=north west,minimum height=4.3cm,text width=11.4cm] (k1) at (.2,11.8){\cardtitle{Adaptar sí mejora la detección}\\[2.5mm]
-PR-AUC media de holdout, ventana de 45 días frente a modelo congelado:\\[1.5mm]
-LightGBM $0.550 \rightarrow 0.597$ · XGBoost $0.499 \rightarrow 0.557$ · CatBoost $0.471 \rightarrow 0.517$\\[1.5mm]
-$t$ pareado significativo en las tres ($p=0.024$, $0.006$, $0.007$).};
+\node[rubric,fill=mint,anchor=north west,minimum height=4.3cm,text width=11.4cm] (k1) at (.2,11.8){\cardtitle{Selección sin fuga}\\[2.5mm]
+Cuatro modelos comparados en dos folds internos.\\[1.5mm]
+LightGBM alcanzó PR-AUC $0.560$ interna y $0.586$ en validación con ventana de 60 días.\\[1.5mm]
+Modelo y umbrales se congelaron antes de evaluar holdout.};
 
-\node[rubric,fill=gold,anchor=north west,minimum height=4.3cm,text width=11.4cm] (k2) at (13.5,11.8){\cardtitle{Pero no se traduce en ahorro}\\[2.5mm]
-Costo ilustrativo por transacción en el escenario central:\\[1.5mm]
-Aprobar todo $23.379$ · V01 con política $\mathbf{8.818}$ · periódico 45\,d $8.925$\\[1.5mm]
-Evita 129 fraudes más, a cambio de 247 escalaciones legítimas más a USD 10.};
+\node[rubric,fill=gold,anchor=north west,minimum height=4.3cm,text width=11.4cm] (k2) at (13.5,11.8){\cardtitle{Costo en cuatro escenarios}\\[2.5mm]
+Política elegida: XGBoost periódico de 30 días.\\[1.5mm]
+Escenario 80/95: validación $10.499$ y holdout retrospectivo $12.312$ por transacción.\\[1.5mm]
+Frente a aprobar todo: $1.610$ millones de pérdida simulada evitada.};
 
-\node[rubric,fill=coral,anchor=north west,minimum height=4.3cm,text width=11.4cm] (k3) at (26.8,11.8){\cardtitle{Dónde está la verdadera palanca}\\[2.5mm]
-Eficacia del analista de 60 a 100\,\%: mueve el costo \textbf{1.824} USD/txn.\\[1.5mm]
-Costo de reentrenar de USD 0 a 500: mueve el costo \textbf{0.028} USD/txn.\\[1.5mm]
-\textbf{65$\times$ de diferencia.} El límite es la revisión humana.};
+\node[rubric,fill=coral,anchor=north west,minimum height=4.3cm,text width=11.4cm] (k3) at (26.8,11.8){\cardtitle{Demanda operativa}\\[2.5mm]
+Holdout: 4\,929 revisiones iniciales y 4\,505 escalaciones directas.\\[1.5mm]
+En 80/95: 280 derivaciones esperadas desde revisión.\\[1.5mm]
+Pico diario de escalaciones: \textbf{376.8}; esa cola no tiene cupo validado.};
 
-\node[rubric,fill=blue,anchor=north west,minimum height=3.0cm,text width=17.6cm] (k4) at (.2,5.9){\cardtitle{El detector sin etiquetas no vio la degradación}\\[2.5mm]
-El PSI del score nunca superó \textbf{0.011} mientras la PR-AUC semanal caía de \textbf{0.732 a 0.473} ($-35\,\%$). El umbral convencional de 0.25 quedó 23$\times$ por encima de todo lo observado.\\[1.5mm]
-Concept drift sin covariate shift: la alerta combina ambas señales.};
+\node[rubric,fill=blue,anchor=north west,minimum height=3.0cm,text width=17.6cm] (k4) at (.2,5.9){\cardtitle{Política de calidad observada}\\[2.5mm]
+Cota semanal de PR-AUC $0.4897$: hubo una semana madura bajo la cota y luego recuperación.\\[1.5mm]
+Meses 6 y 7: \textbf{mantener}. No hubo dos incumplimientos consecutivos ni promoción.};
 
-\node[rubric,fill=mint,anchor=north west,minimum height=3.0cm,text width=19.2cm] (k5) at (19.0,5.9){\cardtitle{Auditamos nuestro propio trabajo}\\[2.5mm]
-\textbf{Fuga de V01:} medida, no supuesta. Con cuartiles contaminados PR-AUC $0.51656$; limpios $0.51910$. La versión con fuga rinde \textbf{0.0025 peor}: se declara, pero no otorga ventaja.\\[1.5mm]
-\textbf{Calibración:} el score sobreestima $4.11\times$. Isotónica baja Brier de $0.0479$ a $\mathbf{0.0219}$.};
+\node[rubric,fill=mint,anchor=north west,minimum height=3.0cm,text width=19.2cm] (k5) at (19.0,5.9){\cardtitle{Calibración y cobertura}\\[2.5mm]
+PR-AUC holdout $0.548$; Brier bruto $0.06863$ y calibrado $0.02195$ con isotónica ajustada en validación.\\[1.5mm]
+UID no visto: 49\,069 filas, PR-AUC $0.570$; conocido: 39\,512, PR-AUC $0.487$.};
 
-\node[anchor=west,align=left,text width=37.8cm,font=\small,text=navy] at (.45,1.55){\textbf{Recomendación:} mantener V01 con política y conservar armada la infraestructura adaptativa —ventanas, detector y protocolo de promoción—, suspendiendo el disparo automático de reentrenamiento hasta que un piloto mida la eficacia real del analista, que es el parámetro que domina la decisión.};
+\node[anchor=west,align=left,text width=37.8cm,font=\small,text=navy] at (.45,1.55){\textbf{Siguiente prueba:} medir eficacia humana y capacidad de escalación en piloto. Evaluar la política congelada con transacciones nuevas etiquetadas.};
 
-\node[anchor=west,text width=37.8cm,align=left,font=\footnotesize,text=navy!85] at (.45,0.45){\textbf{Alcance:} todos los costos son supuestos ilustrativos y ninguno procede de una empresa real. La comparación es una simulación contrafactual con etiquetas históricas, no un ensayo causal. UID conocido/desconocido es un proxy operativo de cobertura, no un grupo demográfico protegido ni una prueba de equidad.};
+\node[anchor=west,text width=37.8cm,align=left,font=\footnotesize,text=navy!85] at (.45,0.45){\textbf{Alcance y fuentes:} Forrester TEI 2026; LexisNexis True Cost of Fraud 2025. Cada ajuste espera siete días de etiquetas. La evaluación usa datos históricos. UID no prueba equidad demográfica.};
 \end{tikzpicture}
 \end{document}

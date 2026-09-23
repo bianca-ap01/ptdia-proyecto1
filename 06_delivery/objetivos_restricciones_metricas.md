@@ -1,5 +1,7 @@
 # Objetivos, restricciones y metricas del sistema
 
+> **Borrador histórico V05/V06.** Las métricas de costo y acción de esta versión preceden a la política final con cupo diario. Consulte `final/REPORTE.md` para cifras actuales.
+
 ## Caso de uso
 
 El sistema propuesto es un sistema inteligente adaptativo para deteccion de fraude en transacciones electronicas. Cada transaccion recibe un score de riesgo y una decision operativa: aprobar, enviar a revision manual o escalar/bloquear.

@@ -1,0 +1,25 @@
+{
+  "stage": "costos",
+  "status": "complete",
+  "candidates": 200,
+  "scenario_rows": 800,
+  "chosen": {
+    "model": "xgboost",
+    "strategy": "periodic",
+    "window_days": "30",
+    "review_threshold": 0.38715403080000027,
+    "escalate_threshold": 0.6521011739999998,
+    "worst_regret_pct": 0.0,
+    "review_capacity_per_day": 159,
+    "training_config_digest": "cbe5a960edfef2bc58970745dca263bdb99f29c5a36f9c90c0293fb1c7618892",
+    "selection_period_end": 12547045.999999998,
+    "holdout_labels_used": false,
+    "cost_provenance": {
+      "review_usd": "Forrester TEI: 0.75 minutes at USD 52/hour",
+      "escalation_usd": "USD 4 per confirmed-fraud escalation is a workflow assumption; Forrester USD 4 concerns some false-alert follow-up",
+      "fraud_loss_multiplier": "LexisNexis 2025 US financial services benchmark, not an IEEE-CIS tariff"
+    },
+    "digest": "cfd6f0d294519acb23a5627f1377b1f3785bc9599c9acfdbc5208ecb2408cf4b"
+  },
+  "holdout_labels_used": false
+}

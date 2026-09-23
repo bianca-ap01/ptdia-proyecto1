@@ -1,5 +1,7 @@
 # Informe tecnico - Sistema adaptativo de deteccion de fraude
 
+> **Borrador histórico V01–V07.** Sus costos normalizados de V05 y porcentajes de revisión no corresponden a la simulación final con cupo diario. Para entregar o citar resultados actuales, use `final/REPORTE.md` y `07_latex/informe.pdf`.
+
 ## 1. Problema y caso de uso
 
 El proyecto desarrolla un sistema inteligente adaptativo para deteccion de fraude financiero usando el dataset IEEE-CIS Fraud Detection. El sistema recibe una transaccion electronica, estima su riesgo de fraude y toma una decision operativa: aprobar, enviar a revision manual o escalar/bloquear temporalmente.

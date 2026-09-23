@@ -1,0 +1,3 @@
+relative_month,last_matured_pr_auc,quality_floor,breach_checks,actions,result_rows_after_first_action,observed_pr_auc_after_first_action
+6,0.4966862632610487,0.4896781375722198,0,keep,83088,0.5118718181920674
+7,0.4966862632610487,0.4896781375722198,0,keep,5493,0.5705023208102047

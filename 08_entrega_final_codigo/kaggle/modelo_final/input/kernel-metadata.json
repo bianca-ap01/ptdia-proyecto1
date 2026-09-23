@@ -1,0 +1,19 @@
+{
+  "id": "badexample/ptdia-entrega-final-modelo-final",
+  "title": "ptdia-entrega-final-modelo-final",
+  "code_file": "main.ipynb",
+  "language": "python",
+  "kernel_type": "notebook",
+  "is_private": true,
+  "enable_gpu": false,
+  "enable_internet": false,
+  "competition_sources": [
+    "ieee-fraud-detection"
+  ],
+  "dataset_sources": [],
+  "kernel_sources": [
+    "badexample/ptdia-entrega-final-experimentacion",
+    "badexample/ptdia-entrega-final-costos"
+  ],
+  "model_sources": []
+}

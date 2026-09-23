@@ -1,0 +1,8 @@
+{
+  "stage": "experimentacion",
+  "status": "complete",
+  "candidate_count": 12,
+  "prediction_rows": 1062972,
+  "config_digest": "cbe5a960edfef2bc58970745dca263bdb99f29c5a36f9c90c0293fb1c7618892",
+  "holdout_labels_used": false
+}
