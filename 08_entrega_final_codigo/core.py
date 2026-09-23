@@ -1,8 +1,8 @@
 """Single source of truth for temporal features, models and policy accounting.
 
 All fitting functions receive an explicit historical training frame. Selection
-stages never load holdout labels. The competition holdout remains retrospective
-because earlier project versions inspected it.
+stages never load holdout labels. The final stage evaluates a frozen policy
+on a later historical period.
 """
 
 from __future__ import annotations

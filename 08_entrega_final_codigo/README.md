@@ -16,7 +16,7 @@ También guarda `feature_associations.csv` (Pearson para variables numéricas y 
 
 El corte cronológico es 70/15/15 por `TransactionDT`. Los dos folds internos evalúan los tramos 50–65 % y 75–90 % de la duración temporal del train inicial, de modo que ambos caben dentro de ese periodo en IEEE-CIS. Un ajuste usa etiquetas con al menos siete días de antigüedad. El último tramo de siete días de validación no puede informar la elección al inicio del holdout. No se usa la etiqueta del test sin etiqueta de la competencia. Las estadísticas de preprocesamiento y la selección de variables `V` se ajustan en cada ventana de entrenamiento. Cinco atributos por UID usan sólo eventos anteriores.
 
-El holdout de IEEE-CIS **ya fue inspeccionado por versiones históricas del proyecto**. La nueva implementación congela elecciones antes de acceder a sus etiquetas, pero el resultado sigue siendo retrospectivo. No se afirma un test independiente nuevo.
+La implementación congela modelo, hiperparámetros y umbrales antes de acceder a las etiquetas del holdout. La evaluación final se informa como histórica; una prueba prospectiva requiere nuevas transacciones etiquetadas.
 
 ## Costos y escenarios
 
@@ -38,7 +38,7 @@ La elección minimiza el peor arrepentimiento porcentual frente al menor costo d
 
 Los kernels se configuran como privados y CPU. Cada etapa guarda un manifiesto de estado. El kernel de costos depende de los outputs de experimentación; el final depende de ambos. Si una ejecución falla, `run_summary.json` identifica el error; no se reutilizan outputs de corridas anteriores como si fueran nuevos. El usuario autorizó `badexample`: las cuatro etapas terminaron y sus outputs IEEE-CIS se descargaron. `python verify.py` pasó sobre ellos. La prueba sintética local no es evidencia de desempeño. El estado preciso de cada etapa está en `run_manifest.json`.
 
-La validación eligió XGBoost periódico de 30 días con umbrales 0.3872/0.6521 y cupo de 159 revisiones iniciales por día. En el holdout retrospectivo obtuvo PR-AUC 0.548 y, bajo eficacia 80/95, costo simulado 12.312 por transacción. El informe de cuatro páginas, la presentación de 14 diapositivas y la infografía A3 están en `../07_latex/` y se basan en estos outputs nuevos.
+La validación eligió XGBoost periódico de 30 días con umbrales 0.3872/0.6521 y cupo de 159 revisiones iniciales por día. En el holdout histórico obtuvo PR-AUC 0.548 y, bajo eficacia 80/95, costo simulado 12.312 por transacción. El informe de ocho páginas, la presentación y la infografía A3 están en `../07_latex/` y se basan en estos outputs nuevos. `../07_latex/make_figures.py` reconstruye los gráficos compartidos desde los CSV guardados.
 
 ## Política de calidad
 
