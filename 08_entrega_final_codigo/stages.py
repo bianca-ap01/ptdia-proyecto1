@@ -486,10 +486,14 @@ def run_final(root: Path | None = None) -> Path:
     shadow["relative_month"] = ((shadow.TransactionDT - float(df.TransactionDT.min())) //
                                 (30 * DAY)).astype(int) + 1
     monthly_quality = []
-    for month, checks in ledger.groupby("relative_month"):
+    origin = float(df.TransactionDT.min())
+    for month, month_rows in shadow.groupby("relative_month"):
+        month_start = origin + (int(month) - 1) * 30 * DAY
+        month_end = month_start + 30 * DAY
+        checks = ledger[(ledger.start < month_end) & (ledger.end > month_start)]
         actions = checks.loc[checks.decision != "keep", "decision"]
         first_action = checks.loc[checks.decision != "keep", "start"]
-        month_scores = shadow[shadow.relative_month == month]
+        month_scores = month_rows
         if len(first_action):
             month_scores = month_scores[month_scores.TransactionDT >= first_action.min()]
         monthly_quality.append({

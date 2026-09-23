@@ -1,22 +1,24 @@
 {
-  "package_status": "experimentation_running_on_kaggle",
+  "package_status": "complete_retrospective",
   "notebook_order": [
     "01_eda.ipynb",
     "02_experimentacion.ipynb",
     "03_costos_escenarios.ipynb",
     "04_modelo_final.ipynb"
   ],
-  "ieee_cis_outputs_downloaded": "eda_only",
-  "real_data_verification_complete": false,
-  "report_and_slides_synced_to_new_outputs": false,
+  "ieee_cis_outputs_downloaded": "all_four_stages",
+  "real_data_verification_complete": true,
+  "report_and_slides_synced_to_new_outputs": true,
   "local_synthetic_smoke_test": "passed; no performance estimates are inferred",
   "kaggle_owner_authorized_by_user": "badexample",
   "kaggle_kernels": {
     "eda": {"slug": "badexample/ptdia-entrega-final-eda", "version": 1, "status": "complete", "outputs_downloaded": true},
-    "experimentacion": {"slug": "badexample/ptdia-entrega-final-experimentacion", "version": 2, "status": "running", "outputs_downloaded": false, "version_1_failure": "Fixed inner folds extended beyond the actual initial training period; corrected to train-span fractions in version 2."},
-    "costos": {"slug": "badexample/ptdia-entrega-final-costos", "status": "waiting_for_experimentacion"},
-    "modelo_final": {"slug": "badexample/ptdia-entrega-final-modelo-final", "status": "waiting_for_costos"}
+    "experimentacion": {"slug": "badexample/ptdia-entrega-final-experimentacion", "version": 2, "status": "complete", "outputs_downloaded": true, "candidate_count": 12, "prediction_rows": 1062972, "version_1_failure": "Fixed inner folds extended beyond the actual initial training period; corrected to train-span fractions in version 2."},
+    "costos": {"slug": "badexample/ptdia-entrega-final-costos", "version": 1, "status": "complete", "outputs_downloaded": true, "selected_model": "xgboost", "selected_strategy": "periodic_30_days"},
+    "modelo_final": {"slug": "badexample/ptdia-entrega-final-modelo-final", "version": 2, "status": "complete", "outputs_downloaded": true, "version_1_note": "Monthly quality ledger omitted the partial final month; version 2 corrects reporting without changing the frozen choice."}
   },
-  "required_next_step": "When experimentation completes, download and inspect its outputs, then launch costs and final model sequentially, download outputs, run verify.py, and synchronize the report and slides.",
+  "verification": "python 08_entrega_final_codigo/verify.py passed on downloaded IEEE-CIS outputs",
+  "selected_policy": "XGBoost periodic 30 days; review/escalation thresholds 0.387154/0.652101; daily review cap 159",
+  "required_next_step": "Collect new labeled transactions for an independent prospective estimate and measure actual human review and escalation performance.",
   "holdout_interpretation": "retrospective; earlier project work inspected this period"
 }

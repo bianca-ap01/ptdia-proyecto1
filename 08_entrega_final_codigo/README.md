@@ -33,7 +33,9 @@ La elección minimiza el peor arrepentimiento porcentual frente al menor costo d
 3. Ejecutar los cuatro notebooks en el orden de la tabla. En local: `python run.py eda`, luego `experimentacion`, `costos` y `modelo_final`. Para preparar kernels de Kaggle, usar `python build_notebooks.py --owner CUENTA_AUTORIZADA` tras verificar la cuenta activa. Subir cada `kaggle/<etapa>/input/` después de que la etapa anterior termine, descargar los archivos en `outputs/<etapa>/` y comprobar `run_summary.json`.
 4. Ejecutar `python verify.py` tras descargar todos los outputs. `python verify.py --notebooks-only` valida sólo la estructura de notebooks.
 
-Los kernels se configuran como privados y CPU. Cada etapa guarda un manifiesto de estado. El kernel de costos depende de los outputs de experimentación; el final depende de ambos. Si una ejecución falla, `run_summary.json` identifica el error; no se reutilizan outputs de corridas anteriores como si fueran nuevos. El usuario autorizó `badexample`: EDA ya terminó y sus outputs se descargaron; experimentación está en curso. La prueba sintética local no es evidencia de desempeño. El estado preciso de cada etapa está en `run_manifest.json`.
+Los kernels se configuran como privados y CPU. Cada etapa guarda un manifiesto de estado. El kernel de costos depende de los outputs de experimentación; el final depende de ambos. Si una ejecución falla, `run_summary.json` identifica el error; no se reutilizan outputs de corridas anteriores como si fueran nuevos. El usuario autorizó `badexample`: las cuatro etapas terminaron y sus outputs IEEE-CIS se descargaron. `python verify.py` pasó sobre ellos. La prueba sintética local no es evidencia de desempeño. El estado preciso de cada etapa está en `run_manifest.json`.
+
+La validación eligió XGBoost periódico de 30 días con umbrales 0.3872/0.6521 y cupo de 159 revisiones iniciales por día. En el holdout retrospectivo obtuvo PR-AUC 0.548 y, bajo eficacia 80/95, costo simulado 12.312 por transacción. El informe de cuatro páginas, la presentación de 14 diapositivas y la infografía A3 están en `../07_latex/` y se basan en estos outputs nuevos.
 
 ## Política de calidad
 

@@ -4,7 +4,7 @@ Sistema inteligente adaptativo sobre datos no estacionarios.
 
 ## Nueva entrega de código
 
-La carpeta **[`08_entrega_final_codigo/`](08_entrega_final_codigo/README.md)** contiene los cuatro notebooks, el código compartido, el protocolo de validación temporal y el verificador. El usuario autorizó ejecutar en la cuenta Kaggle configurada (`badexample`). EDA terminó y sus salidas IEEE-CIS se descargaron; experimentación está en curso. La evaluación, la verificación integral y la actualización de cifras en el informe y las diapositivas siguen pendientes. [`08_entrega_final_codigo/run_manifest.json`](08_entrega_final_codigo/run_manifest.json) registra el estado por etapa.
+La carpeta **[`08_entrega_final_codigo/`](08_entrega_final_codigo/README.md)** contiene los cuatro notebooks, el código compartido, el protocolo de validación temporal, outputs IEEE-CIS descargados y el verificador. Las cuatro etapas terminaron en kernels privados de la cuenta Kaggle autorizada (`badexample`) y la verificación integral pasó. El [informe](07_latex/informe.pdf), la [presentación](07_latex/presentacion.pdf) y la [infografía](07_latex/infografia.pdf) se actualizaron con esos resultados. [`08_entrega_final_codigo/run_manifest.json`](08_entrega_final_codigo/run_manifest.json) registra el estado por etapa y la limitación retrospectiva del holdout.
 
 `final/` conserva la entrega histórica y sus resultados anteriores; las cifras de sus documentos no deben atribuirse a los notebooks nuevos.
 
@@ -35,8 +35,8 @@ Los datos crudos (~1.3 GB) no se versionan: se descargan de la competencia
 
 ## Bitácora experimental (histórico)
 
-Las carpetas `01_planning/` … `07_latex/` documentan las versiones V01–V07 que
-precedieron a la entrega. Se conservan por trazabilidad de decisiones.
+Las carpetas `01_planning/` … `06_delivery/` documentan las versiones V01–V07 que
+precedieron a la nueva entrega. `07_latex/` contiene ahora los PDFs actualizados.
 
 | Carpeta | Contenido | Uso |
 | --- | --- | --- |
@@ -47,7 +47,7 @@ precedieron a la entrega. Se conservan por trazabilidad de decisiones.
 | `04_scripts/` | Scripts locales de respaldo. | Politica de decision V05 y robustez V06 antes de publicarlas en Kaggle. |
 | `05_reports/` | Reportes narrativos por version. | Material base para la entrega final. |
 | `06_delivery/` | Borradores previos alineados a la rubrica. | Conservan cifras de V05/V06 que no corresponden a la evaluación de `final/`; no usarlos como resultados actuales. |
-| `07_latex/` | Entregables compilables en LaTeX. | Informe PDF, presentación PDF e infografía PDF; contrastar siempre sus cifras con `final/REPORTE.md`. |
+| `07_latex/` | Informe, presentación e infografía compilables en LaTeX. | Actualizados desde los outputs de `08_entrega_final_codigo/`; no usar cifras de `final/REPORTE.md` como resultados nuevos. |
 
 ## Versiones
 

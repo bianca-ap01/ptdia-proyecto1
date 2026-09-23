@@ -93,7 +93,8 @@ def verify_outputs():
     assert (used.candidate_train_last_dt < used.calibration_end - 7 * 86_400).all()
     assert (used.gate_end <= used.start - 7 * 86_400).all()
     monthly_quality = pd.read_csv(final / "monthly_quality_ledger.csv")
-    assert set(monthly_quality.relative_month) == set(ledger.relative_month)
+    monthly_metrics = pd.read_csv(final / "monthly_metrics.csv")
+    assert set(monthly_quality.relative_month) == set(monthly_metrics.relative_month)
     assert (monthly_quality.result_rows_after_first_action >= 0).all()
     assert summaries["modelo_final"]["retrospective_holdout"] is True
     print("PASS: splits, fitting cutoffs, frozen choice, review capacity, cost and adaptation gates")

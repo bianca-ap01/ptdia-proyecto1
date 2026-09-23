@@ -1,0 +1,64 @@
+{
+  "selected": {
+    "lightgbm": {
+      "params": {
+        "num_leaves": 63,
+        "min_child_samples": 100
+      },
+      "param_index": 2,
+      "inner_mean_pr_auc": 0.5603392937394606,
+      "quality_floor": 0.5147754000110975
+    },
+    "logistic": {
+      "params": {
+        "C": 0.1
+      },
+      "param_index": 0,
+      "inner_mean_pr_auc": 0.3740953200985484,
+      "quality_floor": 0.32211549741101225
+    },
+    "tree": {
+      "params": {
+        "max_depth": 10,
+        "min_samples_leaf": 100
+      },
+      "param_index": 2,
+      "inner_mean_pr_auc": 0.38727032953838236,
+      "quality_floor": 0.34432226749415223
+    },
+    "xgboost": {
+      "params": {
+        "max_depth": 6,
+        "min_child_weight": 30
+      },
+      "param_index": 3,
+      "inner_mean_pr_auc": 0.536318237657154,
+      "quality_floor": 0.4896781375722198
+    }
+  },
+  "train_cut": 10437998.1,
+  "valid_cut": 13151845.999999998,
+  "label_delay_days": 7,
+  "fold_train_span_fractions": [
+    [
+      0.5,
+      0.65
+    ],
+    [
+      0.75,
+      0.9
+    ]
+  ],
+  "models": [
+    "logistic",
+    "tree",
+    "lightgbm",
+    "xgboost"
+  ],
+  "adaptive_windows_days": [
+    30,
+    60,
+    90
+  ],
+  "digest": "cbe5a960edfef2bc58970745dca263bdb99f29c5a36f9c90c0293fb1c7618892"
+}
